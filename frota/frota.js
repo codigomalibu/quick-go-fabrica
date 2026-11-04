@@ -39,6 +39,12 @@ const ESTILO = `
 .qgf #labels.longe .lbl .d{margin-top:2px}
 .qgf #labels.longe .lbl .n{font-size:10px}
 .qgf #labels.longe .carga{font-size:8.5px;padding:2px 6px}
+.qgf #labels.estreito .lbl{padding:3px 6px 4px;border-radius:7px}
+.qgf #labels.estreito .lbl .n{font-size:9.5px}
+.qgf #labels.estreito.longe .lbl{padding:2px 5px}
+.qgf #labels.estreito.longe .lbl .n{font-size:8.5px;letter-spacing:0}
+.qgf #labels.estreito.longe .lbl .d{display:none}
+.qgf #labels.estreito.longe .carga{display:none}
 .qgf .lbl.alvo{border-color:var(--ambar);box-shadow:0 0 0 2px rgba(215,154,69,.35)}
 .qgf .lbl.fab{background:rgba(215,154,69,.16);border-color:rgba(215,154,69,.55)}
 .qgf .carga{position:absolute;left:0;top:0;pointer-events:none;font:600 9.5px var(--rotulo);letter-spacing:.06em;color:#24190a;background:var(--ambar);border-radius:999px;padding:3px 8px;white-space:nowrap;transform:translate(-50%,-100%)}
@@ -108,6 +114,28 @@ const ESTILO = `
   .qgf .chips{margin-left:0}
   .qgf .gaveta{position:fixed;z-index:30}
   .qgf .dica{display:none}
+}
+@media (max-width:700px){
+  .qgf{border-radius:16px;grid-template-rows:auto minmax(340px,58svh) auto}
+  .qgf .qgf-top{padding:10px 12px;gap:8px}
+  .qgf .marca h2{font-size:22px}
+  .qgf .marca span{font-size:9px;letter-spacing:.14em}
+  .qgf .chips{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
+  .qgf .chips::-webkit-scrollbar{display:none}
+  .qgf .chip{flex:none;min-height:34px}
+  .qgf .vista{left:10px;right:10px;bottom:10px;justify-content:space-between}
+  .qgf .modo button{padding:9px 12px}
+  .qgf .qbtn{min-height:38px}
+  .qgf .lado{min-height:0;max-height:78svh}
+  .qgf .abas{padding:8px 10px}
+  .qgf .abas button[role="tab"]{padding:9px 12px}
+  .qgf .lista{padding:10px 12px 22px}
+  .qgf .mq{min-height:36px;padding:7px 10px}
+  .qgf .un .nm{font-size:19px}
+  .qgf .lbl .n{font-size:10.5px}
+  .qgf .linha{grid-template-columns:1fr}
+  .qgf .ff input,.qgf .ff select,.qgf .ff textarea{font-size:16px;min-height:42px}
+  .qgf .gaveta .acoes .qbtn{flex:1}
 }
 @media (prefers-reduced-motion:reduce){.qgf *{transition:none!important}}
 `;
@@ -686,7 +714,7 @@ function voar(alvo, dist, alt){
 function geral(){
   if (!R) return; let ext = 20, cx = 0, cz = 0; const ps = Object.values(layout);
   if (ps.length){ const xs = ps.map(p=>p.x), zs = ps.map(p=>p.z); cx = (Math.min(...xs)+Math.max(...xs))/2; cz = (Math.min(...zs)+Math.max(...zs))/2; ext = Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...zs)-Math.min(...zs))/2 + 12; }
-  const d = ext*(UI.modo==='rotas' ? 2.6 : 1.85); voo = {t:0, p0:G3.cam.position.clone(), t0:G3.ctl.target.clone(), p1:new THREE.Vector3(cx + d*.3, d*.78, cz + d*1.05), t1:new THREE.Vector3(cx,0,cz)};
+  const d = ext*(UI.modo==='rotas' ? 2.6 : 1.85) / Math.min(1, Math.max(.5, G3.cam.aspect*1.15)); /* tela em pé (celular): afasta para caber na largura */ voo = {t:0, p0:G3.cam.position.clone(), t0:G3.ctl.target.clone(), p1:new THREE.Vector3(cx + d*.3, d*.78, cz + d*1.05), t1:new THREE.Vector3(cx,0,cz)};
 }
 function focarUn(id){ const p = layout[id]; if (!p) return; voar(new THREE.Vector3(p.x, 1.5, p.z), p.fab?22:15, p.fab?14:10); }
 function focarMq(id){ const o = G3.mq && G3.mq[id]; if (!o) return; voar(o.position.clone().setY(1.5), 9, 5.5); }
@@ -842,6 +870,7 @@ function quadro(now){
     el.style.opacity = vis ? 1 : 0; el.style.pointerEvents = vis && el.classList.contains('lbl') ? 'auto' : 'none';
     el.style.transform = `translate(${(v3.x*.5+.5)*w}px, ${(-v3.y*.5+.5)*h}px) translate(-50%,-100%)`; };
   const longe = G3.cam.position.distanceTo(G3.ctl.target) > 95; const LB = $('#labels'); if (LB.classList.contains('longe') !== longe) LB.classList.toggle('longe', longe);
+  const estreito = w < 560; if (LB.classList.contains('estreito') !== estreito) LB.classList.toggle('estreito', estreito);
   raiz.querySelectorAll('#labels .lbl').forEach(el => { const o = G3.ped[el.dataset.id]; if (!o){ el.style.opacity = 0; return; } proj(el, o.position.x, (el.dataset.id===FAB ? 7 : 6.8)*o.scale.x, o.position.z); });
   raiz.querySelectorAll('#labels .carga').forEach(el => { const c = G3.caminhoes[el.dataset.cam]; if (!c || !c.pos){ el.style.opacity = 0; return; } proj(el, c.pos.x, 4.6*MAPA.esc, c.pos.z); });
 }
