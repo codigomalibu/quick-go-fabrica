@@ -1,0 +1,1347 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Quick Go Fábrica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@500;600;700&family=Anek+Devanagari:wght@300;400;500;600&display=swap">
+<style>body{margin:0;font-size:14px;-webkit-font-smoothing:antialiased}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: faixa Azul Petróleo com logo e navegação fina; papel linho de fundo; títulos finos em serifa display; fotos dos itens em todas as listas */
+:root{
+  --petroleo:#22343b; --platina:#d9d9d9; --linho:#faf0e6;
+  --mineral:#6f9ca7; --nevoa:#a9cad5; --ambar:#d79a45; --lavanda:#6e7fb8; --lilas:#a77fa5; --pessego:#e6a58f;
+  --bg:#f5ede2; --paper:url("https://static.wixstatic.com/media/42aab8_387e42f344fc45e6ba8e836c34c67040~mv2.jpg"); --surface:#fcf8f2; --surface-2:#f1e9dd; --line:#ddd2c2; --ink:#22343b; --muted:#5f6d71; --accent:#a9712a; --photo-bg:#ffffff;
+  --ok:#2f7a57; --warn:#a9712a; --bad:#b4483c; --ok-bg:#e1eee5; --warn-bg:#f6e6cc; --bad-bg:#f6e0dc; --info-bg:#e1edf0;
+  --display:"Italiana","Didot","Bodoni 72",Georgia,serif; --sub:"Montserrat",system-ui,sans-serif; --body:"Anek Devanagari",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:4px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#132027; --paper:none; --surface:#1a2a31; --surface-2:#21343c; --line:#2e4650; --ink:#faf0e6; --muted:#a8b8bc; --accent:#e3ad62; --photo-bg:#f4efe8;
+  --ok:#7cc59d; --warn:#e3ad62; --bad:#ec8f82; --ok-bg:#183a2d; --warn-bg:#3a2c13; --bad-bg:#3e1f1b; --info-bg:#173640; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#132027; --paper:none; --surface:#1a2a31; --surface-2:#21343c; --line:#2e4650; --ink:#faf0e6; --muted:#a8b8bc; --accent:#e3ad62; --photo-bg:#f4efe8;
+  --ok:#7cc59d; --warn:#e3ad62; --bad:#ec8f82; --ok-bg:#183a2d; --warn-bg:#3a2c13; --bad-bg:#3e1f1b; --info-bg:#173640; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg) var(--paper);background-size:700px auto;color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;font-weight:400}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--petroleo)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--petroleo);color:var(--linho);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.brand{display:flex;align-items:center;gap:18px;padding-block:16px 6px;flex-wrap:wrap}
+.brand img{height:34px;width:auto;display:block}
+.brand .tag{font-family:var(--sub);font-size:10.5px;text-transform:uppercase;letter-spacing:.22em;color:var(--nevoa);border-left:1px solid rgba(250,240,230,.25);padding-left:18px}
+.brand .sp{flex:1}
+.brand .who{font-size:13px;color:rgba(250,240,230,.7)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{color:rgba(250,240,230,.72);text-decoration:none;padding:12px 12px 13px;font-family:var(--sub);font-weight:500;font-size:12px;letter-spacing:.06em;white-space:nowrap;border-bottom:2px solid transparent}
+nav.tabs a:hover{color:var(--linho)}
+nav.tabs a.on{color:var(--linho);border-bottom-color:var(--ambar)}
+main{padding-block:28px 72px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.01em;line-height:1.05}
+h1{font-size:46px}
+h2{font-size:30px}
+h3{font-size:23px}
+.eyebrow{font-family:var(--sub);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--accent)}
+.lead{color:var(--muted);max-width:66ch;margin:8px 0 0;font-size:16px;font-weight:300}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.stat .lbl{font-family:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:600}
+.stat .val{font-family:var(--display);font-size:36px;margin-top:6px;font-variant-numeric:tabular-nums;line-height:1}
+.stat .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.hero{position:relative;border-radius:var(--r);overflow:hidden;min-height:300px;display:flex;align-items:flex-end;background:#0e171b url("https://static.wixstatic.com/media/42aab8_3ce6f52fe0344be1bd8592cd5b844ab7~mv2.jpg") center/cover no-repeat;color:var(--linho);margin-bottom:22px}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,30,35,.92) 0%,rgba(18,30,35,.6) 45%,rgba(18,30,35,0) 75%)}
+.hero .in{position:relative;z-index:1;padding:34px 32px;max-width:560px}
+.hero h1{font-size:54px;color:var(--linho)}
+.hero p{color:rgba(250,240,230,.82);font-weight:300;font-size:16px;margin:10px 0 18px}
+.hero .eyebrow{color:var(--ambar)}
+.mcard{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:0;overflow:hidden}
+.mcard .ph{background:#0e171b center/cover no-repeat;min-height:240px}
+.mcard .bd{padding:20px 20px 20px 0;min-width:0}
+.btn{font:inherit;font-family:var(--sub);font-weight:600;font-size:12px;letter-spacing:.05em;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;border-radius:var(--r);cursor:pointer;display:inline-flex;gap:6px;align-items:center;text-decoration:none}
+.btn:hover{border-color:var(--mineral)}
+.btn.pri{background:var(--petroleo);border-color:var(--petroleo);color:var(--linho)}
+.btn.pri:hover{background:#2c434b}
+.btn.amb{background:var(--ambar);border-color:var(--ambar);color:#1f1608}
+.btn.sm{padding:5px 9px;font-size:11px}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:root:not([data-theme="light"]) .btn.pri{border-color:var(--line)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,.card:focus-visible{outline:2px solid var(--mineral);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;min-width:0}
+textarea{min-height:64px;width:100%}
+label.f{display:flex;flex-direction:column;gap:5px;font-family:var(--sub);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;min-width:0}
+label.f input,label.f select,label.f textarea{font-family:var(--body);letter-spacing:0;text-transform:none;font-weight:400}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.seg button{font-family:var(--sub);font-size:11.5px;letter-spacing:.06em;font-weight:600;border:0;background:transparent;color:var(--muted);padding:9px 14px;cursor:pointer}
+.seg button.on{background:var(--petroleo);color:var(--linho)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-family:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600;padding:11px 10px;border-bottom:1px solid var(--line);background:var(--surface-2);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--surface-2)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.ph{width:56px;padding:5px 6px 5px 10px}
+.thumb{width:44px;height:44px;border-radius:3px;background:var(--photo-bg) center/contain no-repeat;border:1px solid var(--line);display:block}
+.thumb.lg{width:64px;height:64px}
+.thumb.none{display:grid;place-items:center;font-family:var(--sub);font-size:9px;color:#8a8f90;letter-spacing:.06em}
+.code{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.pill{display:inline-block;font-family:var(--sub);font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.p-ok{background:var(--ok-bg);color:var(--ok)}
+.p-warn{background:var(--warn-bg);color:var(--warn)}
+.p-bad{background:var(--bad-bg);color:var(--bad)}
+.p-info{background:var(--info-bg);color:var(--mineral)}
+.p-neu{background:var(--surface-2);color:var(--muted)}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;display:flex}
+.bar span{display:block;height:100%}
+.legend{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;text-align:left;font:inherit;color:inherit;padding:0}
+.card:hover{border-color:var(--mineral)}
+.card .img{aspect-ratio:1/1;background:var(--photo-bg) center/contain no-repeat;border-bottom:1px solid var(--line);max-width:100%}
+.card .img.none{display:grid;place-items:center;font-family:var(--display);font-size:28px;color:#8a8f90}
+.card .bd{padding:12px 13px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.card .nm{font-weight:500;line-height:1.25;font-size:14.5px}
+.card .ft{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;gap:6px}
+.card .pr{font-family:var(--display);font-size:20px}
+.tree{list-style:none;margin:0;padding:0}
+.node{display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-top:10px}
+.node .nimg{width:96px;height:96px;border-radius:3px;background:var(--photo-bg) center/contain no-repeat;border:1px solid var(--line)}
+.node .nimg.cover{background-size:cover}
+.node .nimg.mosaic{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);overflow:hidden}
+.node .nimg.mosaic span{background:var(--photo-bg) center/contain no-repeat}
+.node .nm{font-family:var(--display);font-size:21px;line-height:1.1;margin-top:2px}
+.node>div{min-width:0}
+.node .act{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.tree .tree{padding-left:26px;border-left:1px solid var(--line);margin-left:47px}
+details.parts>summary{cursor:pointer;color:var(--mineral);font-family:var(--sub);font-size:11px;letter-spacing:.06em;font-weight:600;padding-top:6px}
+.counter{display:inline-flex;align-items:center;gap:6px}
+.counter b{min-width:22px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);background:color-mix(in srgb,var(--surface) 60%,transparent)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--petroleo);color:var(--linho);padding:11px 18px;border-radius:var(--r);font-family:var(--sub);font-size:12px;font-weight:600;letter-spacing:.04em;z-index:50;box-shadow:0 8px 28px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
+.toast.err{background:var(--bad)}
+.scrim{position:fixed;inset:0;background:rgba(14,23,27,.55);z-index:40;display:flex;justify-content:flex-end}
+.drawer{background:var(--bg) var(--paper);background-size:700px auto;width:min(600px,100%);height:100%;overflow-y:auto;padding:22px max(20px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) 20px;border-left:1px solid var(--line)}
+.drawer .fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.drawer .fg .full{grid-column:1/-1}
+.drawer .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.drawer .photo{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;margin-top:14px}
+.drawer .photo .thumb{width:150px;height:150px}
+.gantt{display:grid;grid-template-columns:170px 1fr;gap:8px 14px;align-items:center;font-size:13px}
+.gantt .track{position:relative;height:28px;background:var(--surface-2);border-radius:3px}
+.gantt .gseg{position:absolute;top:4px;bottom:4px;border-radius:2px;display:flex;align-items:center;padding:0 8px;color:#fff;font-family:var(--sub);font-weight:600;font-size:10.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.gantt .lbl{font-weight:500}
+.axis{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);grid-column:2}
+.deliver{display:flex;gap:26px;align-items:center;flex-wrap:wrap;background:var(--petroleo) url("https://static.wixstatic.com/media/42aab8_c6849ebfdce84c949dd77cd9071fb08f~mv2.jpg") right center/auto 100% no-repeat;color:var(--linho);border-radius:var(--r);padding:22px 24px;position:relative;overflow:hidden}
+.deliver::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--petroleo) 55%,rgba(34,52,59,.55))}
+.deliver>*{position:relative}
+.deliver .big{font-family:var(--display);font-size:42px;line-height:1}
+.deliver .k{font-family:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--nevoa);margin-bottom:4px}
+.combo{display:flex;gap:12px;flex-wrap:wrap}
+.combo .unit{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px 10px 10px;background:var(--surface);display:flex;gap:12px;align-items:center;flex:1;min-width:220px}
+.combo .unit .uimg{width:58px;height:78px;border-radius:3px;background:#0e171b center/cover no-repeat;flex:none}
+.combo .unit .q{font-family:var(--display);font-size:34px;line-height:1}
+.notice{background:var(--info-bg);color:var(--ink);border-radius:var(--r);padding:11px 14px;font-size:14px}
+.sec{margin-top:30px}
+.sech{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+a.lk{color:var(--mineral);text-decoration:none;font-weight:500}
+a.lk:hover{text-decoration:underline}
+.explode{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px}
+.explode figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:10px;cursor:zoom-in}
+.explode figure img{width:100%;height:170px;object-fit:contain;display:block}
+.explode figcaption{font-family:var(--sub);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#22343b;margin-top:6px;font-weight:600}
+.lightbox{position:fixed;inset:0;background:rgba(14,23,27,.88);z-index:60;display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;background:#fff;border-radius:var(--r)}
+.role{font-family:var(--sub);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(250,240,230,.3);border-radius:99px;color:var(--linho)}
+.hint{font-family:var(--body);text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:400;color:var(--mineral)}
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:var(--sub);font-size:10px;fill:var(--muted)}
+.chart .grid line{stroke:var(--line)}
+.up{color:var(--bad)} .down{color:var(--ok)}
+.doc{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
+.doc .cv{aspect-ratio:3/4;background:#fff center/cover no-repeat;border:1px solid var(--line);border-radius:3px;max-width:100%}
+.cj{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:18px;align-items:start}
+.cj figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:10px;cursor:zoom-in}
+.cj figure img{width:100%;height:220px;object-fit:contain;display:block}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:12px}
+.photos figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:zoom-in}
+.photos figure img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#fff}
+.photos figcaption{padding:8px 10px;font-size:13px}
+ol.steps,ul.steps{margin:8px 0 0;padding-left:20px;display:grid;gap:4px}
+.arqs{display:grid;gap:6px;margin-top:10px}
+.arq{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;text-decoration:none;color:var(--ink);background:color-mix(in srgb,var(--surface) 55%,transparent);border:1px solid var(--glass-brd)}
+.arq:hover{border-color:var(--mineral)}
+.arq .tp{font-family:var(--sub);font-size:9px;font-weight:700;letter-spacing:.08em;color:#fff;padding:3px 7px;border-radius:6px;flex:none}
+.arq .nm{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}
+.card .stk{display:flex;align-items:center;gap:6px}
+.card .stk b{min-width:20px;text-align:center}
+.wrap.largo{max-width:1680px}
+
+body.locked header.top,body.locked main,body.locked #layer{display:none}
+#gate{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:#0e171b url("https://static.wixstatic.com/media/42aab8_3ce6f52fe0344be1bd8592cd5b844ab7~mv2.jpg") center/cover no-repeat}
+#gate[hidden]{display:none}
+#gate::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(18,30,35,.55),rgba(18,30,35,.85))}
+.gate-card{position:relative;width:min(400px,100%);padding:34px 30px 28px;border-radius:28px;background:rgba(34,52,59,.55);-webkit-backdrop-filter:blur(28px) saturate(170%);backdrop-filter:blur(28px) saturate(170%);border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);color:var(--linho);text-align:center}
+.gate-card img{height:38px;width:auto;margin:0 auto 18px;display:block}
+.gate-card h1{font-size:44px;color:var(--linho)}
+.gate-card p{color:rgba(250,240,230,.75);margin:6px 0 20px;font-weight:300}
+.gate-card form{display:flex;gap:8px}
+.gate-card input{flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:var(--linho);border-radius:999px;padding:11px 16px;box-shadow:none}
+.gate-card input::placeholder{color:rgba(250,240,230,.55)}
+#gate-msg{min-height:20px;margin-top:12px;font-size:13px;color:#f3c08a}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sev-Leve{background:var(--ok-bg);color:var(--ok)} .sev-Grave{background:var(--warn-bg);color:var(--warn)} .sev-Gravíssima{background:var(--bad-bg);color:var(--bad)}
+@media (max-width:700px){.cj{grid-template-columns:1fr}.doc{grid-template-columns:80px 1fr}}
+@media (max-width:700px){
+  h1{font-size:36px} .hero h1{font-size:40px} .hero .in{padding:24px 20px}
+  .drawer .fg{grid-template-columns:1fr}
+  .gantt{grid-template-columns:100px 1fr}
+  .brand .tag{display:none}
+  .mcard{grid-template-columns:110px 1fr} .mcard .ph{min-height:200px}
+  .node{grid-template-columns:64px 1fr} .node .nimg{width:64px;height:64px} .node .act{grid-column:1/-1;flex-direction:row;justify-content:space-between;flex-wrap:wrap}
+  .tree .tree{padding-left:8px;margin-left:4px}
+  .panel{padding:14px}
+  .drawer .photo{grid-template-columns:100px 1fr} .drawer .photo .thumb{width:100px;height:100px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ===== Liquid glass: superfícies translúcidas sobre o linho, com halos de cor da marca ===== */
+:root{--r:16px;--glass:rgba(255,253,249,.58);--glass-strong:rgba(255,253,249,.78);--glass-brd:rgba(255,255,255,.75);--glass-hi:rgba(255,255,255,.9);--shadow:0 10px 34px rgba(34,52,59,.10),0 1px 2px rgba(34,52,59,.06);--nav:rgba(34,52,59,.74);--blob1:rgba(111,156,167,.30);--blob2:rgba(215,154,69,.22);--blob3:rgba(167,127,165,.16)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--glass:rgba(30,48,56,.55);--glass-strong:rgba(30,48,56,.82);--glass-brd:rgba(255,255,255,.10);--glass-hi:rgba(255,255,255,.14);--shadow:0 12px 36px rgba(0,0,0,.35);--nav:rgba(18,30,35,.72);--blob1:rgba(111,156,167,.22);--blob2:rgba(215,154,69,.12);--blob3:rgba(110,127,184,.14)}}
+:root[data-theme="dark"]{--glass:rgba(30,48,56,.55);--glass-strong:rgba(30,48,56,.82);--glass-brd:rgba(255,255,255,.10);--glass-hi:rgba(255,255,255,.14);--shadow:0 12px 36px rgba(0,0,0,.35);--nav:rgba(18,30,35,.72);--blob1:rgba(111,156,167,.22);--blob2:rgba(215,154,69,.12);--blob3:rgba(110,127,184,.14)}
+html{min-height:100%}
+body{background:radial-gradient(900px 600px at 8% -5%,var(--blob1),transparent 60%),radial-gradient(800px 520px at 100% 18%,var(--blob2),transparent 60%),radial-gradient(900px 700px at 40% 110%,var(--blob3),transparent 60%),var(--paper),var(--bg);background-attachment:fixed;background-size:auto,auto,auto,700px auto,auto}
+.glass,.panel,.tw,.card,.node,.empty,.combo .unit,.explode figure,.photos figure,.cj figure{background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);border:1px solid var(--glass-brd);box-shadow:var(--shadow),inset 0 1px 0 var(--glass-hi);border-radius:var(--r)}
+.explode figure,.cj figure{background:rgba(255,255,255,.92)}
+.tw{overflow:hidden;overflow-x:auto}
+th{background:transparent;border-bottom:1px solid var(--line)}
+td{border-bottom-color:color-mix(in srgb,var(--line) 70%,transparent)}
+tbody tr.click:hover td{background:color-mix(in srgb,var(--mineral) 10%,transparent)}
+header.top{background:transparent;position:sticky;top:env(safe-area-inset-top,0px);padding-top:12px;z-index:5}
+body::before{background:transparent}
+header.top>.wrap>.navbar{background:var(--nav);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 40px rgba(14,23,27,.22),inset 0 1px 0 rgba(255,255,255,.12);border-radius:24px;padding:4px 14px 10px}
+.brand{padding-block:10px 8px}
+nav.tabs{gap:4px;padding:4px;background:rgba(255,255,255,.07);border-radius:999px;width:max-content;max-width:100%}
+nav.tabs a{border:0;border-radius:999px;padding:8px 14px;color:rgba(250,240,230,.78)}
+nav.tabs a:hover{background:rgba(255,255,255,.08)}
+nav.tabs a.on{background:rgba(250,240,230,.92);color:var(--petroleo);box-shadow:0 2px 10px rgba(0,0,0,.18),inset 0 1px 0 #fff}
+main{padding-block:24px 80px}
+.head{border-bottom:0;padding-bottom:4px}
+.hero{border-radius:28px;box-shadow:var(--shadow)}
+.mcard{border-radius:var(--r)}
+.mcard .ph{border-radius:var(--r) 0 0 var(--r)}
+.btn{border-radius:999px;background:var(--glass-strong);border:1px solid var(--glass-brd);box-shadow:0 1px 2px rgba(34,52,59,.08),inset 0 1px 0 var(--glass-hi);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:9px 16px;transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{border-color:var(--glass-brd);box-shadow:0 4px 14px rgba(34,52,59,.14),inset 0 1px 0 var(--glass-hi);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.pri{background:linear-gradient(180deg,#2f4852,#22343b);border-color:rgba(255,255,255,.12);color:var(--linho)}
+.btn.amb{background:linear-gradient(180deg,#e2aa5d,#d79a45);border-color:rgba(255,255,255,.4);color:#1f1608}
+.btn.ghost{background:transparent;box-shadow:none;border-color:transparent}
+.btn.sm{padding:5px 11px}
+input,select,textarea{border-radius:12px;background:var(--glass-strong);border:1px solid var(--glass-brd);box-shadow:inset 0 1px 2px rgba(34,52,59,.06)}
+.seg{border-radius:999px;padding:3px;background:var(--glass);border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);gap:2px}
+.seg button{border-radius:999px;padding:7px 14px}
+.seg button.on{background:var(--glass-strong);color:var(--ink);box-shadow:0 2px 8px rgba(34,52,59,.14),inset 0 1px 0 var(--glass-hi)}
+.card{transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(34,52,59,.16),inset 0 1px 0 var(--glass-hi)}
+.card .img{background-color:#fff;border-bottom:1px solid var(--glass-brd)}
+.thumb{border-radius:10px;border-color:var(--glass-brd);background-color:#fff}
+.node .nimg{border-radius:14px;background-color:#fff}
+.node .nimg.cover{background-color:#0e171b}
+.tree .tree{border-left:1px dashed var(--line)}
+.pill{border-radius:999px}
+.scrim{background:rgba(14,23,27,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.drawer{background:var(--glass-strong);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);border-left:1px solid var(--glass-brd);border-radius:28px 0 0 28px;box-shadow:-20px 0 60px rgba(14,23,27,.25)}
+.toast{border-radius:999px;background:var(--nav);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15)}
+.deliver{border-radius:24px;box-shadow:var(--shadow)}
+.gantt .track{border-radius:999px;background:color-mix(in srgb,var(--line) 55%,transparent)}
+.gantt .gseg{border-radius:999px}
+.bar{border-radius:999px}
+.notice{border-radius:14px;background:color-mix(in srgb,var(--mineral) 14%,transparent);border:1px solid color-mix(in srgb,var(--mineral) 25%,transparent)}
+.lightbox{background:rgba(14,23,27,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.lightbox img{border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.stat .val{letter-spacing:-.01em}
+.panel.stat{padding:18px 20px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass,.panel,.tw,.card,.node,.empty,.drawer{background:var(--surface)}}
+@media (max-width:700px){header.top{padding-top:8px} header.top>.wrap>.navbar{border-radius:20px;padding:2px 10px 8px} .mcard .stat{text-align:left!important}.drawer{border-radius:22px 22px 0 0;height:92%;margin-top:auto;width:100%;border-left:0}.scrim{align-items:flex-end}}
+@media (prefers-reduced-motion:reduce){.btn,.card{transition:none}.btn:hover,.card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap"><div class="navbar">
+    <div class="brand">
+      <img src="https://static.wixstatic.com/media/42aab8_09a414e98161417d84ff1fcd751f8dc5~mv2.png" alt="Quick GO Drinks" width="166" height="34">
+      <div class="tag">Fábrica · Mini Go &amp; Tech Go</div>
+      <div class="sp"></div>
+      <div class="who" id="who"></div><span class="role" id="role" hidden></span><button class="btn sm" id="sair" hidden style="background:rgba(255,255,255,.12);color:var(--linho);border-color:rgba(255,255,255,.2)">Sair</button>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Seções"></nav>
+  </div></div>
+</header>
+<div id="gate" hidden><div class="gate-card" role="dialog" aria-labelledby="gate-t">
+  <img src="https://static.wixstatic.com/media/42aab8_09a414e98161417d84ff1fcd751f8dc5~mv2.png" alt="Quick GO Drinks" width="190" height="39">
+  <h1 id="gate-t">Fábrica</h1><p>Digite a senha da sua área para entrar.</p>
+  <form id="fgate" autocomplete="off"><label class="sr" for="gate-pw">Senha</label><input id="gate-pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn amb" type="submit">Entrar</button></form>
+  <div id="gate-msg" role="status" aria-live="polite"></div>
+</div></div>
+<main class="wrap" id="view"><div class="empty">Carregando a base da fábrica…</div></main>
+<div id="layer"></div>
+
+<script>
+(() => {
+"use strict";
+const MODELS = ["MINI", "TECH"];
+const MODEL_NAME = { MINI: "Mini Go", TECH: "Tech Go" };
+const MODEL_IMG = { MINI: { maquina: "https://static.wixstatic.com/media/42aab8_360516f169dc470fb812c088768664d4~mv2.jpg", acabado: "https://static.wixstatic.com/media/42aab8_0a64899527534c408f337c6bf6976380~mv2.jpg", card: "https://static.wixstatic.com/media/42aab8_0a64899527534c408f337c6bf6976380~mv2.jpg" }, TECH: { maquina: "https://static.wixstatic.com/media/42aab8_0069dc3787a248f4acb5991395783d5f~mv2.jpg", acabado: "https://static.wixstatic.com/media/42aab8_0069dc3787a248f4acb5991395783d5f~mv2.jpg", card: "https://static.wixstatic.com/media/42aab8_0069dc3787a248f4acb5991395783d5f~mv2.jpg" } };
+const TIPO = { peca: "Peça", peca_pronta: "Peça pronta", acessorio: "Acessório" };
+const GRUPOS = ["Carcaça/Suportes", "Elétrica", "Eletrônica", "Hidráulica", "Acessórios", "Consumíveis"];
+const GRUPO_COR = { "Carcaça/Suportes": "#d79a45", "Elétrica": "#e6a58f", "Eletrônica": "#6f9ca7", "Hidráulica": "#6e7fb8", "Acessórios": "#a77fa5", "Consumíveis": "#a9cad5", "Mão de obra": "#22343b" };
+const CONJ = {
+  bico: { nome: "Conjunto bico dispensador", img: "https://static.wixstatic.com/media/42aab8_e2221bb4240744a7bcd763cd7bcc523f~mv2.jpg", fn: "Saída dos líquidos dispensados e iluminação da área de serviço.", comp: [["QG-F001", "Fixador do Bico", 1], ["QG-F002", "Trava do Bico", 1], ["QG-C002", "Bico Dispensador", 1], ["QG-EL001", "LED Endereçável", 1], ["QG-C003", "Anel de Acabamento do Bico", 1], ["QG-H001", "Bico Direcionador", 1]] },
+  principal: { nome: "Conjunto principal", img: "https://static.wixstatic.com/media/42aab8_cd203820c03a4e668102209e402aa7a0~mv2.jpg", fn: "Estrutura que sustenta os sistemas hidráulico, elétrico e eletrônico.", comp: [["QG-C001", "Carenagem Principal", 1], ["QG-C004", "Suporte Copo", 1], ["QG-C005", "Suporte Fixação das Bombas", 2], ["QG-H002", "Bomba Diafragma 12VDC", 4]] },
+  frontal: { nome: "Conjunto frontal", img: "https://static.wixstatic.com/media/42aab8_20b4f1b9987f4f6787cb83f584fe8c3a~mv2.jpg", fn: "Abriga os principais componentes de processamento e interface do equipamento.", comp: [["QG-F007", "Parafuso Philips M3", 4], ["QG-EL005", "Placa Controladora", 1], ["QG-EL006", "Raspberry Pi 4", 1], ["QG-EL007", "Cabo USB-C", 1], ["QG-EL008", "Extensor USB", 1], ["QG-EL009", "Adaptador Micro HDMI", 1], ["QG-EL010", "Conector USB-C", 1], ["QG-EL011", "Adaptador Mini HDMI", 1], ["QG-EL012", "Tela Touch 7”", 1], ["QG-C011", "Suporte de Placas", 1]] },
+  tampa: { nome: "Conjunto tampa traseira", img: "https://static.wixstatic.com/media/42aab8_c735bf173fbb41439ee433f9b6b64bf1~mv2.jpg", fn: "Permite acesso técnico e ventilação dos componentes internos.", comp: [["QG-C009", "Tampa ACM Traseira", 1], ["QG-C010", "Protetor Cooler", 1], ["QG-EL002", "Extensor USB", 1], ["QG-EL003", "Interruptor Comunicação", 1], ["QG-EL004", "Cooler 12VDC", 1], ["QG-F005", "Parafuso Inox M4 Cabeça Abaulada Allen", 4], ["QG-F006", "Parafuso Inox M3 Cabeça Cilíndrica Allen", 4]] },
+  conexoes: { nome: "Conjunto de conexões", img: "https://static.wixstatic.com/media/42aab8_127a3bf2605246429c397c43ada1341f~mv2.jpg", fn: "Interface hidráulica e elétrica do equipamento.", comp: [["QG-C006", "Suporte de Conexões", 1], ["QG-H003", "Conector para Mangueira 1/4”", 4], ["QG-E001", "Conector Fonte J4", 1], ["QG-E002", "Botão ON/OFF", 1], ["QG-F003", "Parafuso Abaulado M3 Inox Allen", 2]] },
+};
+// Etapas registradas na produção que alimentam a sugestão de prazo
+const CATEG = { principal: "carcaca", frontal: "eletronica", acabado: "montagem" };
+const CATEG_NOME = { carcaca: "Fabricação da carcaça", eletronica: "Montagem eletrônica", montagem: "Montagem da máquina", frete: "Frete" };
+const STATUS_PRACA = { planejamento: ["Planejamento", "p-info"], compras: ["Compras em andamento", "p-warn"], producao: ["Em produção", "p-warn"], expedida: ["Expedida", "p-ok"], entregue: ["Entregue", "p-ok"], cancelada: ["Cancelada", "p-neu"] };
+const STATUS_COMPRA = { pendente: ["A pedir", "p-bad"], pedido: ["Pedido feito", "p-warn"], recebido: ["Recebido", "p-ok"], cancelado: ["Cancelado", "p-neu"] };
+const DEF_CFG = { maoObra: { MINI: 0, TECH: 0 }, tempos: { carcaca: 5, eletronica: 2, montagem: 2 }, frete: 7, simult: 1, diasUteis: true, combo: { MINI: 2, TECH: 1 } };
+const ZERO_M = () => ({ ...Object.fromEntries(Object.keys(CONJ).map((k) => [k, 0])), acabado: 0, maquina: 0 });
+const PRECO_KEYS = ["custo", "precoAvulso", "link", "fornecedor"];
+const ROLE_NAME = { admin: "Administrador", tecnico: "Montagem Técnica", leitura: "Somente leitura" };
+
+const S = { db: null, assets: null, user: null, role: "leitura", canWrite: false, loaded: { itens: false }, itens: {}, precos: {}, cfg: null, mont: null, compras: {}, movs: [], pracas: {}, links: {}, producao: [], arquivos: null };
+const UI = { view: "inicio", pecasSub: "peca", grupo: "", conj: "", q: "", modo: "cards", estoqueQ: "", estoqueF: "todos", linksModel: "MINI", custoModel: "MINI", praca: null };
+const ADM = () => S.role === "admin";
+const W = () => S.canWrite;
+
+// ---------- utils ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = (v) => { const n = typeof v === "number" ? v : parseFloat(String(v ?? "").replace(",", ".")); return isFinite(n) ? n : 0; };
+const brl = (v) => num(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const fmtN = (v) => { const n = num(v); return Number.isInteger(n) ? String(n) : n.toLocaleString("pt-BR", { maximumFractionDigits: 1 }); };
+const pct = (v) => (v > 0 ? "+" : "") + v.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
+const pad = (n) => String(n).padStart(2, "0");
+const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const today = () => iso(new Date());
+const parseD = (s) => { const [y, m, d] = String(s || today()).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const fmtD = (s) => s ? parseD(s).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).replace(".", "") : "—";
+const fmtDs = (s) => s ? parseD(s).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) : "—";
+function addDays(s, n, uteis) {
+  const d = parseD(s); let left = Math.max(0, Math.round(num(n)));
+  if (!uteis) { d.setDate(d.getDate() + left); return iso(d); }
+  while (left > 0) { d.setDate(d.getDate() + 1); const w = d.getDay(); if (w !== 0 && w !== 6) left--; }
+  return iso(d);
+}
+const maxD = (...a) => a.filter(Boolean).sort().pop();
+const diffDays = (a, b) => Math.round((parseD(b) - parseD(a)) / 864e5);
+const qtyOf = (it, m) => num(m === "MINI" ? it.qtdMini : it.qtdTech);
+const itemOf = (id) => S.itens[id] ? { id, ...S.itens[id], ...(S.precos[id] || {}) } : null;
+const itemsArr = () => Object.keys(S.itens).map(itemOf);
+const cfg = () => { const c = S.cfg || {}; return { ...DEF_CFG, ...c, maoObra: { ...DEF_CFG.maoObra, ...(c.maoObra || {}) }, tempos: { ...DEF_CFG.tempos, ...(c.tempos || {}) }, combo: { ...DEF_CFG.combo, ...(c.combo || {}) } }; };
+const mont = () => { const m = S.mont || {}; return { MINI: { ...ZERO_M(), ...(m.MINI || {}) }, TECH: { ...ZERO_M(), ...(m.TECH || {}) } }; };
+const FOTOS = {"pp-hc-0002":"42aab8_ff2c698be777405db20af5d18612abb0~mv2.jpg","pp-hc-0003":"42aab8_947db0cca62b4b649148af3221ae42d4~mv2.jpg","pp-tla-0002":"42aab8_d7afbbfd2472428ea3fdc309cdda58bc~mv2.jpg","pp-tla-0001":"42aab8_ab2ae45df9364de1b3645723c7ef0d18~mv2.jpg","pp-pcb-0001":"42aab8_83b2343df55c4adfa394debcea1c8d96~mv2.jpg","pp-prt-0001":"42aab8_adbfc7d74633428d96b89273dcb2ee43~mv2.jpg","pp-rtp-0001":"42aab8_0a7361a26d5944dcb5e87f38778d5fbc~mv2.png","pp-sg-0001":"42aab8_66da535ad8064018b03ea8a32cbc3e07~mv2.jpg","pp-cne-0007-f":"42aab8_83e1d589b71449adb247b9461da0110c~mv2.jpg","pp-cne-0007":"42aab8_eac77f1f450d4c6d9959b0cb6f84ad10~mv2.jpg","pp-fnt-0002":"42aab8_bb372b9b09ad45448b576eb9f4cb70a0~mv2.jpg","pp-fnt-0001":"42aab8_4e78c1f2a5094976bd0b859449b69cae~mv2.jpg","pp-adp-hdmi-0001":"42aab8_1b1c13cb5c984a5e8c466aad61d9be66~mv2.jpg","pp-mac-0001":"42aab8_20574994940d45948ac316bd669a0120~mv2.jpg","pp-cb-hdmi-0002":"42aab8_2a82ff4ba3ac42bdb0a9a9f4b9b5fe70~mv2.jpg","pp-cb-usb-0001":"42aab8_2b5a032caab744a3ba951a9aa14d7453~mv2.jpg","pp-cb-usb-0002":"42aab8_82772db34e7a43928cb4e861400d27a9~mv2.jpg","pp-cb-usb-0003":"42aab8_db500f72bad2413381ebf2a82b3c2973~mv2.jpg","pp-cb-usbc-0001":"42aab8_a12d5eba3a934462af6b1f2c65686749~mv2.jpg","pp-cmm-0001":"42aab8_0e3ec9f344c14f58ad7f6a52da4ce61a~mv2.jpg","pp-led-0001":"42aab8_2788c23c4a5f4c8f8b672eff9928e89d~mv2.jpg","co-manp04":"42aab8_d547993b330c454b9fbbd25c5e5dfdcb~mv2.jpg","co-mans201":"42aab8_8d4cfc57efe14b3babcc15b40f924cba~mv2.jpg","pp-bomb-0001":"42aab8_26b6be8faac94108858271f035885d86~mv2.jpg","pp-val-0001":"42aab8_af6b96af3b3f4b4a9f0b77037c37fd4a~mv2.jpg","pp-abu-0404":"42aab8_45f06b68eeb544c8b61bdba034a03b84~mv2.jpg","pp-kre3-0001":"42aab8_9cdbc91e7e3e4b4395863fd488c414a3~mv2.jpg","pp-kk-0003":"42aab8_2447952b2b624cce81e046960cf22768~mv2.jpg","pp-kk-0002":"42aab8_f1007393ed764a1abf9fa744add81e68~mv2.jpg","pp-kk-0001":"42aab8_b6b6ed3f77fd426592a20e2d15967c5c~mv2.jpg","pp-btn-0004":"42aab8_39a48cee86e34225934fe0b646117359~mv2.jpg","pp-btn-0002":"42aab8_d2fafef45b6949fa8220bc59dfeef8d5~mv2.jpg","pp-cne-0004":"42aab8_fc2d6db8894f487ebb48e72d6de5a3d9~mv2.webp","pp-cne-0002":"42aab8_3c0cf40b175f4ebea50c9c3c40b74142~mv2.jpg","pp-pci-0003":"42aab8_2ad4e22169554eb6a86ef7b8ac640f0c~mv2.jpg","pa-acm-0001":"42aab8_1b2c02b45e4749c2bdd32697fc1486d9~mv2.jpg","pa-acm-0002":"42aab8_930c787aac2941e695473f749d7f4529~mv2.jpg","pa-mb-0001":"42aab8_0b78173e204c441e8f75e3d734986bb9~mv2.jpg","pa-mb-0002":"42aab8_da9c04c0fb7748c088eef9235c5dc9a3~mv2.jpg","pa-petg-0001":"42aab8_408b51c322e349d0b1d6731dde36d904~mv2.jpg","pa-petg-0002":"42aab8_2c76445b0f9c4b808059a537b24b9dde~mv2.jpg","pa-petg-0003":"42aab8_6eaf6c968e4d4ddb866b5930e3506d82~mv2.jpg","pa-petg-0004":"42aab8_71d2734d304b43a09d34bd872ec53be0~mv2.jpg","pa-petg-0005":"42aab8_5fcd93d039784e8890dd2c508929f95c~mv2.jpg","pa-petg-0006":"42aab8_495327cbc0f84e56a7cecfc90fcca120~mv2.jpg","pa-petg-0007":"42aab8_f79c558aec0541aeb0f91542b48a7345~mv2.jpg","pa-petg-0008":"42aab8_6e44245a71e54979acc9877fde11c41f~mv2.jpg","pa-petg-0009":"42aab8_1126f3f2b344402cbe97b90eedda8d95~mv2.jpg","pa-petg-0010":"42aab8_360d1eaeefaf4eaf8d0fa919a80501d9~mv2.jpg","pa-petg-0011":"42aab8_cd4c396151a54a1d975dc59396127d29~mv2.jpg","pa-petg-0012":"42aab8_d5ef4c676bdd469a9cb5406134c52167~mv2.jpg","pa-petg-0013":"42aab8_1968918c2cc14601acb77a639467403e~mv2.jpg","pp-bua-0001":"42aab8_3bf612bbf8c3492ca114a8804890acef~mv2.jpg","pp-bua-0002":"42aab8_8c5310de79b14b25a798dd2c8c1e9916~mv2.jpg","pp-esl-0001":"42aab8_9f897b6ad4e44388a21a09bcb3ecf9db~mv2.jpg","pp-esn-0001":"42aab8_23acc2d4d76c4e62b5caded1409441f3~mv2.jpg","pp-ins-0001":"42aab8_40fe5302f772425bba006db48d56c3d0~mv2.jpg","pp-paff-0001":"42aab8_76faf57891cc46e88b1342bab028819c~mv2.jpg","pp-paff-0002":"42aab8_5f6f6bf3d0064733b485073bcaa17909~mv2.jpg","pp-pafi-0001":"42aab8_faf99f43846c40f3ad097278fe989b02~mv2.jpg","pp-pafi-0002":"42aab8_778f5baaec834ed8b2f8af0208401e0f~mv2.jpg","pp-pafi-0003":"42aab8_4c17ce5d32e94584b2637477c0de1b70~mv2.jpg","pp-pafi-0004":"42aab8_3680c28a9904431a90fc78e710274d04~mv2.jpg","pp-pafn-0001":"42aab8_0660eedff5504170a24435df171b7811~mv2.jpg","pp-prc-0001":"42aab8_98491723ccc14f5289777e1ba2d56937~mv2.jpg","ps-acm-0001":"42aab8_e822e56c44204801822f4b17fdc3d386~mv2.jpg","ps-acm-0002":"42aab8_318ef8e628ba42378edfacdeea3a6050~mv2.jpg","ps-acm-0003":"42aab8_fe18d231f8864eb0931f48c980f95051~mv2.jpg","ps-acm-0004":"42aab8_8b4e2b62ba2f415bae19778595f51d8c~mv2.jpg","ps-acm-0005":"42aab8_fe0f999ac12548548d8df145e06263c2~mv2.jpg","ps-acm-0006":"42aab8_b9b8b9a5f667403f83f74be39523ae3a~mv2.jpg","ps-acm-0007":"42aab8_543fd2aec80742e7b394624a233b2f81~mv2.jpg","ps-acm-0008":"42aab8_fe403011f3bc45f9857d99274da361d6~mv2.jpg","ps-acrp3-0001":"42aab8_152da9f363e94145973e0fe1910c6e7d~mv2.jpg","ps-acrp3-0002":"42aab8_002673d4d65f4ffbb02fb45f92469fba~mv2.jpg","ps-acrt8-0001":"42aab8_0603de5526834a8bb5ced9ad8dc73b61~mv2.jpg","ps-petg-0001":"42aab8_672fe22887dd4bed90b8125c48e5a1d7~mv2.jpg","ps-pvc-0001":"42aab8_9137927a165e46feb0736fb4da907348~mv2.jpg","ps-pvc-0002":"42aab8_6c4c1958d03a44bca686f4eb57b7d5cc~mv2.jpg","ps-pvc-0003":"42aab8_710a2221d72944428dfc11fe35c2e6ad~mv2.jpg","ps-pvc-0004":"42aab8_05f364c45cd34a3f9909646fcdc3cf98~mv2.jpg","ps-pvc-0005":"42aab8_77bc0a2c9f7c469380b59f12de4e964c~mv2.jpg","ps-pvc-0006":"42aab8_194e57890a8141d0b58cb9b3f0db7d66~mv2.jpg","ps-pvc-0007":"42aab8_c6479983fb4044b5bcc6dae7d25ac238~mv2.jpg","ps-pvc-0008":"42aab8_ef77ca8f85e046a8912a161adecd1770~mv2.jpg","ps-pvc-0009":"42aab8_c75f1569c4c14c289fd2fcd269f67568~mv2.jpg","ps-pvc-0010":"42aab8_2d63eca345ba4de3b24f262864d48a17~mv2.jpg","ps-pvc-0011":"42aab8_3d4f0a1d9b5c40f5a36a7ee691ef9cbd~mv2.jpg","ps-pvc-0012":"42aab8_a23af0f656114972998d89e544697a2f~mv2.jpg","ps-pvc-0013":"42aab8_63c0b215bfb74beabf5bef1bb405737b~mv2.jpg","ps-pvc-0014":"42aab8_490b1c4c207d418bb9f058dc83f3117a~mv2.jpg","ps-pvc-0015":"42aab8_363e8860622e4d64abd1cf0eafc2fee5~mv2.jpg","ps-pvc-0016":"42aab8_846c6c93c38240f6994bfed9eca833ea~mv2.jpg","pp-pafi-0005":"42aab8_dcd6f9300781402bbcbb9aca5c79f263~mv2.png"};
+const fotoUrl = (it) => !it ? "" : (it.foto && /^(https?:|data:)/.test(it.foto)) ? it.foto : FOTOS[it.id] ? "https://static.wixstatic.com/media/" + FOTOS[it.id] : "";
+const cssUrl = (u) => `url('${String(u).replace(/'/g, "%27")}')`;
+const thumb = (it, cls = "") => { const u = fotoUrl(it); return u ? `<span class="thumb ${cls}" style="background-image:${cssUrl(u)}" role="img" aria-label="${esc(it.nome)}"></span>` : `<span class="thumb none ${cls}">SEM FOTO</span>`; };
+const money = (v) => ADM() ? brl(v) : "";
+
+function toast(msg, err) {
+  const t = document.createElement("div"); t.className = "toast" + (err ? " err" : ""); t.textContent = msg; t.setAttribute("role", "status");
+  document.body.appendChild(t); setTimeout(() => t.remove(), err ? 5000 : 2600);
+}
+async function guard(fn, okMsg) {
+  if (!S.db) { toast("A base de dados não está disponível nesta visualização.", true); return false; }
+  if (!S.canWrite) { toast("Seu acesso é só de leitura.", true); return false; }
+  try { await fn(); if (okMsg) toast(okMsg); return true; }
+  catch (e) {
+    const c = e && e.code;
+    if (c === "invalid_argument" || c === "permissao" || c === "sessao") toast("Seu perfil não tem permissão para essa alteração.", true);
+    else if (c === "quota_exceeded") toast("A base atingiu o limite de registros. Apague movimentações antigas.", true);
+    else toast("Não foi possível salvar agora. Tente de novo em instantes.", true);
+    return false;
+  }
+}
+
+// ---------- preços ----------
+function histOf(id) { const h = (S.precos[id] && S.precos[id].historico) || []; return [...h].sort((a, b) => String(a.d).localeCompare(String(b.d))); }
+function priceAt(id, d) { const h = histOf(id); if (!h.length) return num(S.precos[id]?.custo); let v = num(h[0].v); for (const e of h) { if (e.d <= d) v = num(e.v); else break; } return v; }
+function custoModelo(m) {
+  const c = cfg(); const porGrupo = {}; const porTipo = { peca: 0, peca_pronta: 0, acessorio: 0 }; let total = 0; const linhas = [];
+  for (const it of itemsArr()) {
+    const q = qtyOf(it, m); if (!q) continue;
+    const v = q * num(it.custo); total += v;
+    porGrupo[it.grupo || "Outros"] = (porGrupo[it.grupo || "Outros"] || 0) + v;
+    porTipo[it.tipo] = (porTipo[it.tipo] || 0) + v;
+    linhas.push({ ...it, q, v });
+  }
+  const mo = num(c.maoObra[m]);
+  if (mo) porGrupo["Mão de obra"] = mo;
+  return { total: total + mo, pecas: total, mo, porGrupo, porTipo, linhas: linhas.sort((a, b) => b.v - a.v) };
+}
+function serieModelo(m) {
+  const dates = new Set([today()]);
+  for (const id of Object.keys(S.precos)) for (const e of histOf(id)) if (e.d) dates.add(e.d);
+  const its = itemsArr().filter((i) => qtyOf(i, m));
+  const mo = num(cfg().maoObra[m]);
+  return [...dates].sort().map((d) => ({ d, v: its.reduce((s, i) => s + qtyOf(i, m) * priceAt(i.id, d), 0) + mo }));
+}
+async function savePreco(id, novo, origem, extra = {}) {
+  const cur = S.precos[id] || {}; const old = num(cur.custo); const h = [...(cur.historico || [])];
+  const data = { ...cur, ...extra, custo: num(novo) };
+  if (!h.length) h.push({ d: today(), v: old || num(novo), o: "Inicial" });
+  if (num(novo) !== old) h.push({ d: today(), v: num(novo), ant: old, o: origem });
+  data.historico = h.slice(-60);
+  await S.db.collection("precos").doc(id).set(data); S.precos[id] = data;
+}
+
+// ---------- prazos pelo histórico ----------
+function sugestao() {
+  const out = {};
+  for (const cat of ["carcaca", "eletronica", "montagem"]) {
+    const l = S.producao.filter((p) => p.categoria === cat && num(p.dias) > 0).sort((a, b) => String(b.ts).localeCompare(String(a.ts))).slice(0, 5);
+    out[cat] = l.length ? { v: Math.round((l.reduce((s, p) => s + num(p.dias), 0) / l.length) * 10) / 10, n: l.length } : null;
+  }
+  const fr = Object.values(S.pracas).filter((p) => p.expedidaEm && p.entregueEm).sort((a, b) => String(b.entregueEm).localeCompare(String(a.entregueEm))).slice(0, 5);
+  out.frete = fr.length ? { v: Math.round(fr.reduce((s, p) => s + Math.max(0, diffDays(p.expedidaEm, p.entregueEm)), 0) / fr.length), n: fr.length } : null;
+  return out;
+}
+function temposSugeridos() { const c = cfg(); const s = sugestao(); return { carcaca: s.carcaca ? s.carcaca.v : c.tempos.carcaca, eletronica: s.eletronica ? s.eletronica.v : c.tempos.eletronica, montagem: s.montagem ? s.montagem.v : c.tempos.montagem, frete: s.frete ? s.frete.v : c.frete, s }; }
+function prazoReal(id) { const l = Object.values(S.compras).filter((c) => c.itemId === id && c.status === "recebido" && c.dataPedido && c.recebidoEm); return l.length ? Math.round(l.reduce((s, c) => s + diffDays(c.dataPedido, c.recebidoEm), 0) / l.length) : null; }
+
+// ---------- plano da praça ----------
+function planOne(p, stock, ms) {
+  const c = cfg(); const req = {}; const steps = {};
+  const add = (id, q) => { if (q > 0) req[id] = (req[id] || 0) + q; };
+  const its = itemsArr();
+  for (const m of MODELS) {
+    const n = Math.max(0, Math.round(num(p.qtd && p.qtd[m])));
+    const a = Math.min(n, Math.max(0, ms[m].maquina)); ms[m].maquina -= a; const n1 = n - a;
+    const b = Math.min(n1, Math.max(0, ms[m].acabado)); ms[m].acabado -= b; const n2 = n1 - b;
+    const build = {}; const semiUsed = {};
+    for (const it of its) if (it.tipo === "acessorio") add(it.id, qtyOf(it, m) * n1);
+    for (const k of Object.keys(CONJ)) {
+      const s = Math.min(n2, Math.max(0, ms[m][k] || 0)); ms[m][k] -= s; semiUsed[k] = s; build[k] = n2 - s;
+      for (const it of its) if (it.tipo !== "acessorio" && it.conjunto === k) add(it.id, qtyOf(it, m) * build[k]);
+    }
+    for (const it of its) if (it.tipo !== "acessorio" && !CONJ[it.conjunto]) add(it.id, qtyOf(it, m) * n2);
+    steps[m] = { n, prontas: a, acabados: b, embalar: n1, montar: n2, build, semiUsed };
+  }
+  const inicio = p.dataInicio || today();
+  const comprasP = Object.entries(S.compras).map(([id, v]) => ({ id, ...v })).filter((x) => x.pracaId === p.id && x.status !== "cancelado");
+  const linhas = [];
+  for (const [id, need] of Object.entries(req)) {
+    const it = itemOf(id); if (!it) continue;
+    const have = Math.min(need, Math.max(0, stock[id] || 0)); stock[id] = (stock[id] || 0) - have;
+    const falta = need - have;
+    const cp = comprasP.filter((x) => x.itemId === id && x.status !== "recebido");
+    const previsaoCompra = cp.length ? maxD(...cp.map((x) => x.previsao || addDays(inicio, it.prazo, false))) : null;
+    const acao = falta <= 0 ? "estoque" : it.tipo === "peca" ? "fabricar" : "comprar";
+    const previsao = acao === "comprar" ? (previsaoCompra || addDays(inicio, num(it.prazo), false)) : null;
+    linhas.push({ id, it, need, have, falta, acao, previsao, pedido: cp.length > 0, pedidoStatus: cp.map((x) => x.status) });
+  }
+  linhas.sort((a, b) => (a.it.grupo || "").localeCompare(b.it.grupo || "") || (a.it.codigo || "").localeCompare(b.it.codigo || ""));
+  const comprar = linhas.filter((l) => l.acao === "comprar");
+  const chegada = comprar.length ? maxD(...comprar.map((l) => l.previsao)) : inicio;
+  const t = { carcaca: num(p.tempos?.carcaca ?? c.tempos.carcaca), eletronica: num(p.tempos?.eletronica ?? c.tempos.eletronica), montagem: num(p.tempos?.montagem ?? c.tempos.montagem) };
+  const frete = num(p.frete ?? c.frete); const sim = Math.max(1, Math.round(num(p.simult ?? c.simult) || 1)); const uteis = p.diasUteis ?? c.diasUteis;
+  const uM = MODELS.reduce((s, m) => s + steps[m].montar, 0);
+  const uC = MODELS.reduce((s, m) => s + steps[m].build.principal, 0);
+  const uE = MODELS.reduce((s, m) => s + steps[m].build.frontal, 0);
+  const dur = (u, d) => u > 0 ? Math.ceil((u / sim) * d) : 0;
+  const carcIni = inicio, carcFim = addDays(carcIni, dur(uC, t.carcaca), uteis);
+  const eletIni = chegada, eletFim = addDays(eletIni, dur(uE, t.eletronica), uteis);
+  const montIni = maxD(carcFim, eletFim, chegada), montFim = addDays(montIni, dur(uM, t.montagem), uteis);
+  const freteIni = montFim, entrega = addDays(freteIni, frete, false);
+  const fases = [
+    { nome: "Chegada das peças compradas", ini: inicio, fim: chegada, cor: "#6f9ca7", info: comprar.length ? comprar.length + " itens a comprar" : "Tudo em estoque" },
+    { nome: "Fabricação da carcaça", ini: carcIni, fim: carcFim, cor: "#d79a45", info: uC + " un × " + fmtN(t.carcaca) + " d" },
+    { nome: "Montagem eletrônica", ini: eletIni, fim: eletFim, cor: "#6e7fb8", info: uE + " un × " + fmtN(t.eletronica) + " d" },
+    { nome: "Montagem da máquina", ini: montIni, fim: montFim, cor: "#22343b", info: uM + " un × " + fmtN(t.montagem) + " d" },
+    { nome: "Frete até o franqueado", ini: freteIni, fim: entrega, cor: "#a77fa5", info: fmtN(frete) + " dias corridos" },
+  ];
+  const custoCompra = comprar.reduce((s, l) => s + l.falta * num(l.it.custo), 0);
+  const custoTotal = MODELS.reduce((s, m) => s + steps[m].n * custoModelo(m).total, 0);
+  return { steps, linhas, comprar, estoque: linhas.filter((l) => l.have > 0), fabricar: linhas.filter((l) => l.acao === "fabricar"), chegada, entrega, fases, inicio, custoCompra, custoTotal, t, frete, sim, uteis };
+}
+function allPlans() {
+  const stock = {}; for (const [id, it] of Object.entries(S.itens)) stock[id] = Math.max(0, num(it.estoque));
+  const ms = mont(); const plans = {};
+  const list = Object.entries(S.pracas).map(([id, v]) => ({ id, ...v })).sort((a, b) => String(a.criadoEm || "").localeCompare(String(b.criadoEm || "")));
+  for (const p of list) {
+    const ativa = !p.baixado && !["cancelada", "expedida", "entregue"].includes(p.status);
+    plans[p.id] = ativa ? planOne(p, stock, ms) : planOne(p, { ...stock }, JSON.parse(JSON.stringify(ms)));
+    plans[p.id].ativa = ativa;
+  }
+  return plans;
+}
+const emAndamento = (p) => !["entregue", "cancelada"].includes(p.status);
+
+// ---------- shell ----------
+const TABS_ALL = [["inicio", "Visão geral", "all"], ["pecas", "Peças", "all"], ["montagem", "Montagem", "all"], ["acessorios", "Acessórios", "admin"], ["custos", "Custos & preços", "admin"], ["estoque", "Estoque", "all"], ["links", "Links de compra", "admin"], ["pracas", "Praças", "all"], ["frota", "Frota", "admin"], ["manuais", "Manuais", "all"]];
+const tabs = () => TABS_ALL.filter((t) => t[2] === "all" || ADM()).map((t) => [t[0], t[0] === "estoque" && ADM() ? "Estoque & compras" : t[0] === "pracas" ? (ADM() ? "Praças" : "Praças em andamento") : t[1]]);
+function renderTabs() { $("#tabs").innerHTML = tabs().map(([k, n]) => `<a href="#${k}" class="${UI.view === k ? "on" : ""}">${n}</a>`).join(""); }
+function route() {
+  const h = (location.hash || "#inicio").slice(1);
+  const [v, id] = h.split("-p-");
+  UI.view = tabs().some((t) => t[0] === v) ? v : "inicio";
+  UI.praca = v === "pracas" && id ? id : null;
+  render(); window.scrollTo(0, 0);
+}
+let rq = 0;
+function schedule() { if (rq) return; rq = requestAnimationFrame(() => { rq = 0; render(); }); }
+function render() {
+  if (!tabs().some((t) => t[0] === UI.view)) UI.view = "inicio";
+  renderTabs();
+  $("#view").classList.toggle("largo", UI.view === "frota");
+  if (UI.view === "frota") return vFrota();
+  if (window.QGFrota) window.QGFrota.parar();
+  const ae = document.activeElement; const fid = ae && ae.id && $("#view").contains(ae) ? ae.id : null;
+  const sel = fid && "selectionStart" in ae ? [ae.selectionStart, ae.selectionEnd] : null;
+  const V = { inicio: vInicio, pecas: vPecas, montagem: vMontagem, acessorios: vAcess, custos: vCustos, estoque: vEstoque, links: vLinks, pracas: vPracas, manuais: vManuais }[UI.view];
+  if (UI.view !== "manuais" && !S.loaded.itens) { $("#view").innerHTML = S.db === false ? noDb() : `<div class="empty">Carregando a base da fábrica…</div>`; return; }
+  $("#view").innerHTML = V();
+  if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); if (sel) try { el.setSelectionRange(sel[0], sel[1]); } catch (_) {} } }
+}
+// ---------- frota (só administradores): pátio 3D e mapa das microfranquias ----------
+const FROTA_BASE = "https://cdn.jsdelivr.net/gh/codigomalibu/quick-go-fabrica@main";
+const FROTA_JS = ["https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/geometries/RoundedBoxGeometry.js", FROTA_BASE + "/frota/modelos.js", FROTA_BASE + "/frota/brasil.js", FROTA_BASE + "/frota/frota.js"];
+let frotaCarga = null;
+function carregarJs(src) { return new Promise((ok, erro) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => erro(new Error(src)); document.head.appendChild(s); }); }
+function vFrota() {
+  const v = $("#view");
+  if (!ADM()) { location.hash = "#inicio"; return; }
+  if (!S.db) { v.innerHTML = noDb(); return; }
+  if (window.QGFrota) { window.QGFrota.montar(v, { db: S.db, canWrite: S.canWrite && ADM(), user: S.user }); return; }
+  if (!v.querySelector(".frota-carregando")) v.innerHTML = `<div class="empty frota-carregando"><h2>Frota</h2><p class="lead" style="margin:8px auto">Carregando o pátio 3D das microfranquias…</p></div>`;
+  if (!frotaCarga) frotaCarga = (async () => { for (const s of FROTA_JS) await carregarJs(s); })()
+    .then(() => { if (UI.view === "frota") render(); })
+    .catch((e) => { console.error("Frota:", e); frotaCarga = null; if (UI.view === "frota") v.innerHTML = `<div class="empty"><h2>Não foi possível abrir a frota</h2><p class="lead" style="margin:8px auto">O 3D não carregou. Verifique a conexão e abra a aba de novo.</p></div>`; });
+}
+function noDb() { return `<div class="empty"><h2>Base indisponível</h2><p class="lead" style="margin:8px auto">Não foi possível carregar os dados agora. Recarregue a página.</p></div>`; }
+
+// ---------- views ----------
+function statusEstoque(it) {
+  const e = num(it.estoque), mn = num(it.minimo);
+  if (e <= 0) return ["Zerado", "p-bad"];
+  if (mn && e < mn) return ["Abaixo do mínimo", "p-warn"];
+  return ["OK", "p-ok"];
+}
+function costBar(x) {
+  const t = Object.values(x.porGrupo).reduce((s, v) => s + v, 0) || 1;
+  const ent = Object.entries(x.porGrupo).sort((a, b) => b[1] - a[1]);
+  return `<div class="bar" style="margin-top:14px" role="img" aria-label="Composição do custo">${ent.map(([g, v]) => `<span title="${esc(g)}: ${brl(v)}" style="width:${(v / t) * 100}%;background:${GRUPO_COR[g] || "#999"}"></span>`).join("")}</div>
+  <div class="legend">${ent.map(([g, v]) => `<span><i style="background:${GRUPO_COR[g] || "#999"}"></i>${esc(g)} ${brl(v)}</span>`).join("")}</div>`;
+}
+function vInicio() {
+  const its = itemsArr(); const adm = ADM();
+  const baixo = its.filter((i) => statusEstoque(i)[0] !== "OK" && (qtyOf(i, "MINI") || qtyOf(i, "TECH")));
+  const abertas = Object.values(S.compras).filter((c) => c.status === "pendente" || c.status === "pedido");
+  const plans = allPlans();
+  const pr = Object.entries(S.pracas).map(([id, v]) => ({ id, ...v })).filter(emAndamento).sort((a, b) => String(b.criadoEm).localeCompare(String(a.criadoEm)));
+  const ms = mont(); const c = cfg(); const ts = temposSugeridos();
+  const cm = custoModelo("MINI"), ct = custoModelo("TECH");
+  const sim = planOne({ id: "_s", qtd: c.combo, dataInicio: today(), tempos: ts, frete: ts.frete }, Object.fromEntries(its.map((i) => [i.id, Math.max(0, num(i.estoque))])), mont());
+  const card = (m, x) => {
+    const n = its.filter((i) => qtyOf(i, m)).length;
+    return `<div class="panel mcard"><div class="ph" style="background-image:url('${MODEL_IMG[m].card}')" role="img" aria-label="${MODEL_NAME[m]}"></div>
+      <div class="bd"><div class="eyebrow">${m === "MINI" ? "Tela 7” · 4 vias" : "Tela 10” · 6 vias"}</div><h2>${MODEL_NAME[m]}</h2>
+      <div class="row" style="justify-content:space-between;align-items:flex-end;margin-top:12px">
+        ${adm ? `<div class="stat"><div class="lbl">Custo por máquina</div><div class="val">${brl(x.total)}</div><div class="sub">${x.mo ? "inclui " + brl(x.mo) + " de mão de obra" : "peças e acessórios · sem mão de obra"}</div></div>` : `<div class="stat"><div class="lbl">Componentes</div><div class="val">${n}</div><div class="sub">itens diferentes na máquina</div></div>`}
+        <div class="stat" style="text-align:right"><div class="lbl">Prontas</div><div class="val">${ms[m].maquina}</div><div class="sub">${ms[m].acabado} montada(s)</div></div>
+      </div>${adm ? costBar(x) : `<div class="legend">${Object.entries(CONJ).map(([k, v]) => `<span>${esc(v.nome.replace("Conjunto ", ""))}: ${ms[m][k] || 0} em estoque</span>`).join("")}</div>`}</div></div>`;
+  };
+  return `
+  <section class="hero"><div class="in"><div class="eyebrow">Fábrica Quick GO · Campo Grande</div><h1>Do componente ao bar compacto no evento</h1><p>${adm ? "Peças, montagem, custos, estoque e compras das máquinas Mini Go e Tech Go, e o prazo de entrega de cada nova praça." : "Peças, montagem, estoque e manuais das máquinas Mini Go e Tech Go, e as praças em produção."}</p>${adm ? `<a class="btn amb" href="#pracas">Solicitar nova praça</a>` : `<a class="btn amb" href="#manuais">Abrir manuais</a>`}</div></section>
+  <div class="grid g2">${card("MINI", cm)}${card("TECH", ct)}</div>
+  <div class="grid g4 sec">
+    <div class="panel stat"><div class="lbl">Itens cadastrados</div><div class="val">${its.length}</div><div class="sub">${its.filter((i) => i.tipo === "peca").length} peças · ${its.filter((i) => i.tipo === "peca_pronta").length} peças prontas · ${its.filter((i) => i.tipo === "acessorio").length} acessórios</div></div>
+    <div class="panel stat"><div class="lbl">Sem estoque ou abaixo do mínimo</div><div class="val" style="color:${baixo.length ? "var(--bad)" : "var(--ok)"}">${baixo.length}</div><div class="sub"><a class="lk" href="#estoque">Ver estoque</a></div></div>
+    ${adm ? `<div class="panel stat"><div class="lbl">Compras em aberto</div><div class="val">${abertas.length}</div><div class="sub">${brl(abertas.reduce((s, x) => s + num(x.qtd) * num(x.custoUnit), 0))} a receber</div></div>` : `<div class="panel stat"><div class="lbl">Praças em andamento</div><div class="val">${pr.length}</div><div class="sub"><a class="lk" href="#pracas">Ver praças</a></div></div>`}
+    ${adm ? `<div class="panel stat"><div class="lbl">Prazo sugerido p/ nova praça</div><div class="val">${diffDays(today(), sim.entrega)} dias</div><div class="sub">${ts.s.carcaca || ts.s.eletronica || ts.s.montagem ? "pelo tempo real das últimas máquinas" : "tempos padrão · sem histórico ainda"}</div></div>` : `<div class="panel stat"><div class="lbl">Produções registradas</div><div class="val">${S.producao.length}</div><div class="sub">registre cada etapa na Montagem</div></div>`}
+  </div>
+  <div class="sec"><div class="sech"><h2>Praças em andamento</h2><a class="lk" href="#pracas">${adm ? "Todas as praças" : "Ver detalhes"}</a></div>
+    ${pr.length ? `<div class="tw"><table><thead><tr><th>Praça</th><th>Franqueado</th><th>Máquinas</th><th>Status</th>${adm ? '<th class="n">A comprar</th>' : ""}<th>Peças chegam</th><th>Entrega prevista</th></tr></thead><tbody>
+      ${pr.map((p) => { const pl = plans[p.id]; const st = STATUS_PRACA[p.status] || STATUS_PRACA.planejamento; return `<tr class="click" data-go="#pracas-p-${p.id}"><td><b>${esc(p.cidade)}</b></td><td>${esc(p.franqueado || "—")}</td><td class="small">${MODELS.map((m) => num(p.qtd?.[m]) + " " + MODEL_NAME[m]).join(" + ")}</td><td><span class="pill ${st[1]}">${st[0]}</span></td>${adm ? `<td class="n">${pl.comprar.length}</td>` : ""}<td>${fmtD(pl.chegada)}</td><td><b>${fmtD(pl.entrega)}</b></td></tr>`; }).join("")}
+    </tbody></table></div>` : `<div class="empty">Nenhuma praça em andamento.${adm ? ` Use <b>Solicitar nova praça</b> para planejar as ${c.combo.MINI + c.combo.TECH} máquinas de uma nova unidade.` : ""}</div>`}
+  </div>
+  <div class="sec"><div class="sech"><div><div class="eyebrow">Manual Técnico · Revisão 01</div><h2>Arquitetura do equipamento</h2></div><a class="lk" href="#manuais">Abrir manuais</a></div>
+    <div class="explode">
+      <figure data-zoom="https://static.wixstatic.com/media/42aab8_23e0035616d74a2bb872b599b5c06aea~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_23e0035616d74a2bb872b599b5c06aea~mv2.jpg" alt="Vista explodida geral" loading="lazy"><figcaption>Vista explodida geral</figcaption></figure>
+      ${Object.values(CONJ).map((k) => `<figure data-zoom="${k.img}"><img src="${k.img}" alt="${esc(k.nome)}" loading="lazy"><figcaption>${esc(k.nome.replace("Conjunto ", ""))}</figcaption></figure>`).join("")}
+      <figure data-zoom="https://static.wixstatic.com/media/42aab8_8d2280b0ae9341fdb858c21b264d44c4~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_8d2280b0ae9341fdb858c21b264d44c4~mv2.jpg" alt="Placa controladora" loading="lazy"><figcaption>Placa controladora</figcaption></figure>
+      <figure data-zoom="https://static.wixstatic.com/media/42aab8_f011486fd75241d78456e6a2edb3b578~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_f011486fd75241d78456e6a2edb3b578~mv2.jpg" alt="Raspberry Pi 4 e conexões" loading="lazy"><figcaption>Raspberry Pi 4</figcaption></figure>
+    </div>
+  </div>`;
+}
+
+const conjNome = (i) => CONJ[i.conjunto]?.nome.replace("Conjunto ", "") || (i.tipo === "acessorio" ? "Vai junto com a máquina" : "Montagem final");
+function itemCards(list) {
+  if (!list.length) return `<div class="empty">Nenhum item aqui ainda.${ADM() ? " Use o botão de novo item para cadastrar." : ""}</div>`;
+  return `<div class="cards">${list.map((i) => { const st = statusEstoque(i); const u = fotoUrl(i); return `<div class="card" data-edit="${i.id}" role="button" tabindex="0" aria-label="${esc(i.codigo + " " + i.nome)}"><div class="img ${u ? "" : "none"}" ${u ? `style="background-image:${cssUrl(u)}"` : ""}>${u ? "" : "QG"}</div><div class="bd"><span class="code muted">${esc(i.codigo)}${i.qgRef ? " · " + esc(i.qgRef) : ""}</span><span class="nm">${esc(i.nome)}</span><span class="small muted">${esc(conjNome(i))} · Mini ${fmtN(i.qtdMini) || 0} · Tech ${fmtN(i.qtdTech) || 0}</span><div class="ft">${ADM() ? `<span class="pr">${brl(i.custo)}</span>` : `<span class="small muted">Estoque</span>`}${W() ? `<span class="stk"><button class="btn sm" data-step="${i.id}|-1" aria-label="Tirar 1 do estoque">−</button><b class="pill ${st[1]}">${fmtN(i.estoque)}</b><button class="btn sm" data-step="${i.id}|1" aria-label="Somar 1 ao estoque">+</button></span>` : `<span class="pill ${st[1]}">${fmtN(i.estoque)} em est.</span>`}</div></div></div>`; }).join("")}</div>`;
+}
+function itemTable(list, opts = {}) {
+  if (!list.length) return `<div class="empty">Nenhum item aqui ainda.</div>`;
+  const adm = ADM();
+  return `<div class="tw"><table><thead><tr><th></th><th>Código</th><th>Descrição</th><th>Conjunto</th><th>Local</th>${opts.fab ? "<th>Maquinário · MP</th>" : ""}${adm ? '<th class="n">Custo</th>' : ""}<th class="n">Mini</th><th class="n">Tech</th>${adm && opts.avulso ? '<th class="n">Avulso</th>' : ""}<th class="n">Estoque</th><th class="n">Prazo</th>${adm ? "<th>Compra</th>" : ""}</tr></thead><tbody>
+  ${list.map((i) => { const st = statusEstoque(i); return `<tr class="click" data-edit="${i.id}"><td class="ph">${thumb(i)}</td><td class="code">${esc(i.codigo)}</td><td>${esc(i.nome)}${i.dim ? ` <span class="muted small">· ${esc(i.dim)}</span>` : ""}</td><td class="small">${esc(conjNome(i))}</td><td class="code muted">${esc(i.local || "—")}</td>${opts.fab ? `<td class="small">${esc(i.maq || "—")}${i.mp ? ` · <span class="code">${esc(i.mp)}</span>` : ""}</td>` : ""}${adm ? `<td class="n">${brl(i.custo)}</td>` : ""}<td class="n">${fmtN(i.qtdMini) || "—"}</td><td class="n">${fmtN(i.qtdTech) || "—"}</td>${adm && opts.avulso ? `<td class="n">${num(i.precoAvulso) ? brl(i.precoAvulso) : "—"}</td>` : ""}<td class="n"><span class="pill ${st[1]}">${fmtN(i.estoque)}</span></td><td class="n">${i.tipo === "peca" ? '<span class="muted small">fabricação</span>' : fmtN(i.prazo) + " d"}</td>${adm ? `<td>${i.link ? `<a class="lk small" href="${esc(i.link)}" target="_blank" rel="noopener">Abrir</a>` : '<span class="muted small">—</span>'}</td>` : ""}</tr>`; }).join("")}
+  </tbody></table></div>`;
+}
+function filterItems(list) {
+  const q = UI.q.trim().toLowerCase();
+  return list.filter((i) => (!UI.grupo || i.grupo === UI.grupo) && (!UI.conj || i.conjunto === UI.conj) && (!q || (i.codigo + " " + i.nome + " " + (i.local || "") + " " + (i.qgRef || "")).toLowerCase().includes(q)))
+    .sort((a, b) => (a.codigo || "").localeCompare(b.codigo || ""));
+}
+function toolbar(groups, withConj) {
+  return `<div class="row" style="margin-bottom:16px"><input id="q" type="search" placeholder="Buscar código, descrição ou local" value="${esc(UI.q)}" style="flex:1;min-width:200px">
+  ${groups.length ? `<select id="grupo" aria-label="Grupo"><option value="">Todos os grupos</option>${groups.map((g) => `<option ${UI.grupo === g ? "selected" : ""}>${esc(g)}</option>`).join("")}</select>` : ""}
+  ${withConj ? `<select id="conj" aria-label="Conjunto"><option value="">Todos os conjuntos</option>${Object.entries(CONJ).map(([k, v]) => `<option value="${k}" ${UI.conj === k ? "selected" : ""}>${esc(v.nome.replace("Conjunto ", ""))}</option>`).join("")}</select>` : ""}
+  <div class="seg" aria-label="Visualização"><button data-modo="cards" class="${UI.modo === "cards" ? "on" : ""}">Galeria</button><button data-modo="tabela" class="${UI.modo === "tabela" ? "on" : ""}">Tabela</button></div></div>`;
+}
+function vPecas() {
+  if (UI.pecasSub === "acessorio") UI.pecasSub = "peca";
+  const all = itemsArr().filter((i) => i.tipo === UI.pecasSub);
+  const list = filterItems(all);
+  const groups = [...new Set(all.map((i) => i.grupo).filter(Boolean))].sort();
+  const cnt = (t) => itemsArr().filter((i) => i.tipo === t).length;
+  const subs = [["peca", "Peça"], ["peca_pronta", "Peça pronta"]];
+  return `<div class="head"><div><div class="eyebrow">Produção · Peças</div><h1>${{ peca: "Peças fabricadas", peca_pronta: "Peças prontas", acessorio: "Acessórios" }[UI.pecasSub] || "Peças"}</h1><p class="lead">${UI.pecasSub === "peca" ? "Feitas na fábrica a partir de matéria-prima, em router CNC, laser e impressão 3D. Formam a carenagem e os suportes." : UI.pecasSub === "acessorio" ? "Itens que seguem com a máquina, por fora dela: case, proveta, seringa e porta-copo." : "Compradas prontas de fornecedores e montadas dentro da máquina: eletrônica, elétrica, hidráulica e fixadores."}</p></div>
+  <div class="row"><div class="seg">${subs.map(([k, n]) => `<button data-sub="${k}" class="${UI.pecasSub === k ? "on" : ""}">${n} · ${cnt(k)}</button>`).join("")}</div>
+  ${ADM() ? `<button class="btn pri" data-new="${UI.pecasSub}">Nova ${UI.pecasSub === "peca" ? "peça" : "peça pronta"}</button>` : ""}</div></div>
+  ${toolbar(groups, UI.pecasSub !== "acessorio")}
+  ${UI.modo === "cards" ? itemCards(filterItems(itemsArr().filter((i) => i.tipo === UI.pecasSub))) : itemTable(filterItems(itemsArr().filter((i) => i.tipo === UI.pecasSub)), { fab: UI.pecasSub === "peca" })}
+  <p class="muted small" style="margin-top:10px">${list.length} de ${all.length} itens. ${ADM() ? "Clique num item para editar custo, quantidades, estoque, prazo, link e foto." : W() ? "Clique num item para ver detalhes e atualizar o estoque." : "Clique num item para ver os detalhes."}</p>`;
+}
+function vAcess() {
+  const all = itemsArr().filter((i) => i.tipo === "acessorio");
+  const list = filterItems(all);
+  const kit = (m) => all.filter((i) => qtyOf(i, m)).reduce((s, i) => s + qtyOf(i, m) * num(i.custo), 0);
+  return `<div class="head"><div><div class="eyebrow">Produção · Acessórios</div><h1>Acessórios</h1><p class="lead">Itens comprados que seguem com a máquina, por fora dela: case, proveta, seringa e porta-copo. O franqueado também pode comprá-los avulsos.</p></div>
+  ${W() ? `<button class="btn pri" data-new="acessorio">Novo acessório</button>` : ""}</div>
+  <div class="grid g2" style="margin-bottom:18px">${MODELS.map((m) => `<div class="panel stat"><div class="lbl">Kit de acessórios · ${MODEL_NAME[m]}</div><div class="val">${brl(kit(m))}</div><div class="row" style="margin-top:10px;gap:6px">${all.filter((i) => qtyOf(i, m)).map((i) => `<span title="${esc(fmtN(qtyOf(i, m)) + "× " + i.nome)}">${thumb(i)}</span>`).join("") || '<span class="sub">Nenhum acessório vinculado</span>'}</div></div>`).join("")}</div>
+  ${toolbar([], false)}
+  ${UI.modo === "cards" ? itemCards(list) : itemTable(list, { avulso: true })}`;
+}
+
+function vMontagem() {
+  const ms = mont(); const its = itemsArr(); const adm = ADM();
+  const tree = (m) => {
+    const parts = (k) => its.filter((i) => i.tipo !== "acessorio" && i.conjunto === k && qtyOf(i, m));
+    const acc = its.filter((i) => i.tipo === "acessorio" && qtyOf(i, m));
+    const loose = its.filter((i) => i.tipo !== "acessorio" && !CONJ[i.conjunto] && qtyOf(i, m));
+    const sum = (l) => l.reduce((s, i) => s + qtyOf(i, m) * num(i.custo), 0);
+    const plist = (l) => `<details class="parts"><summary>${l.length} itens</summary><div class="tw" style="margin-top:8px"><table><tbody>${l.map((i) => `<tr class="click" data-edit="${i.id}"><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="n">${fmtN(qtyOf(i, m))}×</td>${adm ? `<td class="n">${brl(qtyOf(i, m) * num(i.custo))}</td>` : ""}<td class="n"><span class="pill ${statusEstoque(i)[1]}">${fmtN(i.estoque)} em est.</span></td></tr>`).join("")}</tbody></table></div></details>`;
+    const ctr = (k) => `<span class="counter">${adm ? `<button class="btn sm" data-mc="${m}|${k}|-1" aria-label="Diminuir">−</button>` : ""}<b>${ms[m][k] || 0}</b>${adm ? `<button class="btn sm" data-mc="${m}|${k}|1" aria-label="Aumentar">+</button>` : ""}<span class="small muted">em estoque</span></span>`;
+    const prod = (k, label) => W() ? `<button class="btn sm pri" data-produce="${m}|${k}">${label}</button>` : "";
+    const val = (v) => adm ? `<b>${brl(v)}</b>` : "";
+    const mosaic = (l) => `<div class="nimg mosaic">${l.slice(0, 4).map((i) => `<span style="background-image:${cssUrl(fotoUrl(i))}"></span>`).join("")}</div>`;
+    const acab = Object.keys(CONJ).reduce((s, k) => s + sum(parts(k)), 0) + sum(loose);
+    return `<ul class="tree"><li>
+      <div class="node"><div class="nimg cover" style="background-image:url('${MODEL_IMG[m].maquina}')"></div><div><div class="eyebrow">Máquina</div><div class="nm">${MODEL_NAME[m]} completa</div><div class="muted small">Produto acabado + case e acessórios, pronta para o frete</div></div><div class="act">${val(acab + sum(acc))}${ctr("maquina")}${prod("maquina", "Fechar 1 máquina")}</div></div>
+      <ul class="tree">
+        <li><div class="node">${mosaic(acc)}<div><div class="eyebrow">Acessórios</div><div class="nm">Kit externo</div>${plist(acc)}</div><div class="act">${val(sum(acc))}</div></div></li>
+        <li><div class="node"><div class="nimg ${m === "MINI" ? "" : "cover"}" style="background-image:url('${MODEL_IMG[m].acabado}')"></div><div><div class="eyebrow">Produto acabado</div><div class="nm">${MODEL_NAME[m]} montada</div><div class="muted small">Os cinco conjuntos do Manual Técnico unidos e testados${loose.length ? ", mais itens da montagem final" : ""}</div>${loose.length ? plist(loose) : ""}</div><div class="act">${val(acab)}${ctr("acabado")}${prod("acabado", "Montar 1")}</div></div>
+          <ul class="tree">${Object.entries(CONJ).map(([k, v]) => `<li><div class="node"><div class="nimg" data-zoom="${v.img}" style="background-image:url('${v.img}');cursor:zoom-in"></div><div><div class="eyebrow">Produto semiacabado</div><div class="nm">${esc(v.nome)}</div><div class="muted small">${esc(v.fn)}</div>${plist(parts(k))}</div><div class="act">${val(sum(parts(k)))}${ctr(k)}${prod(k, "Produzir 1")}</div></div></li>`).join("")}</ul>
+        </li>
+      </ul></li></ul>`;
+  };
+  const hist = [...S.producao].sort((a, b) => String(b.ts).localeCompare(String(a.ts))).slice(0, 15);
+  const sg = sugestao();
+  return `<div class="head"><div><div class="eyebrow">Produção · Montagem</div><h1>Montagem</h1><p class="lead">Estrutura de cada modelo em três níveis, seguindo os conjuntos do Manual Técnico. <b>Produzir</b> dá baixa nos componentes do nível de baixo, soma uma unidade ao estoque do nível e registra quantos dias a etapa levou.</p></div></div>
+  <div class="grid g2">${MODELS.map((m) => `<div class="panel"><div class="eyebrow">${m}</div><h2>${MODEL_NAME[m]}</h2>${tree(m)}</div>`).join("")}</div>
+  <div class="grid g2 sec">
+    <div><div class="sech"><h2>Tempo real das últimas etapas</h2></div>
+      <div class="grid g4" style="grid-template-columns:repeat(3,minmax(0,1fr))">${["carcaca", "eletronica", "montagem"].map((k) => `<div class="panel stat"><div class="lbl">${CATEG_NOME[k]}</div><div class="val">${sg[k] ? fmtN(sg[k].v) + " d" : "—"}</div><div class="sub">${sg[k] ? "média das últimas " + sg[k].n : "sem registro ainda"}</div></div>`).join("")}</div>
+      <p class="muted small" style="margin-top:8px">Carcaça vem do conjunto principal, eletrônica do conjunto frontal e montagem do produto acabado. Esses tempos alimentam a sugestão de prazo das novas praças.</p></div>
+    <div><div class="sech"><h2>Produções registradas</h2></div>
+      ${hist.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Modelo</th><th>Etapa</th><th class="n">Dias</th></tr></thead><tbody>${hist.map((p) => `<tr><td class="small">${fmtDs(p.data)}</td><td>${esc(MODEL_NAME[p.modelo] || p.modelo)}</td><td class="small">${esc(p.etapa === "acabado" ? "Produto acabado" : p.etapa === "maquina" ? "Máquina completa" : CONJ[p.etapa]?.nome || p.etapa)}</td><td class="n">${fmtN(p.dias)}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">Ao produzir um conjunto ou montar uma máquina, o tempo gasto aparece aqui.</div>`}
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:12px">A divisão das peças entre os conjuntos é uma sugestão feita a partir das descrições do Manual Técnico.${adm ? " Ajuste o conjunto de cada peça na ficha dela." : ""}</p>`;
+}
+
+function lineChart(series) {
+  const Wd = 640, H = 220, L = 70, R = 16, T = 14, B = 28;
+  const all = series.flatMap((s) => s.pts);
+  if (!all.length) return "";
+  const dates = [...new Set(all.map((p) => p.d))].sort();
+  let lo = Math.min(...all.map((p) => p.v)), hi = Math.max(...all.map((p) => p.v));
+  if (hi - lo < 1) { lo = lo * 0.95; hi = hi * 1.05 || 1; } else { const pd = (hi - lo) * 0.15; lo -= pd; hi += pd; }
+  const x = (d) => dates.length === 1 ? (L + Wd - R) / 2 : L + (dates.indexOf(d) / (dates.length - 1)) * (Wd - L - R);
+  const y = (v) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+  const ticks = [0, 1, 2, 3].map((k) => lo + ((hi - lo) * k) / 3);
+  return `<svg class="chart" viewBox="0 0 ${Wd} ${H}" role="img" aria-label="Custo por máquina ao longo do tempo">
+    <g class="grid">${ticks.map((t) => `<line x1="${L}" x2="${Wd - R}" y1="${y(t)}" y2="${y(t)}"/><text x="${L - 8}" y="${y(t) + 3}" text-anchor="end">${Math.round(t).toLocaleString("pt-BR")}</text>`).join("")}</g>
+    <text x="${L}" y="${H - 8}">${fmtDs(dates[0])}</text>${dates.length > 1 ? `<text x="${Wd - R}" y="${H - 8}" text-anchor="end">${fmtDs(dates[dates.length - 1])}</text>` : ""}
+    ${series.map((s) => `<polyline fill="none" stroke="${s.cor}" stroke-width="2.2" points="${s.pts.map((p) => x(p.d) + "," + y(p.v)).join(" ")}"/>${s.pts.map((p, i) => `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${i === s.pts.length - 1 ? 4 : 2.5}" fill="${s.cor}"><title>${s.nome} ${fmtDs(p.d)}: ${brl(p.v)}</title></circle>`).join("")}`).join("")}
+  </svg><div class="legend">${series.map((s) => `<span><i style="background:${s.cor}"></i>${s.nome} · ${brl(s.pts[s.pts.length - 1].v)}</span>`).join("")}</div>`;
+}
+function vCustos() {
+  const m = UI.custoModel; const x = custoModelo(m); const o = custoModelo(m === "MINI" ? "TECH" : "MINI"); const c = cfg();
+  const maxG = Math.max(...Object.values(x.porGrupo), 1);
+  const series = MODELS.map((k, i) => ({ nome: MODEL_NAME[k], cor: i ? "#d79a45" : "#6f9ca7", pts: serieModelo(k) }));
+  const varItens = itemsArr().map((i) => { const h = histOf(i.id); if (h.length < 2) return null; const a = num(h[0].v), z = num(h[h.length - 1].v); return { ...i, a, z, d: h[h.length - 1].d, var: a ? ((z - a) / a) * 100 : 0, h }; }).filter(Boolean).sort((p, q) => Math.abs(q.var) - Math.abs(p.var));
+  const mudancas = Object.keys(S.precos).flatMap((id) => histOf(id).filter((e) => e.ant !== undefined).map((e) => ({ ...e, id }))).sort((p, q) => String(q.d).localeCompare(String(p.d))).slice(0, 20);
+  const spark = (h) => { if (h.length < 2) return ""; const vs = h.map((e) => num(e.v)); const lo = Math.min(...vs), hi = Math.max(...vs) || 1; const pts = vs.map((v, i) => (i / (vs.length - 1)) * 80 + "," + (18 - ((v - lo) / (hi - lo || 1)) * 16)).join(" "); return `<svg width="80" height="20" viewBox="0 0 80 20" aria-hidden="true"><polyline fill="none" stroke="#6f9ca7" stroke-width="1.6" points="${pts}"/></svg>`; };
+  return `<div class="head"><div><div class="eyebrow">Custos</div><h1>Custos &amp; preços</h1><p class="lead">Custo de cada máquina pela lista de materiais e o acompanhamento da variação de preço de cada componente. Cada alteração de custo, feita na ficha do item ou ao receber uma compra, entra no histórico.</p></div>
+  <div class="seg">${MODELS.map((k) => `<button data-cm="${k}" class="${m === k ? "on" : ""}">${MODEL_NAME[k]}</button>`).join("")}</div></div>
+  <div class="grid g4">
+    <div class="panel stat"><div class="lbl">Custo total · ${MODEL_NAME[m]}</div><div class="val">${brl(x.total)}</div><div class="sub">${x.total > o.total ? "+" : "−"}${brl(Math.abs(x.total - o.total))} vs ${MODEL_NAME[m === "MINI" ? "TECH" : "MINI"]}</div></div>
+    <div class="panel stat"><div class="lbl">Peças fabricadas</div><div class="val">${brl(x.porTipo.peca)}</div></div>
+    <div class="panel stat"><div class="lbl">Peças prontas</div><div class="val">${brl(x.porTipo.peca_pronta)}</div></div>
+    <div class="panel stat"><div class="lbl">Acessórios</div><div class="val">${brl(x.porTipo.acessorio)}</div></div>
+  </div>
+  <div class="grid g2 sec">
+    <div class="panel"><h3>Custo por máquina ao longo do tempo</h3><p class="muted small" style="margin:4px 0 10px">Recalculado a cada data em que algum componente mudou de preço.</p>
+      ${series[0].pts.length > 1 ? lineChart(series) : `${lineChart(series)}<p class="muted small" style="margin-top:6px">Ainda sem variação registrada: o histórico começa com os custos importados do Notion.</p>`}
+    </div>
+    <div class="panel"><h3>Por grupo · ${MODEL_NAME[m]}</h3>
+      ${Object.entries(x.porGrupo).sort((a, b) => b[1] - a[1]).map(([g, v]) => `<div style="margin-top:12px"><div class="row" style="justify-content:space-between"><span>${esc(g)}</span><span style="font-variant-numeric:tabular-nums"><b>${brl(v)}</b> <span class="muted small">${((v / x.total) * 100).toFixed(1)}%</span></span></div><div class="bar" style="margin-top:5px"><span style="width:${(v / maxG) * 100}%;background:${GRUPO_COR[g] || "#999"}"></span></div></div>`).join("")}
+    </div>
+  </div>
+  <div class="grid g2 sec">
+    <div><div class="sech"><h2>Componentes com variação</h2></div>
+      ${varItens.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th class="n">Primeiro</th><th class="n">Atual</th><th class="n">Variação</th><th>Tendência</th></tr></thead><tbody>${varItens.map((i) => `<tr class="click" data-edit="${i.id}"><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="n">${brl(i.a)}</td><td class="n"><b>${brl(i.z)}</b></td><td class="n ${i.var > 0 ? "up" : i.var < 0 ? "down" : ""}">${pct(i.var)}</td><td>${spark(i.h)}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">Nenhum componente mudou de preço ainda. Quando um custo for alterado, ele aparece aqui com a variação.</div>`}
+    </div>
+    <div><div class="sech"><h2>Últimas alterações de preço</h2></div>
+      ${mudancas.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Item</th><th class="n">De</th><th class="n">Para</th><th>Origem</th></tr></thead><tbody>${mudancas.map((e) => { const it = itemOf(e.id) || {}; const v = num(e.ant) ? ((num(e.v) - num(e.ant)) / num(e.ant)) * 100 : 0; return `<tr><td class="small">${fmtDs(e.d)}</td><td><span class="code">${esc(it.codigo || e.id)}</span></td><td class="n">${brl(e.ant)}</td><td class="n"><b>${brl(e.v)}</b> <span class="small ${v > 0 ? "up" : "down"}">${pct(v)}</span></td><td class="small muted">${esc(e.o || "")}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">As alterações de custo aparecem aqui com data e origem.</div>`}
+    </div>
+  </div>
+  <div class="panel sec"><h3>Mão de obra e combo da praça</h3>
+    <p class="muted small" style="margin:6px 0 12px">Valor pago ao técnico por máquina montada. Entra no custo final.</p>
+    <div class="row">${MODELS.map((k) => `<label class="f" style="flex:1">Mão de obra ${MODEL_NAME[k]} (R$)<input id="mo-${k}" type="number" min="0" step="0.01" value="${num(c.maoObra[k])}"></label>`).join("")}${MODELS.map((k) => `<label class="f" style="flex:1">${MODEL_NAME[k]} por praça<input id="cb-${k}" type="number" min="0" step="1" value="${num(c.combo[k])}"></label>`).join("")}</div>
+    <div class="row" style="margin-top:14px;justify-content:space-between"><span class="notice">Uma praça com ${c.combo.MINI} Mini + ${c.combo.TECH} Tech custa <b>${brl(c.combo.MINI * custoModelo("MINI").total + c.combo.TECH * custoModelo("TECH").total)}</b> em máquinas, sem frete.</span><button class="btn pri" data-savecfg="1">Salvar</button></div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Lista de materiais · ${MODEL_NAME[m]}</h2></div>
+  <div class="tw"><table><thead><tr><th></th><th>Código</th><th>Descrição</th><th>Tipo</th><th>Grupo</th><th class="n">Qtd</th><th class="n">Custo un.</th><th class="n">Subtotal</th><th class="n">%</th></tr></thead><tbody>
+  ${x.linhas.map((i) => `<tr class="click" data-edit="${i.id}"><td class="ph">${thumb(i)}</td><td class="code">${esc(i.codigo)}</td><td>${esc(i.nome)}</td><td class="small">${TIPO[i.tipo]}</td><td class="small">${esc(i.grupo)}</td><td class="n">${fmtN(i.q)}</td><td class="n">${brl(i.custo)}</td><td class="n"><b>${brl(i.v)}</b></td><td class="n">${((i.v / x.total) * 100).toFixed(1)}%</td></tr>`).join("")}
+  </tbody></table></div></div>`;
+}
+
+function vEstoque() {
+  const adm = ADM(); const its = itemsArr(); const q = UI.estoqueQ.trim().toLowerCase();
+  let list = its.filter((i) => !q || (i.codigo + " " + i.nome).toLowerCase().includes(q));
+  if (UI.estoqueF === "alerta") list = list.filter((i) => statusEstoque(i)[0] !== "OK");
+  if (UI.estoqueF !== "todos" && UI.estoqueF !== "alerta") list = list.filter((i) => i.tipo === UI.estoqueF);
+  list.sort((a, b) => (a.codigo || "").localeCompare(b.codigo || ""));
+  const ord = { pendente: 0, pedido: 1, recebido: 2, cancelado: 3 };
+  const compras = Object.entries(S.compras).map(([id, v]) => ({ id, ...v })).sort((a, b) => (ord[a.status] - ord[b.status]) || String(a.previsao || "").localeCompare(String(b.previsao || "")));
+  const abertas = compras.filter((c) => c.status === "pendente" || c.status === "pedido");
+  const fechadas = compras.filter((c) => !(c.status === "pendente" || c.status === "pedido")).slice(0, 30);
+  const valorEst = its.reduce((s, i) => s + Math.max(0, num(i.estoque)) * num(i.custo), 0);
+  const cr = (c) => { const it = itemOf(c.itemId) || {}; const st = STATUS_COMPRA[c.status] || STATUS_COMPRA.pendente; const p = c.pracaId && S.pracas[c.pracaId]; const late = c.status === "pedido" && c.previsao && c.previsao < today();
+    return `<tr><td class="ph">${thumb(it)}</td><td><span class="code muted">${esc(it.codigo || "?")}</span><br>${esc(it.nome || "Item removido")}</td><td class="n">${fmtN(c.qtd)}</td><td class="n">${brl(num(c.qtd) * num(c.custoUnit))}</td><td><span class="pill ${st[1]}">${st[0]}</span></td><td class="small">${c.dataPedido ? fmtDs(c.dataPedido) : "—"}</td><td class="small">${c.status === "recebido" ? "Recebido " + fmtDs(c.recebidoEm) + (c.dataPedido ? ` · ${diffDays(c.dataPedido, c.recebidoEm)} d` : "") : `<span style="${late ? "color:var(--bad);font-weight:600" : ""}">${fmtD(c.previsao)}${late ? " · atrasado" : ""}</span>`}</td><td class="small">${p ? `<a class="lk" href="#pracas-p-${c.pracaId}">${esc(p.cidade)}</a>` : "Avulsa"}</td><td>${it.link || c.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(c.link || it.link)}">Link</a>` : ""}</td><td style="white-space:nowrap">${c.status === "pendente" ? `<button class="btn sm" data-cp="${c.id}|pedido">Marcar pedido</button>` : c.status === "pedido" ? `<button class="btn sm pri" data-receber="${c.id}">Receber</button>` : ""}${c.status === "pendente" || c.status === "pedido" ? ` <button class="btn sm ghost danger" data-cp="${c.id}|cancelado">Cancelar</button>` : ""}</td></tr>`; };
+  const movs = S.movs.slice(0, 25);
+  const thC = `<thead><tr><th></th><th>Item</th><th class="n">Qtd</th><th class="n">Valor</th><th>Status</th><th>Pedido</th><th>Chegada</th><th>Praça</th><th></th><th></th></tr></thead>`;
+  return `<div class="head"><div><div class="eyebrow">Estoque</div><h1>${adm ? "Estoque &amp; compras" : "Estoque"}</h1><p class="lead">${adm ? "Saldo de cada item, pedidos de compra com previsão de chegada e histórico de movimentações. Receber um pedido soma a quantidade ao estoque e registra o preço pago." : "Saldo de cada item e histórico de movimentações. Lance entradas, saídas e ajustes de inventário."}</p></div>
+  ${adm ? `<button class="btn pri" data-newcompra="1">Compra avulsa</button>` : ""}</div>
+  <div class="grid g4">${adm ? `<div class="panel stat"><div class="lbl">Valor em estoque</div><div class="val">${brl(valorEst)}</div></div>
+  <div class="panel stat"><div class="lbl">Compras em aberto</div><div class="val">${abertas.length}</div><div class="sub">${abertas.filter((c) => c.status === "pendente").length} a pedir · ${abertas.filter((c) => c.status === "pedido").length} a caminho</div></div>` : `<div class="panel stat"><div class="lbl">Itens em estoque</div><div class="val">${its.filter((i) => num(i.estoque) > 0).length}</div><div class="sub">de ${its.length} cadastrados</div></div>`}
+  <div class="panel stat"><div class="lbl">Itens em alerta</div><div class="val" style="color:var(--bad)">${its.filter((i) => statusEstoque(i)[0] !== "OK").length}</div></div>
+  <div class="panel stat"><div class="lbl">Máquinas prontas</div><div class="val">${mont().MINI.maquina + mont().TECH.maquina}</div><div class="sub">${mont().MINI.maquina} Mini · ${mont().TECH.maquina} Tech</div></div></div>
+  ${adm ? `<div class="sec"><div class="sech"><h2>Compras em aberto</h2></div>
+  ${abertas.length ? `<div class="tw"><table>${thC}<tbody>${abertas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra em aberto. Gere os pedidos a partir de uma praça ou registre uma compra avulsa.</div>`}</div>` : ""}
+  <div class="sec"><div class="sech"><h2>Saldo por item</h2>
+  <div class="row"><input id="eq" type="search" placeholder="Buscar item" value="${esc(UI.estoqueQ)}"><select id="ef" aria-label="Filtro">${[["todos", "Todos"], ["alerta", "Em alerta"], ["peca", "Peças"], ["peca_pronta", "Peças prontas"], ["acessorio", "Acessórios"]].map(([k, n]) => `<option value="${k}" ${UI.estoqueF === k ? "selected" : ""}>${n}</option>`).join("")}</select></div></div>
+  <div class="tw"><table><thead><tr><th></th><th>Item</th><th>Tipo</th><th>Local</th><th class="n">Estoque</th><th class="n">Mínimo</th><th>Situação</th>${adm ? '<th class="n">Valor</th>' : ""}${W() ? "<th>Movimentar</th>" : ""}</tr></thead><tbody>
+  ${list.map((i) => { const st = statusEstoque(i); return `<tr><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="small">${TIPO[i.tipo]}</td><td class="code muted">${esc(i.local || "—")}</td><td class="n"><b>${fmtN(i.estoque)}</b></td><td class="n">${fmtN(i.minimo) || "—"}</td><td><span class="pill ${st[1]}">${st[0]}</span></td>${adm ? `<td class="n">${brl(Math.max(0, num(i.estoque)) * num(i.custo))}</td>` : ""}${W() ? `<td><div class="row" style="gap:4px;flex-wrap:nowrap"><input id="mv-${i.id}" type="number" step="1" min="0" placeholder="qtd" aria-label="Quantidade" style="width:66px"><button class="btn sm" data-mv="${i.id}|entrada">Entrada</button><button class="btn sm" data-mv="${i.id}|saida">Saída</button><button class="btn sm ghost" data-mv="${i.id}|ajuste" title="Define o saldo exato">Ajustar</button></div></td>` : ""}</tr>`; }).join("")}
+  </tbody></table></div></div>
+  <div class="grid g2 sec">
+    <div><div class="sech"><h2>Movimentações recentes</h2></div>${movs.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Item</th><th>Tipo</th><th class="n">Qtd</th><th>Motivo</th></tr></thead><tbody>${movs.map((m) => { const it = S.itens[m.itemId] || {}; return `<tr><td class="small">${fmtDs(m.data)}</td><td><span class="code">${esc(it.codigo || "?")}</span></td><td><span class="pill ${m.tipo === "entrada" ? "p-ok" : m.tipo === "saida" ? "p-warn" : "p-neu"}">${esc(m.tipo)}</span></td><td class="n">${fmtN(m.qtd)}</td><td class="small muted">${esc(m.motivo || "")}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">As entradas, saídas e ajustes aparecem aqui.</div>`}</div>
+    ${adm ? `<div><div class="sech"><h2>Compras concluídas</h2></div>${fechadas.length ? `<div class="tw"><table>${thC}<tbody>${fechadas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra concluída ainda.</div>`}</div>` : ""}
+  </div>`;
+}
+
+function vLinks() {
+  const m = UI.linksModel; const its = itemsArr().filter((i) => m === "TODOS" ? true : qtyOf(i, m) > 0).filter((i) => i.tipo !== "peca").sort((a, b) => (a.grupo || "").localeCompare(b.grupo || "") || (a.codigo || "").localeCompare(b.codigo || ""));
+  const extras = Object.entries(S.links).map(([id, v]) => ({ id, ...v }));
+  const semLink = its.filter((i) => !i.link && !extras.some((e) => e.itemId === i.id));
+  return `<div class="head"><div><div class="eyebrow">Compras</div><h1>Links de compra</h1><p class="lead">Repositório dos links de compra de tudo que vai em cada máquina. Peças fabricadas ficam de fora. Guarde fornecedores alternativos em cada item.</p></div>
+  <div class="row"><div class="seg">${[...MODELS, "TODOS"].map((k) => `<button data-lm="${k}" class="${m === k ? "on" : ""}">${k === "TODOS" ? "Todos" : MODEL_NAME[k]}</button>`).join("")}</div><button class="btn pri" data-copylinks="1">Copiar lista</button></div></div>
+  ${semLink.length ? `<div class="notice" style="margin-bottom:14px"><b>${semLink.length} itens sem link:</b> ${semLink.map((i) => esc(i.codigo)).join(", ")}</div>` : ""}
+  <div class="tw"><table><thead><tr><th></th><th>Item</th><th>Grupo</th>${m !== "TODOS" ? '<th class="n">Qtd</th>' : ""}<th class="n">Custo ref.</th><th>Link principal</th><th>Alternativos</th><th></th></tr></thead><tbody>
+  ${its.map((i) => { const ex = extras.filter((e) => e.itemId === i.id); let host = ""; try { host = i.link ? new URL(i.link).hostname.replace("www.", "") : ""; } catch (_) { host = i.link; }
+    return `<tr><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="small">${esc(i.grupo)}</td>${m !== "TODOS" ? `<td class="n">${fmtN(qtyOf(i, m))}</td>` : ""}<td class="n">${brl(i.custo)}</td><td>${i.link ? `<a class="lk small" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(host)}</a>` : `<span class="muted small">${esc(i.fornecedor || "—")}</span>`}</td><td class="small">${ex.map((e) => `<div><a class="lk" href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.fornecedor || "link")}</a>${num(e.preco) ? " · " + brl(e.preco) : ""} <button class="btn sm ghost danger" data-dellink="${e.id}" aria-label="Remover link">×</button></div>`).join("") || '<span class="muted">—</span>'}</td><td><button class="btn sm" data-addlink="${i.id}">Adicionar link</button></td></tr>`; }).join("")}
+  </tbody></table></div>`;
+}
+
+function vPracas() {
+  if (UI.praca && S.pracas[UI.praca]) return vPraca(UI.praca);
+  const adm = ADM(); const c = cfg(); const plans = allPlans();
+  const list = Object.entries(S.pracas).map(([id, v]) => ({ id, ...v })).filter((p) => adm || emAndamento(p)).sort((a, b) => String(b.criadoEm).localeCompare(String(a.criadoEm)));
+  const tabela = list.length ? `<div class="tw"><table><thead><tr><th>Praça</th><th>Franqueado</th><th>Máquinas</th><th>Status</th><th>Solicitada</th><th>Peças chegam</th><th>Entrega prevista</th>${adm ? "<th>Entrega real</th>" : ""}</tr></thead><tbody>${list.map((p) => { const pl = plans[p.id]; const st = STATUS_PRACA[p.status] || STATUS_PRACA.planejamento; const real = p.entregueEm && p.dataInicio ? diffDays(p.dataInicio, p.entregueEm) : null; const prev = p.previstaInicial && p.dataInicio ? diffDays(p.dataInicio, p.previstaInicial) : null; return `<tr class="click" data-go="#pracas-p-${p.id}"><td><b>${esc(p.cidade)}</b></td><td>${esc(p.franqueado || "—")}</td><td class="small">${MODELS.map((m) => num(p.qtd?.[m]) + " " + MODEL_NAME[m]).join(" + ")}</td><td><span class="pill ${st[1]}">${st[0]}</span></td><td class="small">${fmtDs(p.criadoEm?.slice(0, 10))}</td><td>${fmtD(pl.chegada)}</td><td><b>${fmtD(pl.entrega)}</b></td>${adm ? `<td class="small">${real !== null ? `${fmtD(p.entregueEm)} · ${real} d${prev !== null ? ` <span class="${real > prev ? "up" : "down"}">(${real - prev >= 0 ? "+" : ""}${real - prev} d)</span>` : ""}` : "—"}</td>` : ""}</tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma praça ${adm ? "solicitada" : "em andamento"} ainda.</div>`;
+  if (!adm) return `<div class="head"><div><div class="eyebrow">Produção</div><h1>Praças em andamento</h1><p class="lead">Praças com máquinas em produção e a data prevista de entrega de cada uma.</p></div></div>${tabela}`;
+  const ts = temposSugeridos(); const sg = ts.s;
+  const hint = (k) => sg[k] ? `<span class="hint">Histórico: ${fmtN(sg[k].v)} d (últimas ${sg[k].n})</span>` : `<span class="hint" style="color:var(--muted)">Sem histórico · padrão ${fmtN(k === "frete" ? c.frete : c.tempos[k])} d</span>`;
+  const dummy = planOne({ id: "_novo", qtd: c.combo, dataInicio: today(), tempos: ts, frete: ts.frete }, Object.fromEntries(itemsArr().map((i) => [i.id, Math.max(0, num(i.estoque))])), mont());
+  return `<div class="head"><div><div class="eyebrow">Expansão</div><h1>Nova praça</h1><p class="lead">Cada praça nova recebe ${c.combo.MINI} máquinas Mini e ${c.combo.TECH} Tech. Ao solicitar, a fábrica confere o estoque, lista o que já tem e o que comprar, e calcula a entrega usando o tempo real das últimas máquinas.</p></div></div>
+  <div class="grid g2">
+    <div class="panel"><h2>Solicitar praça</h2>
+      <form id="fpraca" style="margin-top:14px" class="grid">
+        <div class="combo">${MODELS.map((m) => `<div class="unit"><span class="uimg" style="background-image:url('${MODEL_IMG[m].card}')"></span><span class="q">${c.combo[m]}×</span><div><b>${MODEL_NAME[m]}</b><div class="muted small">${brl(custoModelo(m).total)} cada</div></div></div>`).join("")}</div>
+        <div class="row"><label class="f" style="flex:2">Cidade / praça<input id="np-cidade" required placeholder="Ex.: Cuiabá – MT"></label><label class="f" style="flex:2">Franqueado<input id="np-franq" placeholder="Nome do franqueado"></label></div>
+        <div class="row"><label class="f" style="flex:1">Início da produção<input id="np-ini" type="date" value="${today()}"></label>${MODELS.map((m) => `<label class="f" style="flex:1">${MODEL_NAME[m]}<input id="np-q-${m}" type="number" min="0" step="1" value="${c.combo[m]}"></label>`).join("")}</div>
+        <h3 style="margin-top:6px">Tempos de produção</h3>
+        <div class="row"><label class="f" style="flex:1">Fabricar carcaça (dias/máquina)<input id="np-tc" type="number" min="0" step="0.5" value="${ts.carcaca}">${hint("carcaca")}</label><label class="f" style="flex:1">Montar eletrônica (dias/máquina)<input id="np-te" type="number" min="0" step="0.5" value="${ts.eletronica}">${hint("eletronica")}</label></div>
+        <div class="row"><label class="f" style="flex:1">Montar a máquina (dias/máquina)<input id="np-tm" type="number" min="0" step="0.5" value="${ts.montagem}">${hint("montagem")}</label><label class="f" style="flex:1">Frete com case e acessórios (dias)<input id="np-fr" type="number" min="0" step="1" value="${ts.frete}">${hint("frete")}</label></div>
+        <div class="row"><label class="f" style="flex:1">Máquinas produzidas ao mesmo tempo<input id="np-sim" type="number" min="1" step="1" value="${c.simult}"></label><label class="row small" style="flex:1;gap:6px;margin-top:16px"><input id="np-du" type="checkbox" ${c.diasUteis ? "checked" : ""}> Contar só dias úteis na produção</label></div>
+        <button class="btn amb" type="submit">Solicitar e calcular</button>
+      </form>
+    </div>
+    <div class="panel"><h2>Se pedisse hoje</h2><p class="muted small" style="margin:6px 0 14px">Simulação com o estoque atual e os tempos sugeridos pelo histórico, sem descontar reservas de outras praças.</p>
+      <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        <div class="stat"><div class="lbl">Itens em estoque</div><div class="val">${dummy.linhas.filter((l) => l.falta <= 0).length}</div></div>
+        <div class="stat"><div class="lbl">Itens a comprar</div><div class="val">${dummy.comprar.length}</div><div class="sub">${brl(dummy.custoCompra)}</div></div>
+        <div class="stat"><div class="lbl">Peças a fabricar</div><div class="val">${dummy.fabricar.length}</div></div>
+        <div class="stat"><div class="lbl">Entrega estimada</div><div class="val">${fmtDs(dummy.entrega)}</div><div class="sub">${diffDays(today(), dummy.entrega)} dias a partir de hoje</div></div>
+      </div>
+      <div style="margin-top:18px;border-radius:var(--r);overflow:hidden;aspect-ratio:16/8;background:#0e171b url('https://static.wixstatic.com/media/42aab8_1877306c35064a69873601e32d748301~mv2.jpg') center 35%/cover;max-width:100%"></div>
+    </div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Praças solicitadas</h2></div>${tabela}</div>`;
+}
+
+function vPraca(id) {
+  const adm = ADM(); const p = { id, ...S.pracas[id] }; const pl = allPlans()[id]; const st = STATUS_PRACA[p.status] || STATUS_PRACA.planejamento;
+  const span = Math.max(1, diffDays(pl.inicio, pl.entrega));
+  const pos = (d) => (Math.max(0, diffDays(pl.inicio, d)) / span) * 100;
+  const pend = pl.comprar.filter((l) => !l.pedido);
+  const ts = temposSugeridos();
+  const lineRow = (l, mode) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="small">${esc(l.it.grupo)}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td>${mode === "est" ? "" : `<td class="n"><b>${fmtN(l.falta)}</b></td>`}${mode === "comprar" ? `<td class="n">${fmtN(l.it.prazo)} d</td><td>${fmtD(l.previsao)}${l.previsao === pl.chegada && pl.comprar.length ? ' <span class="pill p-warn">define a data</span>' : ""}</td>${adm ? `<td class="n">${brl(l.falta * num(l.it.custo))}</td><td>${l.pedido ? `<span class="pill ${l.pedidoStatus.includes("pedido") ? "p-warn" : "p-bad"}">${l.pedidoStatus.includes("pedido") ? "Pedido feito" : "A pedir"}</span>` : '<span class="pill p-neu">Sem pedido</span>'}</td><td>${l.it.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(l.it.link)}">Comprar</a>` : ""}</td>` : ""}` : ""}${mode === "fab" ? `<td class="small">${esc(l.it.maq || "—")} ${l.it.mp ? `· <span class="code">${esc(l.it.mp)}</span>` : ""}</td>` : ""}</tr>`;
+  const dis = adm ? "" : "disabled";
+  const diffT = adm && ["carcaca", "eletronica", "montagem"].some((k) => ts.s[k] && ts.s[k].v !== pl.t[k]) || (adm && ts.s.frete && ts.s.frete.v !== pl.frete);
+  return `<div class="head"><div><a class="lk small" href="#pracas">← Praças</a><h1 style="margin-top:8px">${esc(p.cidade)}</h1><p class="lead">${esc(p.franqueado || "Franqueado não informado")} · solicitada em ${fmtD(p.criadoEm?.slice(0, 10))} · <span class="pill ${st[1]}">${st[0]}</span></p></div>
+  ${adm ? `<div class="row"><select id="pst" aria-label="Status">${Object.entries(STATUS_PRACA).map(([k, v]) => `<option value="${k}" ${p.status === k ? "selected" : ""}>${v[0]}</option>`).join("")}</select>${pend.length ? `<button class="btn amb" data-gerar="${id}">Gerar ${pend.length} pedidos de compra</button>` : ""}${!p.baixado ? `<button class="btn pri" data-baixa="${id}">Produção concluída: dar baixa</button>` : '<span class="pill p-ok">Estoque baixado</span>'}<button class="btn ghost danger" data-delpraca="${id}">Excluir</button></div>` : ""}</div>
+  <div class="deliver"><div><div class="k">Entrega prevista no franqueado</div><div class="big">${fmtD(pl.entrega)}</div></div><div><div class="k">Todas as peças chegam</div><b>${fmtD(pl.chegada)}</b></div><div><div class="k">Prazo total</div><b>${diffDays(pl.inicio, pl.entrega)} dias</b></div>${adm ? `<div><div class="k">Investimento em máquinas</div><b>${brl(pl.custoTotal)}</b></div><div><div class="k">A comprar</div><b>${brl(pl.custoCompra)}</b></div>` : ""}${p.entregueEm ? `<div><div class="k">Entregue em</div><b>${fmtD(p.entregueEm)}</b></div>` : ""}</div>
+  <div class="grid g2 sec">
+    <div class="panel"><h3>O que a fábrica precisa entregar</h3>
+      <div class="combo" style="margin-top:12px">${MODELS.map((m) => { const s = pl.steps[m]; return `<div class="unit"><span class="uimg" style="background-image:url('${MODEL_IMG[m].card}')"></span><span class="q">${s.n}×</span><div><b>${MODEL_NAME[m]}</b><div class="muted small">${s.prontas ? s.prontas + " pronta(s) do estoque · " : ""}${s.acabados ? s.acabados + " montada(s) do estoque · " : ""}${s.montar} a montar</div><div class="muted small">${Object.keys(CONJ).filter((k) => s.semiUsed[k]).map((k) => s.semiUsed[k] + "× " + CONJ[k].nome.replace("Conjunto ", "").toLowerCase() + " do estoque").join(" · ")}</div></div></div>`; }).join("")}</div>
+      ${!pl.ativa ? `<p class="notice" style="margin-top:12px">Esta praça não reserva mais estoque (${esc(st[0].toLowerCase())}). Os números mostram a situação com o estoque atual.</p>` : ""}
+    </div>
+    <div class="panel"><h3>Tempos usados no cálculo</h3>
+      <div class="row" style="margin-top:12px">
+        <label class="f" style="flex:1">Carcaça (d/máq)<input id="pt-tc" type="number" min="0" step="0.5" value="${pl.t.carcaca}" ${dis}></label>
+        <label class="f" style="flex:1">Eletrônica (d/máq)<input id="pt-te" type="number" min="0" step="0.5" value="${pl.t.eletronica}" ${dis}></label>
+        <label class="f" style="flex:1">Montagem (d/máq)<input id="pt-tm" type="number" min="0" step="0.5" value="${pl.t.montagem}" ${dis}></label>
+        <label class="f" style="flex:1">Frete (dias)<input id="pt-fr" type="number" min="0" step="1" value="${pl.frete}" ${dis}></label>
+      </div>
+      <div class="row" style="margin-top:10px"><label class="f" style="flex:1">Início<input id="pt-ini" type="date" value="${pl.inicio}" ${dis}></label><label class="f" style="flex:1">Simultâneas<input id="pt-sim" type="number" min="1" step="1" value="${pl.sim}" ${dis}></label><label class="row small" style="flex:1;gap:6px;margin-top:16px"><input id="pt-du" type="checkbox" ${pl.uteis ? "checked" : ""} ${dis}> Dias úteis</label></div>
+      ${diffT ? `<div class="notice" style="margin-top:12px">O histórico sugere carcaça ${fmtN(ts.carcaca)} d, eletrônica ${fmtN(ts.eletronica)} d, montagem ${fmtN(ts.montagem)} d e frete ${fmtN(ts.frete)} d. <button class="btn sm" data-usarsug="${id}">Usar sugestão</button></div>` : ""}
+      ${adm ? `<button class="btn pri" style="margin-top:12px" data-savetempos="${id}">Recalcular</button>` : ""}
+    </div>
+  </div>
+  <div class="panel sec"><h3 style="margin-bottom:14px">Cronograma</h3>
+    <div class="gantt">${pl.fases.map((f) => { const l = pos(f.ini), w = Math.max(pos(f.fim) - l, 0.8); return `<div class="lbl">${f.nome}<div class="muted small" style="font-weight:400">${fmtDs(f.ini)} → ${fmtDs(f.fim)}</div></div><div class="track"><div class="gseg" style="left:${l}%;width:${w}%;background:${f.cor}" title="${esc(f.info)}">${w > 14 ? esc(f.info) : ""}</div></div>`; }).join("")}
+    <div class="axis"><span>${fmtD(pl.inicio)}</span><span>${fmtD(pl.entrega)}</span></div></div>
+    <p class="muted small" style="margin-top:12px">A carcaça começa no início da produção. A eletrônica começa quando chega a última peça comprada. A montagem começa quando carcaça e eletrônica estão prontas. Prazos de compra em dias corridos.</p>
+  </div>
+  <div class="sec"><div class="sech"><h2>${adm ? "A comprar" : "Peças a chegar"} · ${pl.comprar.length} itens</h2></div>
+  ${pl.comprar.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th>Grupo</th><th class="n">Precisa</th><th class="n">Tem</th><th class="n">${adm ? "Comprar" : "Falta"}</th><th class="n">Prazo</th><th>Chegada prevista</th>${adm ? '<th class="n">Valor</th><th>Pedido</th><th></th>' : ""}</tr></thead><tbody>${pl.comprar.sort((a, b) => b.previsao.localeCompare(a.previsao)).map((l) => lineRow(l, "comprar")).join("")}</tbody></table></div>` : `<div class="empty">Nada a comprar: o estoque cobre todas as peças prontas e acessórios.</div>`}</div>
+  <div class="sec"><div class="sech"><h2>A fabricar · ${pl.fabricar.length} peças</h2></div>
+  ${pl.fabricar.length ? `<div class="tw"><table><thead><tr><th></th><th>Peça</th><th>Grupo</th><th class="n">Precisa</th><th class="n">Tem</th><th class="n">Fabricar</th><th>Maquinário · MP</th></tr></thead><tbody>${pl.fabricar.map((l) => lineRow(l, "fab")).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma peça a fabricar.</div>`}</div>
+  <div class="sec"><div class="sech"><h2>Já em estoque · ${pl.estoque.length} itens</h2></div>
+  ${pl.estoque.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th>Grupo</th><th class="n">Precisa</th><th class="n">Reservado</th></tr></thead><tbody>${pl.estoque.map((l) => lineRow(l, "est")).join("")}</tbody></table></div>` : `<div class="empty">Nenhum item desta praça está em estoque ainda.</div>`}</div>`;
+}
+
+// ---------- manuais ----------
+const FALHAS = [
+  ["Entupimento de bomba", "Leve", "Acúmulo de resíduos ou cristalização de insumos", "Ausência ou redução de vazão", "Realizar limpeza ou substituição da bomba"],
+  ["Problemas operacionais", "Leve", "Utilização incorreta do equipamento", "Falha não reproduzida em testes técnicos", "Reorientar operador e revisar procedimento"],
+  ["Desconexão do aplicativo", "Leve", "Falha de comunicação ou rede", "Equipamento sem comunicação com o sistema", "Reiniciar comunicação e verificar rede"],
+  ["Calibração incorreta", "Leve", "Alteração dos parâmetros de dosagem", "Volume dispensado fora da especificação", "Executar novo procedimento de calibração"],
+  ["Conexão incorreta de mangueiras", "Leve", "Instalação inadequada após manutenção", "Ausência de sucção ou mistura incorreta", "Corrigir posicionamento das mangueiras"],
+  ["Mangueira dobrada ou obstruída", "Leve", "Instalação inadequada ou esmagamento", "Restrição parcial ou total do fluxo", "Reposicionar ou substituir mangueira"],
+  ["Entupimento de válvula antirretorno", "Grave", "Resíduos acumulados no interior da válvula", "Fluxo interrompido ou retorno de líquido", "Limpar ou substituir válvula"],
+  ["Desconexão de cabo interno", "Grave", "Vibração ou manutenção inadequada", "Componente não responde ou não inicializa", "Reconectar cabo e verificar fixação"],
+  ["Reinicialização inesperada", "Grave", "Instabilidade elétrica ou falha eletrônica", "Reinicialização espontânea do sistema", "Verificar fonte, cabeamento e controladora"],
+  ["Problema na fonte de alimentação", "Grave", "Fonte danificada ou tensão inadequada", "Equipamento não liga ou reinicia constantemente", "Substituir fonte de alimentação"],
+  ["Corrompimento do cartão SD", "Grave", "Desligamento incorreto ou desgaste do cartão", "Raspberry Pi não inicializa", "Substituir cartão SD e reinstalar sistema"],
+  ["Falha na tela touch", "Grave", "Cabo desconectado ou defeito no display", "Tela apagada ou sem resposta ao toque", "Verificar conexões ou substituir tela"],
+  ["Falha da controladora", "Grave", "Defeito eletrônico ou sobrecarga", "Bombas ou periféricos não respondem", "Substituir controladora"],
+  ["Falha do cooler", "Grave", "Desgaste mecânico ou obstrução", "Ausência de ventilação interna", "Limpar ou substituir cooler"],
+  ["Queima de componente eletrônico", "Gravíssima", "Sobretensão, curto-circuito ou descarga elétrica", "Componente sem funcionamento permanente", "Encaminhar para manutenção especializada ou substituir componente"],
+];
+const FOTOS_EQ = [["https://static.wixstatic.com/media/42aab8_0a64899527534c408f337c6bf6976380~mv2.jpg", "Frente"], ["https://static.wixstatic.com/media/42aab8_ca13abc650c941959c37c66a5a77a3fa~mv2.jpg", "Trás"], ["https://static.wixstatic.com/media/42aab8_3c98ef1b79db4545bb24a6d1889f08f8~mv2.jpg", "Lateral"], ["https://static.wixstatic.com/media/42aab8_82c529559cfe425b8970fb83a0e72dd6~mv2.jpg", "Tela"], ["https://static.wixstatic.com/media/42aab8_ef980280c2854fddb747cffa61929f40~mv2.jpg", "Bico dispensador com LED"], ["https://static.wixstatic.com/media/42aab8_8c61124f6f6b4f36ba3f22077b25ffa7~mv2.jpg", "Tampa traseira: saída de ar, entrada USB para arquivos e botão do sistema"], ["https://static.wixstatic.com/media/42aab8_14b63381261f4c658f6b78d215416441~mv2.jpg", "Conexões da parte traseira: vias 1 a 4, entrada de energia e botão power"], ["https://static.wixstatic.com/media/42aab8_ba1143a15f2d4cf2b8c97612d3600662~mv2.jpg", "Energia: fonte"], ["https://static.wixstatic.com/media/42aab8_8a00f2975ea649608f6e75a4a04786ca~mv2.jpg", "Energia: conector"], ["https://static.wixstatic.com/media/42aab8_360516f169dc470fb812c088768664d4~mv2.jpg", "Vias: recipientes"], ["https://static.wixstatic.com/media/42aab8_eb2ec82b2a634ccb82264670b85a4dff~mv2.jpg", "Vias: conexões"]];
+function vManuais() {
+  const its = Object.keys(S.itens).map(itemOf);
+  const byRef = (ref) => its.find((i) => i.qgRef === ref);
+  return `<div class="head"><div><div class="eyebrow">Documentação técnica</div><h1>Manuais</h1><p class="lead">Arquitetura, conjuntos, manutenção e diagnóstico do equipamento Quick GO, para os técnicos homologados.</p></div></div>
+  <div class="grid g2">
+    <div class="panel doc"><div class="cv" style="background-image:url('https://static.wixstatic.com/media/42aab8_23e0035616d74a2bb872b599b5c06aea~mv2.jpg');background-size:contain"></div><div><div class="eyebrow">Revisão 01 · 14 páginas</div><h3>Manual Técnico</h3><p class="muted small" style="margin:6px 0 12px">Arquitetura, vista explodida, conjuntos com códigos QG, conexões das placas, manutenção preventiva e diagnóstico de falhas.</p><a class="btn pri" href="https://drive.google.com/file/d/1v8HlmxRwfMuFyomnsWCYt-PFoLr-_wN-/view" target="_blank" rel="noopener">Abrir PDF</a></div></div>
+    <div class="panel doc"><div class="cv" style="background-image:url('https://static.wixstatic.com/media/42aab8_0a64899527534c408f337c6bf6976380~mv2.jpg')"></div><div><div class="eyebrow">8 páginas</div><h3>Manual de Equipamento</h3><p class="muted small" style="margin:6px 0 12px">Fotos do equipamento: frente, trás, tela, bico com LED, conexões traseiras, energia e vias.</p><a class="btn pri" href="https://drive.google.com/file/d/14c2Ieg6iCw3gU_KFyTi9QTPO-QO_b7s2/view" target="_blank" rel="noopener">Abrir PDF</a></div></div>
+  </div>
+  ${secArquivos()}
+  <div class="sec"><div class="sech"><h2>Arquitetura do equipamento</h2></div>
+    <div class="grid g4">${[["Carenagem", "Sustentação estrutural e proteção dos componentes internos."], ["Sistema elétrico", "Alimentação e distribuição de energia."], ["Sistema eletrônico", "Processamento, controle e interface do equipamento."], ["Sistema hidráulico", "Transporte e dispensação dos líquidos."]].map(([n, d]) => `<div class="panel"><h3>${n}</h3><p class="muted small" style="margin:6px 0 0">${d}</p></div>`).join("")}</div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Conjuntos</h2><a class="lk" href="#montagem">Ver na montagem</a></div>
+    <div class="grid" style="gap:14px">${Object.entries(CONJ).map(([k, v]) => `<div class="panel cj"><figure data-zoom="${v.img}"><img src="${v.img}" alt="${esc(v.nome)}" loading="lazy"></figure><div style="min-width:0"><h3>${esc(v.nome)}</h3><p class="muted small" style="margin:4px 0 12px">${esc(v.fn)}</p><div class="tw"><table><thead><tr><th></th><th>Código</th><th>Descrição</th><th class="n">Qtd</th><th>No cadastro</th></tr></thead><tbody>${v.comp.map(([c, d, q]) => { const it = byRef(c); return `<tr ${it ? `class="click" data-edit="${it.id}"` : ""}><td class="ph">${it ? thumb(it) : ""}</td><td class="code">${c}</td><td>${esc(d)}</td><td class="n">${q}</td><td class="small">${it ? `<span class="code">${esc(it.codigo)}</span>` : '<span class="muted">—</span>'}</td></tr>`; }).join("")}</tbody></table></div></div></div>`).join("")}</div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Conexões das placas de circuito</h2></div>
+    <div class="explode"><figure data-zoom="https://static.wixstatic.com/media/42aab8_8d2280b0ae9341fdb858c21b264d44c4~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_8d2280b0ae9341fdb858c21b264d44c4~mv2.jpg" alt="Placa controladora" loading="lazy"><figcaption>QG-EL005 · Placa controladora (bombas 1 a 6, LED, cooler)</figcaption></figure><figure data-zoom="https://static.wixstatic.com/media/42aab8_f011486fd75241d78456e6a2edb3b578~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_f011486fd75241d78456e6a2edb3b578~mv2.jpg" alt="Raspberry Pi 4" loading="lazy"><figcaption>QG-EL006 · Raspberry Pi 4 (cartão SD, USB-C, HDMI)</figcaption></figure><figure data-zoom="https://static.wixstatic.com/media/42aab8_23e0035616d74a2bb872b599b5c06aea~mv2.jpg"><img src="https://static.wixstatic.com/media/42aab8_23e0035616d74a2bb872b599b5c06aea~mv2.jpg" alt="Vista explodida" loading="lazy"><figcaption>Vista explodida geral</figcaption></figure></div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Equipamento</h2></div>
+    <div class="photos">${FOTOS_EQ.map(([u, c]) => `<figure data-zoom="${u}"><img src="${u}" alt="${esc(c)}" loading="lazy"><figcaption>${esc(c)}</figcaption></figure>`).join("")}</div>
+  </div>
+  <div class="grid g2 sec">
+    <div class="panel"><h3>Manutenção preventiva</h3>
+      ${[["Mensal", ["Verificar vazamentos.", "Inspecionar mangueiras.", "Limpar bico dispensador.", "Verificar funcionamento das bombas."]], ["Trimestral", ["Verificar cooler.", "Verificar conexões elétricas.", "Verificar fixações mecânicas."]], ["Semestral", ["Limpeza interna completa.", "Verificação estrutural.", "Verificação do sistema eletrônico."]]].map(([p, l]) => `<div style="margin-top:12px"><div class="eyebrow">${p}</div><ul class="steps">${l.map((x) => `<li>${x}</li>`).join("")}</ul></div>`).join("")}
+    </div>
+    <div class="panel"><h3>Procedimento de diagnóstico</h3><p class="muted small" style="margin:4px 0 0">Antes de substituir qualquer componente, verificar:</p>
+      <ol class="steps">${["Alimentação elétrica do equipamento.", "Integridade dos cabos e conectores.", "Funcionamento do botão ON/OFF.", "Estado das mangueiras e conexões hidráulicas.", "Funcionamento das bombas diafragma.", "Estado do cartão SD do Raspberry Pi.", "Comunicação entre Raspberry Pi e placa controladora.", "Funcionamento da tela touch.", "Funcionamento do sistema de ventilação (cooler)."].map((x) => `<li>${x}</li>`).join("")}</ol>
+      <div class="eyebrow" style="margin-top:14px">Registro de manutenção</div><p class="small" style="margin:4px 0 0">Toda intervenção registra: número de série, data, falha identificada, diagnóstico, componentes substituídos, técnico responsável e resultado dos testes pós-manutenção.</p>
+    </div>
+  </div>
+  <div class="sec"><div class="sech"><h2>Diagnóstico de falhas</h2></div>
+    <div class="tw"><table><thead><tr><th>Falha</th><th>Severidade</th><th>Possível causa</th><th>Diagnóstico</th><th>Ação corretiva</th></tr></thead><tbody>${FALHAS.map(([f, s, c, d, a]) => `<tr><td><b>${f}</b></td><td><span class="pill sev-${s}">${s}</span></td><td class="small">${c}</td><td class="small">${d}</td><td class="small">${a}</td></tr>`).join("")}</tbody></table></div>
+  </div>`;
+}
+
+
+const DRIVE_PASTA = "1GYTDsPdLpES08-jg1AQagQubo95e5rZy";
+const TIPO_ARQ = { pdf: ["PDF", "#b4483c"], docx: ["DOC", "#3f6fd8"], planilha: ["PLANILHA", "#2f7a57"], png: ["IMAGEM", "#a77fa5"], jpg: ["IMAGEM", "#a77fa5"], svg: ["SVG CORTE", "#d79a45"], ino: ["ARDUINO", "#6f9ca7"], apk: ["APK", "#22343b"], link: ["LINK", "#5f6d71"] };
+const driveUrl = (id) => /^https?:/.test(id) ? id : "https://drive.google.com/open?id=" + encodeURIComponent(id);
+function secArquivos() {
+  const a = S.arquivos || { itens: [], pastas: [] }; const itens = a.itens || []; const pastas = a.pastas || [];
+  const grupos = [["", "Documentos principais"], ...[...new Set(itens.map((i) => i.pasta).filter(Boolean))].map((p) => [p, p])];
+  const fileRow = (f) => { const t = TIPO_ARQ[f.tipo] || TIPO_ARQ.link; return `<a class="arq" href="${esc(driveUrl(f.id))}" target="_blank" rel="noopener"><span class="tp" style="background:${t[1]}">${t[0]}</span><span class="nm">${esc(f.nome)}</span>${ADM() ? `<button class="btn sm ghost danger" data-delarq="${esc(f.id)}" aria-label="Tirar da lista">×</button>` : ""}</a>`; };
+  return `<div class="sec"><div class="sech"><div><div class="eyebrow">Google Drive · pasta Fábrica Quick Go</div><h2>Arquivos da fábrica</h2></div><div class="row">${ADM() ? `<button class="btn" data-addarq="1">Adicionar arquivo</button>` : ""}<a class="btn pri" href="https://drive.google.com/drive/folders/${DRIVE_PASTA}" target="_blank" rel="noopener">Abrir pasta completa no Drive</a></div></div>
+    <p class="muted small" style="margin:-4px 0 12px">O botão abre a pasta sempre atualizada. A lista abaixo foi sincronizada em ${fmtD(a.atualizadoEm)}${ADM() ? "; para incluir um arquivo novo, use Adicionar arquivo" : ""}.</p>
+    ${itens.length ? `<div class="grid g2">${grupos.map(([k, n]) => { const l = itens.filter((i) => (i.pasta || "") === k); if (!l.length) return ""; const pf = pastas.find((p) => p.nome === k); return `<div class="panel"><div class="row" style="justify-content:space-between"><h3>${esc(n)}</h3>${pf ? `<a class="lk small" href="https://drive.google.com/drive/folders/${esc(pf.id)}" target="_blank" rel="noopener">Abrir pasta</a>` : ""}</div><div class="arqs">${l.map(fileRow).join("")}</div></div>`; }).join("")}
+      ${pastas.filter((p) => !itens.some((i) => i.pasta === p.nome)).map((p) => `<div class="panel"><div class="row" style="justify-content:space-between"><h3>${esc(p.nome)}</h3><a class="lk small" href="https://drive.google.com/drive/folders/${esc(p.id)}" target="_blank" rel="noopener">Abrir pasta</a></div><p class="muted small" style="margin:6px 0 0">${p.nome === "Notion" ? "Exportação do Notion: lista de materiais e fotos dos componentes." : "Abra a pasta para ver os arquivos."}</p></div>`).join("")}</div>` : `<div class="empty">A lista de arquivos ainda não foi carregada. Use <b>Abrir pasta completa no Drive</b>.</div>`}
+  </div>`;
+}
+function arqDrawer() {
+  const pastas = ((S.arquivos && S.arquivos.pastas) || []).map((p) => p.nome);
+  drawer(`<div class="row" style="justify-content:space-between"><h2>Adicionar arquivo</h2><button class="btn ghost" data-close="1">Fechar</button></div>
+  <p class="muted small" style="margin-top:6px">Cole o link do arquivo no Drive. Ele aparece para todos na aba Manuais.</p>
+  <form id="farq"><div class="fg">
+    <label class="f full">Link do Drive<input id="na-url" type="url" required placeholder="https://drive.google.com/file/d/…"></label>
+    <label class="f full">Nome<input id="na-nome" required placeholder="Ex.: Esquema elétrico Tech Go.pdf"></label>
+    <label class="f">Tipo<select id="na-tipo">${Object.entries(TIPO_ARQ).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join("")}</select></label>
+    <label class="f">Pasta<select id="na-pasta"><option value="">Documentos principais</option>${pastas.map((p) => `<option>${esc(p)}</option>`).join("")}</select></label>
+  </div><div class="actions"><button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit">Adicionar</button></div></form>`);
+}
+async function saveArquivos(fn) { const cur = JSON.parse(JSON.stringify(S.arquivos || { pasta: DRIVE_PASTA, itens: [], pastas: [] })); fn(cur); cur.atualizadoEm = cur.atualizadoEm || today(); await S.db.collection("arquivos").doc("lista").set(cur); S.arquivos = cur; }
+
+// ---------- drawers ----------
+function closeLayer() { $("#layer").innerHTML = ""; }
+function drawer(html) {
+  $("#layer").innerHTML = `<div class="scrim" data-scrim="1"><aside class="drawer" role="dialog" aria-modal="true">${html}</aside></div>`;
+  const f = $("#layer input:not([type=file]):not([disabled]), #layer select:not([disabled])"); if (f) f.focus();
+}
+let pendingFoto = null;
+function editItem(id, tipoNovo) {
+  pendingFoto = null; const adm = ADM();
+  const it = id ? itemOf(id) : { tipo: tipoNovo, grupo: tipoNovo === "acessorio" ? "Acessórios" : tipoNovo === "peca" ? "Carcaça/Suportes" : "Eletrônica", conjunto: tipoNovo === "acessorio" ? "" : tipoNovo === "peca" ? "principal" : "frontal", prazo: tipoNovo === "peca" ? 0 : 7, estoque: 0, minimo: 0, qtdMini: 0, qtdTech: 0, custo: 0 };
+  if (!adm) {
+    const row = (l, v) => v !== undefined && v !== "" ? `<div><div class="eyebrow" style="color:var(--muted)">${l}</div><div>${v}</div></div>` : "";
+    drawer(`<div class="row" style="justify-content:space-between"><div><div class="eyebrow">${esc(TIPO[it.tipo] || "")}${it.qgRef ? " · Manual " + esc(it.qgRef) : ""}</div><h2>${esc(it.codigo)}</h2></div><button class="btn ghost" data-close="1">Fechar</button></div>
+    <div class="photo">${thumb(it)}<div><div style="font-size:17px">${esc(it.nome)}</div><div class="muted small">${esc(conjNome(it))} · ${esc(it.grupo)}</div></div></div>
+    <div class="fg">${row("Localizador", esc(it.local || "—"))}${row("Qtd por Mini / Tech", `${fmtN(it.qtdMini)} / ${fmtN(it.qtdTech)}`)}${row("Dimensões", esc(it.dim))}${row("Matéria-prima", esc(it.mp))}${row("Maquinário", esc(it.maq))}${row("Prazo de reposição", it.tipo === "peca" ? "Fabricação interna" : fmtN(it.prazo) + " dias")}${it.params ? `<div class="full">${row("Parâmetros de fabricação", esc(it.params))}</div>` : ""}${it.obs ? `<div class="full">${row("Observações", esc(it.obs))}</div>` : ""}</div>
+    ${W() ? `<form id="fest" data-id="${id}"><div class="fg"><label class="f">Estoque atual<input id="es-estoque" type="number" step="any" value="${num(it.estoque)}"></label><label class="f">Estoque mínimo<input id="es-minimo" type="number" step="any" value="${num(it.minimo)}"></label></div><div class="actions"><button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit">Atualizar estoque</button></div></form>` : `<p class="muted small" style="margin-top:14px">Estoque atual: <b>${fmtN(it.estoque)}</b></p>`}`);
+    return;
+  }
+  const F = (k, l, t = "text", ex = "") => `<label class="f ${ex}">${l}<input id="it-${k}" type="${t}" ${t === "number" ? 'step="any"' : ""} value="${esc(it[k] ?? "")}"></label>`;
+  const h = id ? histOf(id) : []; const pr = id ? prazoReal(id) : null;
+  drawer(`<div class="row" style="justify-content:space-between"><div><div class="eyebrow">${esc(TIPO[it.tipo] || "")}${it.qgRef ? " · Manual " + esc(it.qgRef) : ""}</div><h2>${id ? esc(it.codigo) : "Novo item"}</h2></div><button class="btn ghost" data-close="1">Fechar</button></div>
+  <div class="photo"><span id="it-thumb">${thumb(it)}</span><div class="grid" style="gap:8px">${id ? `<div>${esc(it.nome)}</div>` : ""}
+    ${S.assets ? `<label class="btn" style="justify-self:start">Trocar foto<input id="it-file" type="file" accept="image/*" hidden></label><span class="muted small">JPG, PNG ou WEBP. A foto é salva ao clicar em Salvar.</span>` : ""}
+    ${it.link ? `<a class="lk small" href="${esc(it.link)}" target="_blank" rel="noopener">Abrir link de compra</a>` : ""}</div></div>
+  ${h.length > 1 ? `<div class="panel" style="margin-top:14px;padding:12px"><div class="eyebrow">Histórico de preço</div><div class="row small" style="margin-top:6px;gap:6px 14px">${h.slice(-8).map((e) => `<span>${fmtDs(e.d)} · <b>${brl(e.v)}</b></span>`).join("")}</div></div>` : ""}
+  <form id="fitem" data-id="${id || ""}"><div class="fg">
+    ${F("codigo", "Código")}
+    <label class="f">Tipo<select id="it-tipo">${Object.entries(TIPO).map(([k, v]) => `<option value="${k}" ${it.tipo === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+    ${F("nome", "Descrição", "text", "full")}
+    <label class="f">Grupo<select id="it-grupo">${GRUPOS.map((g) => `<option ${it.grupo === g ? "selected" : ""}>${g}</option>`).join("")}</select></label>
+    <label class="f">Conjunto (semiacabado)<select id="it-conjunto"><option value="">Montagem final / externo</option>${Object.entries(CONJ).map(([k, v]) => `<option value="${k}" ${it.conjunto === k ? "selected" : ""}>${esc(v.nome)}</option>`).join("")}</select></label>
+    ${F("custo", "Custo atual (R$)", "number")}${F("local", "Localizador")}
+    ${F("qtdMini", "Qtd por Mini", "number")}${F("qtdTech", "Qtd por Tech", "number")}
+    ${F("estoque", "Estoque atual", "number")}${F("minimo", "Estoque mínimo", "number")}
+    <label class="f">Prazo de entrega (dias)<input id="it-prazo" type="number" step="any" value="${esc(it.prazo ?? "")}">${pr !== null ? `<span class="hint">Prazo real médio das compras: ${pr} d</span>` : ""}</label>${F("fornecedor", "Fornecedor")}
+    ${F("link", "Link de compra", "url", "full")}
+    ${F("qgRef", "Código no Manual Técnico")}${F("dim", "Dimensões")}
+    ${F("mp", "Matéria-prima")}${F("maq", "Maquinário")}
+    ${F("precoAvulso", "Preço de venda avulso (R$)", "number")}
+    <label class="f full">Parâmetros de fabricação<textarea id="it-params">${esc(it.params || "")}</textarea></label>
+    <label class="f full">Observações<textarea id="it-obs">${esc(it.obs || "")}</textarea></label>
+  </div>
+  <div class="actions">${id ? `<button type="button" class="btn ghost danger" data-delitem="${id}">Excluir item</button>` : ""}<button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit" id="it-save">Salvar</button></div>
+  </form>`);
+}
+async function saveItem(form) {
+  const id = form.dataset.id || null; const g = (k) => $("#it-" + k).value.trim();
+  const nums = ["custo", "qtdMini", "qtdTech", "estoque", "minimo", "prazo", "precoAvulso"];
+  const all = {};
+  for (const k of ["codigo", "tipo", "nome", "grupo", "conjunto", "local", "fornecedor", "link", "qgRef", "dim", "mp", "maq", "params", "obs", ...nums]) all[k] = nums.includes(k) ? num(g(k)) : g(k);
+  if (!all.codigo) { toast("Informe o código do item.", true); return; }
+  if (all.link && !/^https?:\/\//i.test(all.link)) all.link = "https://" + all.link;
+  const pub = { ...(id ? S.itens[id] : { origem: "Manual" }) }; for (const [k, v] of Object.entries(all)) if (!PRECO_KEYS.includes(k)) pub[k] = v;
+  for (const k of PRECO_KEYS) delete pub[k];
+  const prevE = id ? num(S.itens[id].estoque) : 0;
+  const btn = $("#it-save"); if (btn) btn.disabled = true;
+  if (pendingFoto && S.assets) {
+    try { const r = await S.assets.upload(pendingFoto); pub.foto = r.url; }
+    catch (e) { toast(e && e.code === "too_large" ? "A foto passa do limite de 20 MB." : e && e.code === "unsupported_type" ? "Formato de imagem não suportado." : "Não foi possível enviar a foto.", true); if (btn) btn.disabled = false; return; }
+  }
+  const ok = await guard(async () => {
+    const slug = all.codigo.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const ref = id ? S.db.collection("itens").doc(id) : (slug && !S.itens[slug] ? S.db.collection("itens").doc(slug) : S.db.collection("itens").doc());
+    await ref.set(pub);
+    await savePreco(ref.id, all.custo, id ? "Edição" : "Cadastro", { precoAvulso: all.precoAvulso, link: all.link, fornecedor: all.fornecedor });
+    if (all.estoque !== prevE) await S.db.collection("movs").add({ itemId: ref.id, tipo: "ajuste", qtd: all.estoque, data: today(), ts: new Date().toISOString(), motivo: "Editado na ficha do item (antes " + fmtN(prevE) + ")" });
+  }, "Item salvo");
+  if (btn) btn.disabled = false;
+  if (ok) closeLayer();
+}
+function compraDrawer() {
+  const its = itemsArr().filter((i) => i.tipo !== "peca").sort((a, b) => a.codigo.localeCompare(b.codigo));
+  drawer(`<div class="row" style="justify-content:space-between"><h2>Compra avulsa</h2><button class="btn ghost" data-close="1">Fechar</button></div>
+  <form id="fcompra"><div class="fg">
+    <label class="f full">Item<select id="nc-item">${its.map((i) => `<option value="${i.id}">${esc(i.codigo)} · ${esc(i.nome)}</option>`).join("")}</select></label>
+    <label class="f">Quantidade<input id="nc-q" type="number" min="1" step="1" value="1"></label>
+    <label class="f">Status<select id="nc-st"><option value="pendente">A pedir</option><option value="pedido">Pedido feito hoje</option></select></label>
+  </div><div class="actions"><button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit">Registrar</button></div></form>`);
+}
+function receberDrawer(cid) {
+  const c = S.compras[cid]; const it = itemOf(c.itemId) || {};
+  drawer(`<div class="row" style="justify-content:space-between"><div><div class="eyebrow">${esc(it.codigo || "")}</div><h2>Receber compra</h2></div><button class="btn ghost" data-close="1">Fechar</button></div>
+  <div class="photo">${thumb(it)}<div>${esc(it.nome || "")}<div class="muted small">${fmtN(c.qtd)} unidade(s)${c.dataPedido ? " · pedido em " + fmtD(c.dataPedido) : ""}</div></div></div>
+  <form id="freceber" data-id="${cid}"><div class="fg">
+    <label class="f">Quantidade recebida<input id="rc-q" type="number" min="0" step="1" value="${num(c.qtd)}"></label>
+    <label class="f">Preço pago por unidade (R$)<input id="rc-p" type="number" min="0" step="0.01" value="${num(c.custoUnit) || num(it.custo)}"><span class="hint">Custo atual no cadastro: ${brl(it.custo)}</span></label>
+    <label class="f full"><span class="row small" style="gap:6px;text-transform:none;letter-spacing:0"><input id="rc-up" type="checkbox" checked> Atualizar o custo do item com o preço pago (entra no histórico de preços)</span></label>
+  </div><div class="actions"><button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit">Receber e somar ao estoque</button></div></form>`);
+}
+function linkDrawer(itemId) {
+  const it = itemOf(itemId);
+  drawer(`<div class="row" style="justify-content:space-between"><div><div class="eyebrow">${esc(it.codigo)}</div><h2>Novo link de compra</h2></div><button class="btn ghost" data-close="1">Fechar</button></div>
+  <div class="photo">${thumb(it)}<p class="muted">${esc(it.nome)}</p></div>
+  <form id="flink" data-item="${itemId}"><div class="fg">
+    <label class="f full">URL<input id="nl-url" type="url" required placeholder="https://"></label>
+    <label class="f">Fornecedor<input id="nl-forn" placeholder="Ex.: Mercado Livre"></label>
+    <label class="f">Preço (R$)<input id="nl-preco" type="number" step="any" min="0"></label>
+    <label class="f full"><span class="row small" style="gap:6px;text-transform:none;letter-spacing:0"><input id="nl-main" type="checkbox"> Usar como link principal do item</span></label>
+  </div><div class="actions"><button type="button" class="btn" data-close="1">Cancelar</button><button class="btn pri" type="submit">Salvar link</button></div></form>`);
+}
+function confirmDrawer(title, text, label, fn, extraHtml = "") {
+  drawer(`<h2>${esc(title)}</h2><p class="lead" style="margin:12px 0 0">${text}</p>${extraHtml}<div class="actions"><button class="btn" data-close="1">Voltar</button><button class="btn pri" id="cfm">${esc(label)}</button></div>`);
+  $("#cfm").onclick = async () => { $("#cfm").disabled = true; await fn(); closeLayer(); };
+}
+
+// ---------- ações ----------
+async function moveStock(id, tipo, q, motivo) {
+  const it = S.itens[id]; const atual = num(it.estoque);
+  const novo = tipo === "entrada" ? atual + q : tipo === "saida" ? atual - q : q;
+  await S.db.collection("itens").doc(id).update({ estoque: novo });
+  await S.db.collection("movs").add({ itemId: id, tipo, qtd: q, data: today(), ts: new Date().toISOString(), motivo: motivo || "" });
+  S.itens[id] = { ...it, estoque: novo };
+}
+async function setMont(m, k, v) { const cur = mont(); cur[m][k] = Math.max(0, v); await S.db.collection("config").doc("montagem").set(cur); S.mont = cur; }
+function produce(m, k) {
+  const ms = mont(); const its = itemsArr(); const consume = []; const semis = [];
+  if (CONJ[k]) its.filter((i) => i.tipo !== "acessorio" && i.conjunto === k && qtyOf(i, m)).forEach((i) => consume.push([i, qtyOf(i, m)]));
+  else if (k === "acabado") { semis.push(...Object.keys(CONJ)); its.filter((i) => i.tipo !== "acessorio" && !CONJ[i.conjunto] && qtyOf(i, m)).forEach((i) => consume.push([i, qtyOf(i, m)])); }
+  else if (k === "maquina") { semis.push("acabado"); its.filter((i) => i.tipo === "acessorio" && qtyOf(i, m)).forEach((i) => consume.push([i, qtyOf(i, m)])); }
+  const faltaI = consume.filter(([i, q]) => num(i.estoque) < q); const faltaS = semis.filter((s) => (ms[m][s] || 0) < 1);
+  const label = k === "maquina" ? "máquina completa" : k === "acabado" ? "produto acabado" : CONJ[k].nome.toLowerCase();
+  const nomeS = (s) => s === "acabado" ? "produto acabado" : CONJ[s].nome;
+  const warn = (faltaI.length || faltaS.length) ? `<br><br><b style="color:var(--bad)">Falta no estoque:</b> ${[...faltaS.map(nomeS), ...faltaI.map(([i, q]) => esc(i.codigo) + " (tem " + fmtN(i.estoque) + ", precisa " + fmtN(q) + ")")].join(", ")}. Os saldos ficarão negativos.` : "";
+  const cat = CATEG[k]; const ts = temposSugeridos();
+  const extra = `<div class="fg"><label class="f">Dias de trabalho nesta etapa<input id="pd-dias" type="number" min="0" step="0.5" value="${cat ? ts[cat] : ""}" placeholder="ex.: 1,5">${cat ? `<span class="hint">Entra no cálculo de prazo de ${CATEG_NOME[cat].toLowerCase()}</span>` : ""}</label><label class="f">Data de conclusão<input id="pd-data" type="date" value="${today()}"></label></div>`;
+  confirmDrawer("Produzir 1 " + label + " · " + MODEL_NAME[m], `Vai dar baixa em ${consume.length} itens${semis.length ? " e em " + semis.length + " semiacabado(s)" : ""} e somar 1 ${label} ao estoque.${warn}`, "Confirmar produção", async () => {
+    const dias = num($("#pd-dias") && $("#pd-dias").value); const data = ($("#pd-data") && $("#pd-data").value) || today();
+    await guard(async () => {
+      for (const [i, q] of consume) await moveStock(i.id, "saida", q, "Produção: " + label + " " + m);
+      const cur = mont(); for (const s of semis) cur[m][s] = (cur[m][s] || 0) - 1; cur[m][k] = (cur[m][k] || 0) + 1;
+      await S.db.collection("config").doc("montagem").set(cur); S.mont = cur;
+      const uid = S.user && S.user.id ? await S.user.id().catch(() => null) : null;
+      await S.db.collection("producao").add({ modelo: m, etapa: k, categoria: cat || "", dias, data, ts: new Date().toISOString(), por: uid || "" });
+    }, "Produção registrada");
+  }, extra);
+}
+async function gerarPedidos(pid) {
+  const pl = allPlans()[pid]; const pend = pl.comprar.filter((l) => !l.pedido);
+  await guard(async () => {
+    for (const l of pend) await S.db.collection("compras").add({ itemId: l.id, qtd: l.falta, custoUnit: num(l.it.custo), status: "pendente", pracaId: pid, prazo: num(l.it.prazo), previsao: addDays(pl.inicio, num(l.it.prazo), false), link: l.it.link || "", criadoEm: new Date().toISOString() });
+    if ((S.pracas[pid].status || "planejamento") === "planejamento") await S.db.collection("pracas").doc(pid).update({ status: "compras" });
+  }, pend.length + " pedidos criados em Estoque & compras");
+}
+function baixaPraca(pid) {
+  const pl = allPlans()[pid]; const p = S.pracas[pid];
+  const faltam = pl.linhas.filter((l) => l.falta > 0);
+  confirmDrawer("Dar baixa da praça " + p.cidade, `Registra a saída de ${pl.linhas.length} itens do estoque e das máquinas e semiacabados reservados, e marca a praça como expedida hoje.${faltam.length ? `<br><br><b style="color:var(--bad)">${faltam.length} itens ainda não estão em estoque</b>; os saldos deles ficarão negativos.` : ""}`, "Dar baixa", () => guard(async () => {
+    for (const l of pl.linhas) await moveStock(l.id, "saida", l.need, "Praça " + p.cidade);
+    const cur = mont();
+    for (const m of MODELS) { const s = pl.steps[m]; cur[m].maquina -= s.prontas; cur[m].acabado -= s.acabados; for (const k of Object.keys(CONJ)) cur[m][k] = (cur[m][k] || 0) - s.semiUsed[k]; }
+    await S.db.collection("config").doc("montagem").set(cur);
+    await S.db.collection("pracas").doc(pid).update({ baixado: true, status: "expedida", expedidaEm: today() });
+  }, "Baixa registrada"));
+}
+
+document.addEventListener("click", async (e) => {
+  const z = e.target.closest("[data-zoom]");
+  if (z) { $("#layer").innerHTML = `<div class="lightbox" data-close="1"><img src="${esc(z.dataset.zoom)}" alt=""></div>`; return; }
+  const t = e.target.closest("[data-step],[data-addarq],[data-delarq],[data-go],[data-edit],[data-new],[data-sub],[data-modo],[data-close],[data-scrim],[data-delitem],[data-mc],[data-produce],[data-cm],[data-savecfg],[data-mv],[data-cp],[data-receber],[data-newcompra],[data-lm],[data-addlink],[data-dellink],[data-copylinks],[data-gerar],[data-baixa],[data-delpraca],[data-savetempos],[data-usarsug]");
+  if (!t) return;
+  const d = t.dataset;
+  if (d.scrim && e.target !== t) return;
+  if (d.step) { const [id, dv] = d.step.split("|"); const n = Number(dv); if (n < 0 && num(S.itens[id]?.estoque) <= 0) { toast("O estoque deste item já está zerado.", true); return; } return guard(() => moveStock(id, n > 0 ? "entrada" : "saida", 1, "Ajuste rápido no card"), n > 0 ? "+1 no estoque" : "−1 no estoque"); }
+  if (d.go) { location.hash = d.go; return; }
+  if (d.edit) return editItem(d.edit);
+  if (d.new) return ADM() && editItem(null, d.new);
+  if (d.sub) { UI.pecasSub = d.sub; UI.grupo = ""; UI.conj = ""; return render(); }
+  if (d.modo) { UI.modo = d.modo; try { localStorage.setItem("qg-modo", d.modo); } catch (_) {} return render(); }
+  if (d.close || d.scrim) return closeLayer();
+  if (d.cm) { UI.custoModel = d.cm; return render(); }
+  if (d.lm) { UI.linksModel = d.lm; return render(); }
+  if (d.produce) { const [m, k] = d.produce.split("|"); return produce(m, k); }
+  if (d.mv) {
+    const [id, tipo] = d.mv.split("|"); const inp = $("#mv-" + id); const q = num(inp.value);
+    if (!(q > 0) && tipo !== "ajuste") { toast("Informe a quantidade.", true); inp.focus(); return; }
+    if (tipo === "ajuste" && inp.value === "") { toast("Informe o saldo exato para ajustar.", true); inp.focus(); return; }
+    return guard(() => moveStock(id, tipo, q, tipo === "ajuste" ? "Ajuste de inventário" : "Lançamento manual"), "Estoque atualizado");
+  }
+  if (!ADM()) return;
+  if (d.delitem) return confirmDrawer("Excluir item", "O item sai do cadastro, dos custos e da lista de materiais. Essa ação não pode ser desfeita.", "Excluir", () => guard(async () => { await S.db.collection("itens").doc(d.delitem).delete(); await S.db.collection("precos").doc(d.delitem).delete(); }, "Item excluído"));
+  if (d.mc) { const [m, k, dv] = d.mc.split("|"); return guard(() => setMont(m, k, (mont()[m][k] || 0) + Number(dv))); }
+  if (d.savecfg) { const c = cfg(); for (const m of MODELS) { c.maoObra[m] = num($("#mo-" + m).value); c.combo[m] = Math.max(0, Math.round(num($("#cb-" + m).value))); } return guard(() => S.db.collection("config").doc("geral").set(c), "Configuração salva"); }
+  if (d.cp) {
+    const [id, st] = d.cp.split("|"); const c = S.compras[id]; const it = itemOf(c.itemId) || {};
+    return guard(async () => {
+      if (st === "pedido") await S.db.collection("compras").doc(id).update({ status: "pedido", dataPedido: today(), previsao: addDays(today(), num(c.prazo ?? it.prazo), false) });
+      else await S.db.collection("compras").doc(id).update({ status: st });
+    }, "Compra atualizada");
+  }
+  if (d.receber) return receberDrawer(d.receber);
+  if (d.addarq) return arqDrawer();
+  if (d.delarq) { e.preventDefault(); return confirmDrawer("Tirar arquivo da lista", "O arquivo sai da lista da aba Manuais. Ele continua no Google Drive.", "Tirar da lista", () => guard(() => saveArquivos((c) => { c.itens = c.itens.filter((i) => i.id !== d.delarq); }), "Arquivo retirado da lista")); }
+  if (d.newcompra) return compraDrawer();
+  if (d.addlink) return linkDrawer(d.addlink);
+  if (d.dellink) return guard(() => S.db.collection("links").doc(d.dellink).delete(), "Link removido");
+  if (d.copylinks) {
+    const m = UI.linksModel; const its = itemsArr().filter((i) => i.tipo !== "peca" && (m === "TODOS" || qtyOf(i, m) > 0)).sort((a, b) => a.codigo.localeCompare(b.codigo));
+    const txt = (m === "TODOS" ? "Quick GO · links de compra" : "Quick GO " + MODEL_NAME[m] + " · links de compra") + "\n\n" + its.map((i) => `${i.codigo} | ${i.nome}${m !== "TODOS" ? " | " + fmtN(qtyOf(i, m)) + "x" : ""} | ${i.link || "sem link"}`).join("\n");
+    try { await navigator.clipboard.writeText(txt); toast("Lista copiada"); }
+    catch (_) { drawer(`<div class="row" style="justify-content:space-between"><h2>Copiar lista</h2><button class="btn ghost" data-close="1">Fechar</button></div><p class="muted">Selecione o texto e copie.</p><textarea id="cpy" style="min-height:60vh;font-family:var(--mono);font-size:12px">${esc(txt)}</textarea>`); $("#cpy").select(); }
+    return;
+  }
+  if (d.gerar) return gerarPedidos(d.gerar);
+  if (d.baixa) return baixaPraca(d.baixa);
+  if (d.delpraca) return confirmDrawer("Excluir praça", "A praça sai da lista e deixa de reservar estoque. Os pedidos de compra já criados continuam em Estoque & compras.", "Excluir", () => guard(async () => { await S.db.collection("pracas").doc(d.delpraca).delete(); location.hash = "#pracas"; }, "Praça excluída"));
+  if (d.usarsug) { const ts = temposSugeridos(); $("#pt-tc").value = ts.carcaca; $("#pt-te").value = ts.eletronica; $("#pt-tm").value = ts.montagem; $("#pt-fr").value = ts.frete; toast("Sugestão aplicada. Clique em Recalcular para salvar."); return; }
+  if (d.savetempos) {
+    const pid = d.savetempos;
+    return guard(() => S.db.collection("pracas").doc(pid).update({ dataInicio: $("#pt-ini").value || today(), tempos: { carcaca: num($("#pt-tc").value), eletronica: num($("#pt-te").value), montagem: num($("#pt-tm").value) }, frete: num($("#pt-fr").value), simult: Math.max(1, Math.round(num($("#pt-sim").value))), diasUteis: $("#pt-du").checked }), "Cronograma recalculado");
+  }
+});
+document.addEventListener("input", (e) => {
+  const id = e.target.id;
+  if (id === "q") { UI.q = e.target.value; schedule(); }
+  if (id === "eq") { UI.estoqueQ = e.target.value; schedule(); }
+});
+document.addEventListener("change", (e) => {
+  const id = e.target.id;
+  if (id === "grupo") { UI.grupo = e.target.value; render(); }
+  if (id === "conj") { UI.conj = e.target.value; render(); }
+  if (id === "ef") { UI.estoqueF = e.target.value; render(); }
+  if (id === "pst" && UI.praca && ADM()) {
+    const st = e.target.value; const p = S.pracas[UI.praca]; const upd = { status: st };
+    if (st === "expedida" && !p.expedidaEm) upd.expedidaEm = today();
+    if (st === "entregue") { upd.entregueEm = today(); if (!p.expedidaEm) upd.expedidaEm = today(); }
+    guard(() => S.db.collection("pracas").doc(UI.praca).update(upd), st === "entregue" ? "Entrega registrada: o frete real entra na sugestão de prazo" : "Status atualizado");
+  }
+  if (id === "it-file") {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    if (!/^image\//.test(f.type)) { toast("Escolha um arquivo de imagem.", true); return; }
+    pendingFoto = f; const u = URL.createObjectURL(f);
+    $("#it-thumb").innerHTML = `<span class="thumb" style="background-image:url('${u}')"></span>`;
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("#layer").innerHTML) closeLayer();
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("card") && e.target.dataset.edit) { e.preventDefault(); editItem(e.target.dataset.edit); }
+});
+document.addEventListener("submit", async (e) => {
+  e.preventDefault(); const f = e.target;
+  if (f.id === "fest") {
+    const id = f.dataset.id; const novo = num($("#es-estoque").value); const mn = num($("#es-minimo").value); const it = S.itens[id];
+    const ok = await guard(async () => { if (novo !== num(it.estoque)) await moveStock(id, "ajuste", novo, "Atualizado pela montagem técnica"); if (mn !== num(it.minimo)) await S.db.collection("itens").doc(id).update({ minimo: mn }); }, "Estoque atualizado");
+    if (ok) closeLayer(); return;
+  }
+  if (!ADM()) return;
+  if (f.id === "fitem") return saveItem(f);
+  if (f.id === "farq") {
+    const url = $("#na-url").value.trim(); const m = url.match(/\/d\/([A-Za-z0-9_-]{15,})/) || url.match(/[?&]id=([A-Za-z0-9_-]{15,})/);
+    const nome = $("#na-nome").value.trim(); if (!url || !nome) { toast("Informe o link e o nome.", true); return; }
+    const novo = { id: m ? m[1] : url, nome, tipo: $("#na-tipo").value, pasta: $("#na-pasta").value };
+    const ok = await guard(() => saveArquivos((c) => { c.itens = [...(c.itens || []).filter((i) => i.id !== novo.id), novo]; }), "Arquivo adicionado");
+    if (ok) closeLayer(); return;
+  }
+  if (f.id === "fcompra") {
+    const id = $("#nc-item").value; const it = itemOf(id); const st = $("#nc-st").value;
+    const ok = await guard(() => S.db.collection("compras").add({ itemId: id, qtd: Math.max(1, num($("#nc-q").value)), custoUnit: num(it.custo), status: st, pracaId: "", prazo: num(it.prazo), dataPedido: st === "pedido" ? today() : "", previsao: addDays(today(), num(it.prazo), false), link: it.link || "", criadoEm: new Date().toISOString() }), "Compra registrada");
+    if (ok) closeLayer(); return;
+  }
+  if (f.id === "freceber") {
+    const cid = f.dataset.id; const c = S.compras[cid]; const q = num($("#rc-q").value); const p = num($("#rc-p").value); const up = $("#rc-up").checked;
+    const ok = await guard(async () => {
+      await S.db.collection("compras").doc(cid).update({ status: "recebido", recebidoEm: today(), qtdRecebida: q, custoUnit: p, diasReais: c.dataPedido ? diffDays(c.dataPedido, today()) : null });
+      if (S.itens[c.itemId]) { if (q > 0) await moveStock(c.itemId, "entrada", q, "Compra recebida"); if (up && p > 0) await savePreco(c.itemId, p, "Compra recebida"); }
+    }, "Recebido e somado ao estoque");
+    if (ok) closeLayer(); return;
+  }
+  if (f.id === "flink") {
+    const itemId = f.dataset.item; let url = $("#nl-url").value.trim(); if (url && !/^https?:\/\//i.test(url)) url = "https://" + url;
+    const main = $("#nl-main").checked; const forn = $("#nl-forn").value.trim(); const preco = num($("#nl-preco").value);
+    const ok = await guard(async () => {
+      if (main) { const old = S.precos[itemId] || {}; if (old.link) await S.db.collection("links").add({ itemId, url: old.link, fornecedor: old.fornecedor || "Link anterior", preco: num(old.custo) }); const nd = { ...old, link: url, fornecedor: forn || old.fornecedor || "" }; await S.db.collection("precos").doc(itemId).set(nd); S.precos[itemId] = nd; }
+      else await S.db.collection("links").add({ itemId, url, fornecedor: forn, preco });
+    }, "Link salvo");
+    if (ok) closeLayer(); return;
+  }
+  if (f.id === "fpraca") {
+    const cidade = $("#np-cidade").value.trim(); if (!cidade) { toast("Informe a cidade da praça.", true); return; }
+    const data = { cidade, franqueado: $("#np-franq").value.trim(), dataInicio: $("#np-ini").value || today(), qtd: Object.fromEntries(MODELS.map((m) => [m, Math.max(0, Math.round(num($("#np-q-" + m).value)))])), tempos: { carcaca: num($("#np-tc").value), eletronica: num($("#np-te").value), montagem: num($("#np-tm").value) }, frete: num($("#np-fr").value), simult: Math.max(1, Math.round(num($("#np-sim").value))), diasUteis: $("#np-du").checked, status: "planejamento", criadoEm: new Date().toISOString() };
+    const stock = {}; for (const [i, it] of Object.entries(S.itens)) stock[i] = Math.max(0, num(it.estoque));
+    data.previstaInicial = planOne({ id: "_novo", ...data }, stock, mont()).entrega;
+    let newId = null;
+    const ok = await guard(async () => { const r = await S.db.collection("pracas").add(data); newId = r.id; }, "Praça criada");
+    if (ok && newId) { S.pracas[newId] = data; location.hash = "#pracas-p-" + newId; }
+  }
+});
+window.addEventListener("hashchange", route);
+
+// ---------- dados ----------
+function sub(ref, set, err) { return ref.onSnapshot(set, err || (() => {})); }
+// ---------- acesso e dados (Wix: página com Velo) ----------
+let TOKEN = null, reqSeq = 0; const pend = {};
+function rpc(op, ...args) {
+  return new Promise((res, rej) => {
+    const id = ++reqSeq; pend[id] = { res, rej };
+    window.parent.postMessage({ qg: 1, id, op, args, token: TOKEN }, "*");
+    setTimeout(() => { if (pend[id]) { delete pend[id]; rej({ code: "unavailable", message: "Sem resposta do site" }); } }, 30000);
+  });
+}
+window.addEventListener("message", (e) => {
+  const d = e.data; if (!d || !d.qg || d.op || !pend[d.id]) return;
+  const p = pend[d.id]; delete pend[d.id];
+  d.ok ? p.res(d.res) : p.rej({ code: d.code || "erro", message: d.err || "" });
+});
+// Base local espelhando as coleções, com assinaturas no mesmo formato usado pelo app
+const BASE = {}; const ouvintes = [];
+const docSnap = (c, id) => ({ id, exists: !!(BASE[c] && BASE[c][id]), data: () => BASE[c] && BASE[c][id] });
+function avisar(c) { ouvintes.filter((o) => o.c === c).forEach((o) => o.fn()); }
+function consulta(c, ord, lim) {
+  const q = {
+    orderBy: (f, dir) => consulta(c, [f, dir || "asc"], lim),
+    limit: (n) => consulta(c, ord, n),
+    onSnapshot: (next) => {
+      const fn = () => {
+        let docs = Object.keys(BASE[c] || {}).map((id) => docSnap(c, id));
+        if (ord) docs.sort((a, b) => { const x = a.data()[ord[0]], y = b.data()[ord[0]]; return (x > y ? 1 : x < y ? -1 : 0) * (ord[1] === "desc" ? -1 : 1); });
+        if (lim) docs = docs.slice(0, lim);
+        next({ docs, size: docs.length, empty: !docs.length });
+      };
+      const o = { c, fn }; ouvintes.push(o); setTimeout(fn, 0);
+      return () => { const i = ouvintes.indexOf(o); if (i >= 0) ouvintes.splice(i, 1); };
+    },
+    doc: (id) => refDoc(c, id || ("d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7))),
+    add: async (dados) => { const r = refDoc(c, "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)); await r.set(dados); return r; },
+  };
+  return q;
+}
+function refDoc(c, id) {
+  return {
+    id,
+    set: async (dados) => { await rpc("salvar", c, id, dados); (BASE[c] = BASE[c] || {})[id] = JSON.parse(JSON.stringify(dados)); avisar(c); },
+    update: async (patch) => { await rpc("atualizar", c, id, patch); BASE[c] = BASE[c] || {}; BASE[c][id] = { ...(BASE[c][id] || {}), ...JSON.parse(JSON.stringify(patch)) }; avisar(c); },
+    delete: async () => { await rpc("excluir", c, id); if (BASE[c]) delete BASE[c][id]; avisar(c); },
+    onSnapshot: (next) => { const fn = () => next(docSnap(c, id)); const o = { c, fn }; ouvintes.push(o); setTimeout(fn, 0); return () => { const i = ouvintes.indexOf(o); if (i >= 0) ouvintes.splice(i, 1); }; },
+  };
+}
+const DB = { collection: (c) => consulta(c), doc: (p) => { const [c, id] = p.split("/"); return refDoc(c, id); } };
+async function recarregar() {
+  const tudo = await rpc("carregar");
+  for (const c of Object.keys(BASE)) if (!tudo[c]) BASE[c] = {};
+  for (const [c, docs] of Object.entries(tudo)) BASE[c] = docs;
+  Object.keys(BASE).forEach(avisar);
+}
+function showGate(msg) {
+  document.body.classList.add("locked");
+  $("#gate").hidden = false; $("#gate-msg").textContent = msg || ""; $("#gate-pw").value = "";
+  setTimeout(() => $("#gate-pw").focus(), 30);
+}
+let assinado = false, poll = 0;
+function assinarTudo() {
+  if (assinado) return; assinado = true;
+  const db = DB;
+  db.collection("itens").onSnapshot((sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.itens = o; S.loaded.itens = true; schedule(); });
+  db.doc("config/montagem").onSnapshot((d) => { S.mont = d.exists ? d.data() : null; schedule(); });
+  db.collection("pracas").onSnapshot((sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.pracas = o; schedule(); });
+  db.doc("arquivos/lista").onSnapshot((d) => { S.arquivos = d.exists ? d.data() : null; schedule(); });
+  db.collection("producao").orderBy("ts", "desc").limit(200).onSnapshot((sn) => { S.producao = sn.docs.map((d) => ({ id: d.id, ...d.data() })); schedule(); });
+  db.collection("movs").orderBy("ts", "desc").limit(60).onSnapshot((sn) => { S.movs = sn.docs.map((d) => ({ id: d.id, ...d.data() })); schedule(); });
+  db.collection("precos").onSnapshot((sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.precos = o; schedule(); });
+  db.doc("config/geral").onSnapshot((d) => { S.cfg = d.exists ? d.data() : null; schedule(); });
+  db.collection("compras").onSnapshot((sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.compras = o; schedule(); });
+  db.collection("links").onSnapshot((sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.links = o; schedule(); });
+}
+async function entrar(role) {
+  S.role = role; S.canWrite = true; S.db = DB; S.user = { id: async () => role };
+  S.assets = null;
+  $("#role").hidden = false; $("#role").textContent = ROLE_NAME[S.role]; $("#sair").hidden = false;
+  document.body.classList.remove("locked"); $("#gate").hidden = true; $("#gate-msg").textContent = "";
+  assinarTudo();
+  await recarregar();
+  clearInterval(poll); poll = setInterval(() => { if (!document.hidden && TOKEN) recarregar().catch(() => {}); }, 45000);
+  if (!location.hash) location.hash = "#inicio"; route();
+}
+function lock() {
+  TOKEN = null; clearInterval(poll); try { sessionStorage.removeItem("qg-token"); } catch (_) {}
+  for (const c of Object.keys(BASE)) BASE[c] = {}; Object.keys(BASE).forEach(avisar);
+  S.role = "leitura"; S.canWrite = false; closeLayer(); $("#view").innerHTML = "";
+  $("#role").hidden = true; $("#sair").hidden = true; showGate("Sessão encerrada.");
+}
+document.addEventListener("submit", async (e) => {
+  if (e.target.id !== "fgate") return;
+  e.preventDefault();
+  const pw = $("#gate-pw").value.trim(); if (!pw) { $("#gate-msg").textContent = "Digite a senha."; return; }
+  const btn = e.target.querySelector("button"); btn.disabled = true; $("#gate-msg").textContent = "Entrando…";
+  try {
+    const r = await rpc("entrar", pw);
+    TOKEN = r.token; try { sessionStorage.setItem("qg-token", JSON.stringify(r)); } catch (_) {}
+    await entrar(r.perfil);
+  } catch (err) { $("#gate-msg").textContent = err && err.code === "senha" ? "Senha incorreta." : err && err.code === "bloqueado" ? "Muitas tentativas. Aguarde um minuto." : "Não foi possível entrar agora. Tente de novo."; }
+  btn.disabled = false;
+}, true);
+document.addEventListener("click", (e) => { if (e.target.closest("#sair")) lock(); });
+async function boot() {
+  try { const md = localStorage.getItem("qg-modo"); if (md === "cards" || md === "tabela") UI.modo = md; } catch (_) {}
+  showGate();
+  let salvo = null; try { salvo = JSON.parse(sessionStorage.getItem("qg-token") || "null"); } catch (_) {}
+  if (salvo && salvo.token && salvo.exp > Date.now()) { TOKEN = salvo.token; try { await entrar(salvo.perfil); } catch (_) { lock(); } }
+}
+
+boot();
+})();
+</script>
+
+</body>
+</html>
