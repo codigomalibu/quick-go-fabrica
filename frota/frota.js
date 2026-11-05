@@ -164,6 +164,7 @@ const MARKUP = `
       <button role="tab" id="ab-mv" aria-selected="false">Movimentos</button>
       <button role="tab" id="ab-lg" aria-selected="false">Legenda</button>
       <span class="sp"></span>
+      <button class="qbtn" id="bt-rel" type="button" title="Gera o status de todas as unidades para o financeiro">Relatório</button>
       <button class="qbtn" id="bt-nova" type="button" title="Cadastrar uma nova unidade com 2 Mini Go e 1 Tech Go">+ Unidade</button>
     </div>
     <div class="lista" id="lista"></div>
@@ -286,7 +287,7 @@ function cardUn(u, fab){
   const apagada = UI.filtro && !ms.some(m=>m.status===UI.filtro);
   return `<section class="un${fab?' fab':''}${apagada?' apagada':''}" data-drop="${esc(u.id)}">
     <header data-un="${esc(u.id)}" title="${fab?'Máquinas sem unidade':'Editar unidade'}"><span class="nm">${esc(u.nome)}</span>${u.uf?`<span class="uf">${esc(u.uf)}</span>`:''}<span class="num">${fab?'':(u.ordem??'')}</span></header>
-    ${u.nota?`<div class="nota">${esc(u.nota)}</div>`:''}${comp}
+    ${u.implantacao?`<div class="nota">Implantada em ${esc(u.implantacao.split('-').reverse().join('/'))}</div>`:''}${u.nota?`<div class="nota">${esc(u.nota)}</div>`:''}${comp}
     <div class="mqs">${ms.length? ms.map(m=>`<span class="mq${UI.filtro&&m.status!==UI.filtro?' dim':''}${UI.sel===m.id?' sel':''}" draggable="${S.canWrite}" data-mq="${esc(m.id)}" role="button" tabindex="0" title="${esc(STATUS[m.status]?.n||m.status)}${m.nota?' · '+esc(m.nota):''}"><i style="background:${COR[m.status]||'#888'}"></i>${esc(MODELO[m.modelo]||m.modelo)}<small>${esc(m.serie||'')}</small></span>`).join('') : `<span class="vazio">${fab?'Arraste máquinas para cá para tirá-las de uma unidade.':'Sem máquinas.'}</span>`}
     ${fab?`<button class="qbtn ghost" data-addmq="1" type="button" style="padding:4px 9px">+ Máquina</button>`:''}</div>
   </section>`;
@@ -328,10 +329,54 @@ function abrirMq(id){ UI.gaveta={tipo:'mq', id, conf:false}; UI.sel=id; renderGa
 function abrirUn(id){ if (id===FAB) return; UI.gaveta={tipo:'un', id, conf:false}; renderGaveta(); }
 function fechar(){ UI.gaveta=null; UI.sel=null; renderGaveta(); renderLista(); }
 function optsUn(atual){ return `<option value="${FAB}"${atual===FAB||!S.unidades[atual]?' selected':''}>Fábrica · Estoque</option>` + unidadesOrd().map(u=>`<option value="${esc(u.id)}"${u.id===atual?' selected':''}>${esc(u.nome)} – ${esc(u.uf||'')}</option>`).join(''); }
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+// Situação da unidade para o relatório mensal (ordem importa: a primeira regra que bate vale)
+function situacaoUn(u){
+  const m = maqsDe(u.id); const st = m.map(x=>x.status);
+  const falt = st.filter(s=>s==='faltando'||s==='a_produzir').length;
+  if (st.includes('devolucao')) return {k:'fech', m, falt};
+  if (m.length && st.every(s=>s==='aguardando')) return {k:'nao', m, falt};
+  if (falt) return {k:'falt', m, falt};
+  if (m.length===3 && st.every(s=>s==='operando')) return {k:'ok', m, falt};
+  return {k:'outras', m, falt};
+}
+function relatorioTexto(){
+  const hoje = new Date();
+  const lista = unidadesOrd().map(u=>({u, s:situacaoUn(u)}));
+  const por = k => lista.filter(x=>x.s.k===k);
+  const linha = x => `- ${x.u.nome}${x.u.uf?' ('+x.u.uf+')':''}`;
+  const bloco = (titulo, itens, extra) => `${titulo} (${itens.length})\n` + (itens.length ? itens.map(x=>linha(x)+(extra?extra(x):'')).join('\n') : '- nenhuma');
+  const totalMq = lista.reduce((s,x)=>s+x.s.m.length,0);
+  const faltTotal = por('falt').reduce((s,x)=>s+x.s.falt,0);
+  return [
+    `Status das unidades Quick Go: ${MESES[hoje.getMonth()]} de ${hoje.getFullYear()}`,
+    `Total: ${lista.length} unidades e ${totalMq} máquinas.`,
+    '',
+    bloco('1. Em processo de fechamento', por('fech'), x=>` (${x.s.m.length} máquina(s) em devolução)`),
+    '',
+    bloco('2. Com 100% das máquinas (3 de 3 operando)', por('ok')),
+    '',
+    bloco('3. Com máquinas faltando', por('falt'), x=>` (faltam ${x.s.falt})`),
+    `   Total de máquinas faltando: ${faltTotal}`,
+    '',
+    bloco('4. Ainda não receberam as máquinas', por('nao')),
+    '',
+    bloco('5. Outras situações (reparo, acabamento, produção, envio)', por('outras'), x=>x.u.nota?` (${x.u.nota})`:''),
+  ].join('\n');
+}
+function relatorioHtml(){
+  return `<div class="cab"><h2>Relatório mensal</h2><button class="qbtn ghost" data-x="1" type="button">Fechar</button></div>
+  <div class="corpo">
+    <div class="vazio">Texto gerado agora. Copie e cole no e-mail para financeiro.franchising@malibubar.com.br. O envio automático do dia 04 ainda não está ligado.</div>
+    <textarea id="rel-txt" readonly style="min-height:55vh;font:400 13px ui-monospace,Consolas,monospace">${esc(relatorioTexto())}</textarea>
+    <div class="acoes"><button class="qbtn pri" type="button" data-copyrel="1">Copiar texto</button></div>
+  </div>`;
+}
 function renderGaveta(){
   const G = $('#gaveta'); const g = UI.gaveta;
   if (!g){ G.hidden = true; G.innerHTML=''; return; }
   const ro = !S.canWrite || !S.db ? ' disabled' : '';
+  if (g.tipo==='rel'){ G.innerHTML = relatorioHtml(); G.hidden = false; return; }
   if (g.tipo==='mq' || g.tipo==='novamq'){
     const m = g.tipo==='mq' ? S.maquinas[g.id] : {modelo:'MINI', status:'producao', unidade:FAB, serie:'', nota:''};
     if (!m){ fechar(); return; }
@@ -355,6 +400,7 @@ function renderGaveta(){
       <label class="ff">UF<select id="un-uf"${ro}>${UFS.map(x=>`<option${x===u.uf?' selected':''}>${x}</option>`).join('')}</select></label></div>
       <label class="ff">Situação da unidade<input id="un-nota" value="${esc(u.nota||'')}" maxlength="120"${ro} placeholder="Ex.: Máquinas em produção"></label>
       <label class="ff">Posição no pátio<input id="un-ordem" type="number" min="1" max="99" value="${esc(u.ordem??'')}"${ro}></label>
+      <label class="ff">Data de implantação<input id="un-impl" type="date" value="${esc(u.implantacao||'')}"${ro}></label>
       ${nova?'<div class="vazio">A unidade nasce com 2 Mini Go e 1 Tech Go com status “Aguardando compra”.</div>':`<div class="vazio">${ms.length} máquina(s): ${ms.map(m=>esc(MODELO[m.modelo])+' ('+esc(STATUS[m.status]?.n||'')+')').join(', ')||'nenhuma'}.</div>`}
       ${ro?'':`<div class="acoes">${nova?'':'<button class="qbtn perigo" type="button" data-del="1">Excluir unidade</button>'}<button class="qbtn pri" type="submit">${nova?'Cadastrar unidade':'Salvar'}</button></div>`}
       ${g.conf?`<div class="conf">Excluir a unidade ${esc(u.nome)}? ${ms.length?`As ${ms.length} máquina(s) dela vão para Fábrica · Estoque.`:''}<div class="acoes"><button class="qbtn" type="button" data-nconf="1">Manter</button><button class="qbtn perigo" type="button" data-sconf="1">Excluir</button></div></div>`:''}
@@ -378,7 +424,7 @@ async function salvarMq(){
 }
 async function salvarUn(){
   const g = UI.gaveta; const nome = $('#un-nome').value.trim(); if (!nome){ toast('Informe a cidade da unidade.', true); return; }
-  const d = {nome, uf:$('#un-uf').value, nota:$('#un-nota').value.trim(), ordem: parseInt($('#un-ordem').value,10) || unidadesOrd().length+1};
+  const d = {nome, uf:$('#un-uf').value, nota:$('#un-nota').value.trim(), ordem: parseInt($('#un-ordem').value,10) || unidadesOrd().length+1, implantacao: $('#un-impl').value || ''};
   if (g.tipo==='novaun'){
     let id = slug(nome); while (S.unidades[id]) id += '-2';
     const ab = slug(nome).replace(/-/g,'').slice(0,3).toUpperCase();
@@ -403,6 +449,7 @@ async function excluir(){
 $('#chips').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; UI.filtro = UI.filtro===b.dataset.f ? null : b.dataset.f; renderAll(); });
 ['un','mv','lg'].forEach(k => $('#ab-'+k).addEventListener('click', ()=>{ UI.aba=k; renderLista(); }));
 $('#bt-nova').addEventListener('click', ()=>{ UI.gaveta={tipo:'novaun', conf:false}; renderGaveta(); });
+$('#bt-rel').addEventListener('click', ()=>{ UI.gaveta={tipo:'rel', conf:false}; renderGaveta(); });
 $('#lista').addEventListener('input', e => { if (e.target.id==='busca'){ UI.q = e.target.value; renderLista(); } });
 $('#lista').addEventListener('click', e => {
   const mq = e.target.closest('[data-mq]'); if (mq){ abrirMq(mq.dataset.mq); focarMq(mq.dataset.mq); return; }
@@ -416,6 +463,7 @@ $('#lista').addEventListener('dragleave', e => { const z = e.target.closest('[da
 $('#lista').addEventListener('drop', e => { const z = e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); z.classList.remove('over'); const id = e.dataTransfer.getData('text/plain'); if (id && S.maquinas[id]) mover(id, z.dataset.drop); });
 $('#gaveta').addEventListener('click', e => {
   if (e.target.closest('[data-x]')) return fechar();
+  if (e.target.closest('[data-copyrel]')){ const t = $('#rel-txt'); navigator.clipboard.writeText(t.value).then(()=>toast('Texto copiado')).catch(()=>{ t.select(); toast('Selecione o texto e copie', true); }); return; }
   if (e.target.closest('[data-del]')){ UI.gaveta.conf = true; renderGaveta(); return; }
   if (e.target.closest('[data-nconf]')){ UI.gaveta.conf = false; renderGaveta(); return; }
   if (e.target.closest('[data-sconf]')) excluir();
