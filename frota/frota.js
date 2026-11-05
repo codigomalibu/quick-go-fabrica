@@ -287,7 +287,7 @@ function cardUn(u, fab){
   const apagada = UI.filtro && !ms.some(m=>m.status===UI.filtro);
   return `<section class="un${fab?' fab':''}${apagada?' apagada':''}" data-drop="${esc(u.id)}">
     <header data-un="${esc(u.id)}" title="${fab?'Máquinas sem unidade':'Editar unidade'}"><span class="nm">${esc(u.nome)}</span>${u.uf?`<span class="uf">${esc(u.uf)}</span>`:''}<span class="num">${fab?'':(u.ordem??'')}</span></header>
-    ${u.implantacao?`<div class="nota">Implantada em ${esc(u.implantacao.split('-').reverse().join('/'))}</div>`:''}${u.nota?`<div class="nota">${esc(u.nota)}</div>`:''}${comp}
+    ${u.categoria==='intencao'?`<div class="comp" style="color:var(--mineral)">Intenção de compra</div>`:''}${u.implantacao?`<div class="nota">Implantada em ${esc(u.implantacao.split('-').reverse().join('/'))}</div>`:''}${u.nota?`<div class="nota">${esc(u.nota)}</div>`:''}${comp}
     <div class="mqs">${ms.length? ms.map(m=>`<span class="mq${UI.filtro&&m.status!==UI.filtro?' dim':''}${UI.sel===m.id?' sel':''}" draggable="${S.canWrite}" data-mq="${esc(m.id)}" role="button" tabindex="0" title="${esc(STATUS[m.status]?.n||m.status)}${m.nota?' · '+esc(m.nota):''}"><i style="background:${COR[m.status]||'#888'}"></i>${esc(MODELO[m.modelo]||m.modelo)}<small>${esc(m.serie||'')}</small></span>`).join('') : `<span class="vazio">${fab?'Arraste máquinas para cá para tirá-las de uma unidade.':'Sem máquinas.'}</span>`}
     ${fab?`<button class="qbtn ghost" data-addmq="1" type="button" style="padding:4px 9px">+ Máquina</button>`:''}</div>
   </section>`;
@@ -332,6 +332,7 @@ function optsUn(atual){ return `<option value="${FAB}"${atual===FAB||!S.unidades
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 // Situação da unidade para o relatório mensal (ordem importa: a primeira regra que bate vale)
 function situacaoUn(u){
+  if (u.categoria==='intencao') return {k:'intencao', m:maqsDe(u.id), falt:0};
   const m = maqsDe(u.id); const st = m.map(x=>x.status);
   const falt = st.filter(s=>s==='faltando'||s==='a_produzir').length;
   if (st.includes('devolucao')) return {k:'fech', m, falt};
@@ -359,9 +360,11 @@ function relatorioTexto(){
     bloco('3. Com máquinas faltando', por('falt'), x=>` (faltam ${x.s.falt})`),
     `   Total de máquinas faltando: ${faltTotal}`,
     '',
-    bloco('4. Ainda não receberam as máquinas', por('nao')),
+    bloco('4. Intenção de compra', por('intencao')),
     '',
-    bloco('5. Outras situações (reparo, acabamento, produção, envio)', por('outras'), x=>x.u.nota?` (${x.u.nota})`:''),
+    bloco('5. Ainda não receberam as máquinas', por('nao')),
+    '',
+    bloco('6. Outras situações (reparo, acabamento, produção, envio)', por('outras'), x=>x.u.nota?` (${x.u.nota})`:''),
   ].join('\n');
 }
 function relatorioHtml(){
@@ -401,6 +404,7 @@ function renderGaveta(){
       <label class="ff">Situação da unidade<input id="un-nota" value="${esc(u.nota||'')}" maxlength="120"${ro} placeholder="Ex.: Máquinas em produção"></label>
       <label class="ff">Posição no pátio<input id="un-ordem" type="number" min="1" max="99" value="${esc(u.ordem??'')}"${ro}></label>
       <label class="ff">Data de implantação<input id="un-impl" type="date" value="${esc(u.implantacao||'')}"${ro}></label>
+      <label class="ff">Categoria<select id="un-cat"${ro}><option value="">Normal</option><option value="intencao"${u.categoria==='intencao'?' selected':''}>Intenção de compra</option></select></label>
       ${nova?'<div class="vazio">A unidade nasce com 2 Mini Go e 1 Tech Go com status “Aguardando compra”.</div>':`<div class="vazio">${ms.length} máquina(s): ${ms.map(m=>esc(MODELO[m.modelo])+' ('+esc(STATUS[m.status]?.n||'')+')').join(', ')||'nenhuma'}.</div>`}
       ${ro?'':`<div class="acoes">${nova?'':'<button class="qbtn perigo" type="button" data-del="1">Excluir unidade</button>'}<button class="qbtn pri" type="submit">${nova?'Cadastrar unidade':'Salvar'}</button></div>`}
       ${g.conf?`<div class="conf">Excluir a unidade ${esc(u.nome)}? ${ms.length?`As ${ms.length} máquina(s) dela vão para Fábrica · Estoque.`:''}<div class="acoes"><button class="qbtn" type="button" data-nconf="1">Manter</button><button class="qbtn perigo" type="button" data-sconf="1">Excluir</button></div></div>`:''}
@@ -424,7 +428,7 @@ async function salvarMq(){
 }
 async function salvarUn(){
   const g = UI.gaveta; const nome = $('#un-nome').value.trim(); if (!nome){ toast('Informe a cidade da unidade.', true); return; }
-  const d = {nome, uf:$('#un-uf').value, nota:$('#un-nota').value.trim(), ordem: parseInt($('#un-ordem').value,10) || unidadesOrd().length+1, implantacao: $('#un-impl').value || ''};
+  const d = {nome, uf:$('#un-uf').value, nota:$('#un-nota').value.trim(), ordem: parseInt($('#un-ordem').value,10) || unidadesOrd().length+1, implantacao: $('#un-impl').value || '', categoria: $('#un-cat').value || ''};
   if (g.tipo==='novaun'){
     let id = slug(nome); while (S.unidades[id]) id += '-2';
     const ab = slug(nome).replace(/-/g,'').slice(0,3).toUpperCase();
