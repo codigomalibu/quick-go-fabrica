@@ -217,6 +217,13 @@ const maqsDe = (uid) => Object.entries(S.maquinas).map(([id,v])=>({id,...v})).fi
   .sort((a,b)=> (a.modelo===b.modelo?0:a.modelo==='MINI'?-1:1) || String(a.serie||a.id).localeCompare(String(b.serie||b.id)));
 const nomeUn = (id) => id===FAB ? 'Fábrica · Estoque' : (S.unidades[id]?.nome || 'Fábrica · Estoque');
 const rotMq = (m) => (MODELO[m.modelo]||m.modelo) + (m.serie ? ' · ' + m.serie : '');
+// ID fixo da máquina: Mini01Cuiaba, Mini02Cuiaba, Tech01Cuiaba (tipo + número + cidade de origem, sem acento)
+const semAcento = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]/g,'');
+const baseDe = (id, m) => m.base || id.replace(/-(m\d|t\d)$/,'');
+const numDe = (id, m) => String(m.num || (id.match(/(\d)$/)||[,'1'])[1]).padStart(2,'0');
+const idMaq = (id, m) => { const b = baseDe(id,m); const u = S.unidades[b]; return (m.modelo==='TECH'?'Tech':'Mini') + numDe(id,m) + (u ? semAcento(u.nome) : semAcento(b)); };
+// Empréstimo: a máquina está numa unidade que não é a de origem
+const emprestada = (id, m) => { const b = baseDe(id,m); return !!S.unidades[m.unidade] && m.unidade !== b; };
 function saude(lista){ for (const k of ORDEM) if (lista.some(m=>m.status===k)) return k; return null; }
 
 /* ---------------- dados ---------------- */
@@ -240,7 +247,7 @@ async function mover(id, para){
   const ok = await guard(async () => {
     await S.db.doc('maquinas/' + id).update({unidade: para});
     await S.db.collection('movimentos').add({maquina:id, rotulo: rotMq(m), de, para, deNome: nomeUn(de), paraNome: nomeUn(para), status: m.status||'', ts: new Date().toISOString(), por: S.uid || null});
-  }, rotMq(m) + ' → ' + nomeUn(para));
+  }, idMaq(id, m) + ' → ' + nomeUn(para));
   if (!ok){ S.maquinas[id] = {...S.maquinas[id], unidade: ant}; renderAll(); }
 }
 
@@ -331,6 +338,7 @@ function relatorioTexto(){
   const por = k => lista.filter(x=>x.s.k===k);
   const linha = x => `- ${x.u.nome}${x.u.uf?' ('+x.u.uf+')':''}`;
   const bloco = (titulo, itens, extra) => `${titulo} (${itens.length})\n` + (itens.length ? itens.map(x=>linha(x)+(extra?extra(x):'')).join('\n') : '- nenhuma');
+  const emprest = Object.entries(S.maquinas).filter(([id,m])=>emprestada(id,m));
   const totalMq = lista.reduce((s,x)=>s+x.s.m.length,0);
   const faltTotal = por('falt').reduce((s,x)=>s+x.s.falt,0);
   return [
@@ -349,6 +357,9 @@ function relatorioTexto(){
     bloco('5. Ainda não receberam as máquinas', por('nao')),
     '',
     bloco('6. Outras situações (reparo, acabamento, produção, envio)', por('outras'), x=>x.u.nota?` (${x.u.nota})`:''),
+    '',
+    `7. Máquinas emprestadas para outra unidade (${emprest.length})`,
+    ...(emprest.length ? emprest.map(([id,m])=>`- ${idMaq(id,m)} está em ${S.unidades[m.unidade].nome} (origem: ${S.unidades[baseDe(id,m)]?.nome || baseDe(id,m)})`) : ['- nenhuma']),
   ].join('\n');
 }
 function relatorioHtml(){
@@ -367,7 +378,7 @@ function renderGaveta(){
   if (g.tipo==='mq' || g.tipo==='novamq'){
     const m = g.tipo==='mq' ? S.maquinas[g.id] : {modelo:'MINI', status:'producao', unidade:FAB, serie:'', nota:''};
     if (!m){ fechar(); return; }
-    G.innerHTML = `<div class="cab"><h2>${g.tipo==='mq'?esc(rotMq(m)):'Nova máquina'}</h2><button class="btn ghost" data-x="1" type="button">Fechar</button></div>
+    G.innerHTML = `<div class="cab"><h2>${g.tipo==='mq'?esc(idMaq(g.id,m)):'Nova máquina'}</h2><button class="btn ghost" data-x="1" type="button">Fechar</button></div>
     <form class="corpo" id="fmq" autocomplete="off">
       <div class="linha"><label class="f">Modelo<select id="mq-modelo"${ro}>${Object.entries(MODELO).map(([k,v])=>`<option value="${k}"${m.modelo===k?' selected':''}>${v}</option>`).join('')}</select></label>
       <label class="f">Nº de série<input id="mq-serie" value="${esc(m.serie||'')}" maxlength="30"${ro}></label></div>
@@ -375,7 +386,7 @@ function renderGaveta(){
       <label class="f">Unidade<select id="mq-un"${ro}>${optsUn(m.unidade)}</select></label>
       <label class="f">Observação<textarea id="mq-nota" maxlength="500"${ro} placeholder="Ex.: trocar bomba 2, aguardando peça">${esc(m.nota||'')}</textarea></label>
       ${ro?'<div class="vazio">Somente leitura.</div>':`<div class="acoes">${g.tipo==='mq'?'<button class="btn perigo" type="button" data-del="1">Excluir máquina</button>':''}<button class="btn pri" type="submit">${g.tipo==='mq'?'Salvar':'Cadastrar'}</button></div>`}
-      ${g.conf?`<div class="conf">Excluir ${esc(rotMq(m))} de vez? O histórico de movimentos continua.<div class="acoes"><button class="btn" type="button" data-nconf="1">Manter</button><button class="btn perigo" type="button" data-sconf="1">Excluir</button></div></div>`:''}
+      ${g.conf?`<div class="conf">Excluir ${esc(idMaq(g.id,m))} de vez? O histórico de movimentos continua.<div class="acoes"><button class="btn" type="button" data-nconf="1">Manter</button><button class="btn perigo" type="button" data-sconf="1">Excluir</button></div></div>`:''}
     </form>`;
   } else {
     const nova = g.tipo==='novaun'; const u = nova ? {nome:'', uf:'', nota:'Franquia em compra', ordem: unidadesOrd().length+1} : S.unidades[g.id];
@@ -400,6 +411,7 @@ async function salvarMq(){
   const g = UI.gaveta; const d = {modelo:$('#mq-modelo').value, serie:$('#mq-serie').value.trim(), status:$('#mq-status').value, unidade:$('#mq-un').value, nota:$('#mq-nota').value.trim()};
   if (g.tipo==='novamq'){
     const id = 'mq-' + Date.now().toString(36);
+    d.base = d.unidade; d.num = String(maqsDe(d.unidade).filter(x=>x.modelo===d.modelo).length+1);
     if (await guard(()=>S.db.doc('maquinas/'+id).set(d), 'Máquina cadastrada')) fechar();
     return;
   }
@@ -810,7 +822,7 @@ if (R){
     if (id !== hover){ hover = id; canvas.style.cursor = id ? 'grab' : ''; }
     if (id && S.maquinas[id]){ const m = S.maquinas[id]; const r = palco.getBoundingClientRect(); const lf = localFisico(m);
       const onde = lf.onde==='cam' ? (m.status==='devolucao' ? 'voltando de ' : 'a caminho de ') + nomeUn(lf.dono) : lf.para ? 'na fábrica, para ' + nomeUn(lf.para) : nomeUn(m.unidade);
-      tip.innerHTML = `<b>${esc(rotMq(m))}</b>${esc(STATUS[m.status]?.n||m.status)} · ${esc(onde)}${m.nota?'<br>'+esc(m.nota):''}`;
+      tip.innerHTML = `<b>${esc(idMaq(id,m))}</b>${esc(STATUS[m.status]?.n||m.status)} · ${esc(onde)}${m.nota?'<br>'+esc(m.nota):''}`;
       tip.style.left = (ev.clientX - r.left) + 'px'; tip.style.top = (ev.clientY - r.top) + 'px'; tip.hidden = false; }
     else tip.hidden = true;
   });
