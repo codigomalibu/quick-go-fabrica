@@ -173,7 +173,7 @@
    "modelo": "MINI",
    "nota": "Tem que ser produzida (confirmar modelo)",
    "serie": "BSB-M2",
-   "status": "a_produzir",
+   "status": "manutencao",
    "unidade": "brasilia"
   },
   "brasilia-t1": {
@@ -318,9 +318,9 @@
   },
   "ponta-pora-m2": {
    "modelo": "MINI",
-   "nota": "Falta 1 máquina (confirmar se é Mini ou Tech)",
+   "nota": "Falta 1 máquina",
    "serie": "PPO-M2",
-   "status": "faltando",
+   "status": "manutencao",
    "unidade": "ponta-pora"
   },
   "ponta-pora-t1": {
@@ -363,7 +363,7 @@
    "nota": "",
    "serie": "RPO-M2",
    "status": "producao",
-   "unidade": "sao-jose-do-rio-preto"
+   "unidade": "fabrica"
   },
   "sao-jose-do-rio-preto-t1": {
    "modelo": "TECH",
@@ -376,21 +376,21 @@
    "modelo": "MINI",
    "nota": "Problema de acabamento (confirmar modelo)",
    "serie": "SPA-M1",
-   "status": "acabamento",
+   "status": "operando",
    "unidade": "sao-paulo"
   },
   "sao-paulo-m2": {
    "modelo": "MINI",
-   "nota": "Problema de acabamento (confirmar modelo)",
+   "nota": "Problema de acabamento",
    "serie": "SPA-M2",
-   "status": "acabamento",
+   "status": "manutencao",
    "unidade": "sao-paulo"
   },
   "sao-paulo-t1": {
    "modelo": "TECH",
-   "nota": "",
+   "nota": "Problema de acabamento",
    "serie": "SPA-T1",
-   "status": "operando",
+   "status": "manutencao",
    "unidade": "sao-paulo"
   },
   "sinop-m1": {
@@ -469,6 +469,39 @@
    "rotulo": "Mini Go · CBA-M2",
    "status": "operando",
    "ts": "2026-11-05T16:39:38.412Z"
+  },
+  "dmw2egvyyb2ds9": {
+   "de": "uberlandia",
+   "deNome": "Uberlândia",
+   "maquina": "brasilia-t1",
+   "para": "brasilia",
+   "paraNome": "Brasília",
+   "por": "admin",
+   "rotulo": "Tech Go · BSB-T1",
+   "status": "operando",
+   "ts": "2026-11-04T17:37:59.770Z"
+  },
+  "dmw2egulrw5k1i": {
+   "de": "brasilia",
+   "deNome": "Brasília",
+   "maquina": "brasilia-t1",
+   "para": "uberlandia",
+   "paraNome": "Uberlândia",
+   "por": "admin",
+   "rotulo": "Tech Go · BSB-T1",
+   "status": "operando",
+   "ts": "2026-11-04T17:37:57.998Z"
+  },
+  "dmw26mdlc8v9js": {
+   "de": "sao-jose-do-rio-preto",
+   "deNome": "São José do Rio Preto",
+   "maquina": "sao-jose-do-rio-preto-m2",
+   "para": "fabrica",
+   "paraNome": "Fábrica · Estoque",
+   "por": "admin",
+   "rotulo": "Mini Go · RPO-M2",
+   "status": "producao",
+   "ts": "2026-11-04T13:58:18.959Z"
   }
  }
 }
