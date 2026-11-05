@@ -352,41 +352,62 @@ function relatorioTexto(){
   const hoje = new Date();
   const lista = unidadesOrd().map(u=>({u, s:situacaoUn(u)}));
   const por = k => lista.filter(x=>x.s.k===k);
-  const linha = x => `- ${x.u.nome}${x.u.uf?' ('+x.u.uf+')':''}`;
-  const bloco = (titulo, itens, extra) => `${titulo} (${itens.length})\n` + (itens.length ? itens.map(x=>linha(x)+(extra?extra(x):'')).join('\n') : '- nenhuma');
+  const nomeUf = u => `${u.nome}${u.uf?' ('+u.uf+')':''}`;
   const emprest = Object.entries(S.maquinas).filter(([id,m])=>emprestada(id,m));
-  const reparo = Object.entries(S.maquinas).filter(([id,m])=>m.status==='manutencao');
   const totalMq = lista.reduce((s,x)=>s+x.s.m.length,0);
-  const faltTotal = por('falt').reduce((s,x)=>s+x.s.falt,0);
+  const outras = por('outras');
+  const fech = por('fech'); const ok = por('ok');
+  const blocoOutras = outras.length ? outras.map(x=>{
+    const cab = `${nomeUf(x.u)}${x.u.nota?' — '+x.u.nota:''}`;
+    if (!x.s.m.some(m=>m.status==='manutencao')) return cab;
+    const linhas = x.s.m.map(m=>`  ${idMaq(m.id,m)}: ${STATUS[m.status]?.n || m.status}${m.nota?' · observação: '+m.nota:''}`);
+    return [cab, ...linhas].join('\n');
+  }).join('\n\n') : '- nenhuma';
   return [
     `Status das unidades Quick Go: ${MESES[hoje.getMonth()]} de ${hoje.getFullYear()}`,
     `Total: ${lista.length} unidades e ${totalMq} máquinas.`,
     '',
-    bloco('1. Em processo de fechamento', por('fech'), x=>` (${x.s.m.length} máquina(s) em devolução)`),
+    `1. Em processo de fechamento (${fech.length})`,
+    fech.length ? fech.map(x=>`- ${nomeUf(x.u)} (${x.s.m.length} máquina(s) em devolução)`).join('\n') : '- nenhuma',
     '',
-    bloco('2. Com 100% das máquinas (3 de 3 operando)', por('ok')),
+    `2. Com 100% das máquinas (3 de 3 operando) (${ok.length})`,
+    ok.length ? ok.map(x=>`- ${nomeUf(x.u)}`).join('\n') : '- nenhuma',
     '',
-    bloco('3. Com máquinas faltando', por('falt'), x=>` (faltam ${x.s.falt})`),
-    `   Total de máquinas faltando: ${faltTotal}`,
+    `3. Outras situações (${outras.length})`,
+    blocoOutras,
     '',
-    bloco('4. Intenção de compra', por('intencao')),
-    '',
-    bloco('5. Ainda não receberam as máquinas', por('nao')),
-    '',
-    bloco('6. Outras situações (reparo, acabamento, produção, envio)', por('outras'), x=>x.u.nota?` (${x.u.nota})`:''),
-    '',
-    `7. Máquinas emprestadas para outra unidade (${emprest.length})`,
+    `4. Máquinas emprestadas para outra unidade (${emprest.length})`,
     ...(emprest.length ? emprest.map(([id,m])=>`- ${idMaq(id,m)} está em ${S.unidades[m.unidade].nome} (origem: ${S.unidades[baseDe(id,m)]?.nome || baseDe(id,m)})`) : ['- nenhuma']),
-    '',
-    `8. Máquinas em reparo (${reparo.length})`,
-    ...(reparo.length ? reparo.map(([id,m])=>`- ${idMaq(id,m)} · unidade: ${S.unidades[m.unidade]?.nome || 'Fábrica · Estoque'} · observação: ${m.nota || 'sem observação'}`) : ['- nenhuma']),
   ].join('\n');
+}
+// Visual do relatório: blocos coloridos, com espaço entre as unidades
+function relatorioVisual(){
+  const lista = unidadesOrd().map(u=>({u, s:situacaoUn(u)}));
+  const por = k => lista.filter(x=>x.s.k===k);
+  const nome = u => `${esc(u.nome)}${u.uf?' <span style="opacity:.6">'+esc(u.uf)+'</span>':''}`;
+  const card = (cor, titulo, corpo) => `<section style="border-left:4px solid ${cor};background:var(--surface,#1a2a31);border-radius:12px;padding:12px 14px;margin-top:12px"><h3 style="margin:0 0 8px;font:600 11px var(--rotulo,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:${cor}">${titulo}</h3>${corpo}</section>`;
+  const fech = por('fech'); const ok = por('ok'); const outras = por('outras');
+  const emprest = Object.entries(S.maquinas).filter(([id,m])=>emprestada(id,m));
+  const fechHtml = fech.length ? fech.map(x=>`<div style="margin-top:6px">${nome(x.u)} <span style="opacity:.75">· ${x.s.m.length} máquina(s) em devolução</span></div>`).join('') : '<div style="opacity:.7">Nenhuma</div>';
+  const okHtml = ok.length ? ok.map(x=>`<div style="margin-top:6px">${nome(x.u)}</div>`).join('') : '<div style="opacity:.7">Nenhuma</div>';
+  const outrasHtml = outras.length ? outras.map(x=>{
+    const head = `<div style="font:600 15px var(--display,serif)">${nome(x.u)}${x.u.nota?` <span style="font:400 13px var(--corpo,sans-serif);opacity:.75">· ${esc(x.u.nota)}</span>`:''}</div>`;
+    if (!x.s.m.some(m=>m.status==='manutencao')) return `<div style="margin-top:12px">${head}</div>`;
+    const linhas = x.s.m.map(m=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0 0 6px;font-size:14px"><i style="width:9px;height:9px;border-radius:50%;background:${COR[m.status]||'#888'};display:inline-block;flex:none"></i><b>${esc(idMaq(m.id,m))}</b> · ${esc(STATUS[m.status]?.n||m.status)}${m.nota?`<span style="opacity:.75"> — ${esc(m.nota)}</span>`:''}</div>`).join('');
+    return `<div style="margin-top:12px">${head}${linhas}</div>`;
+  }).join('') : '<div style="opacity:.7">Nenhuma</div>';
+  const empHtml = emprest.length ? emprest.map(([id,m])=>`<div style="margin-top:6px"><b>${esc(idMaq(id,m))}</b> está em ${esc(S.unidades[m.unidade].nome)} <span style="opacity:.75">(origem: ${esc(S.unidades[baseDe(id,m)]?.nome || baseDe(id,m))})</span></div>`).join('') : '<div style="opacity:.7">Nenhuma</div>';
+  return card('#7cc59d','1. Em processo de fechamento', fechHtml)
+    + card('#4fae7f','2. Com 100% das máquinas', okHtml)
+    + card('#e0a24a','3. Outras situações', outrasHtml)
+    + card('#8494d4','4. Máquinas emprestadas', empHtml);
 }
 function relatorioHtml(){
   return `<div class="cab"><h2>Relatório mensal</h2><button class="qbtn ghost" data-x="1" type="button">Fechar</button></div>
   <div class="corpo">
-    <div class="vazio">Texto gerado agora. Copie e cole no e-mail para financeiro.franchising@malibubar.com.br. O envio automático do dia 04 ainda não está ligado.</div>
-    <textarea id="rel-txt" readonly style="min-height:55vh;font:400 13px ui-monospace,Consolas,monospace">${esc(relatorioTexto())}</textarea>
+    <div class="vazio">Para enviar a financeiro.franchising@malibubar.com.br, copie o texto. O envio automático do dia 04 ainda não está ligado.</div>
+    ${relatorioVisual()}
+    <details style="margin-top:12px"><summary>Texto para copiar</summary><textarea id="rel-txt" readonly style="min-height:40vh;font:400 13px ui-monospace,Consolas,monospace">${esc(relatorioTexto())}</textarea></details>
     <div class="acoes"><button class="qbtn pri" type="button" data-copyrel="1">Copiar texto</button></div>
   </div>`;
 }
