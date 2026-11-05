@@ -339,6 +339,7 @@ function relatorioTexto(){
   const linha = x => `- ${x.u.nome}${x.u.uf?' ('+x.u.uf+')':''}`;
   const bloco = (titulo, itens, extra) => `${titulo} (${itens.length})\n` + (itens.length ? itens.map(x=>linha(x)+(extra?extra(x):'')).join('\n') : '- nenhuma');
   const emprest = Object.entries(S.maquinas).filter(([id,m])=>emprestada(id,m));
+  const reparo = Object.entries(S.maquinas).filter(([id,m])=>m.status==='manutencao');
   const totalMq = lista.reduce((s,x)=>s+x.s.m.length,0);
   const faltTotal = por('falt').reduce((s,x)=>s+x.s.falt,0);
   return [
@@ -360,6 +361,9 @@ function relatorioTexto(){
     '',
     `7. Máquinas emprestadas para outra unidade (${emprest.length})`,
     ...(emprest.length ? emprest.map(([id,m])=>`- ${idMaq(id,m)} está em ${S.unidades[m.unidade].nome} (origem: ${S.unidades[baseDe(id,m)]?.nome || baseDe(id,m)})`) : ['- nenhuma']),
+    '',
+    `8. Máquinas em reparo (${reparo.length})`,
+    ...(reparo.length ? reparo.map(([id,m])=>`- ${idMaq(id,m)} · unidade: ${S.unidades[m.unidade]?.nome || 'Fábrica · Estoque'} · observação: ${m.nota || 'sem observação'}`) : ['- nenhuma']),
   ].join('\n');
 }
 function relatorioHtml(){
