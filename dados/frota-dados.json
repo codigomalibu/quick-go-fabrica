@@ -1,507 +1,507 @@
 {
- "frota_unidades": {
-  "balneario-camboriu": {
-   "nome": "Balneário Camboriú",
-   "nota": "Máquinas em produção",
-   "ordem": 11,
-   "uf": "SC"
+  "frota_unidades": {
+    "sao-gabriel-do-oeste": {
+      "nome": "São Gabriel do Oeste",
+      "nota": "Máquinas em produção",
+      "ordem": 14,
+      "uf": "MS"
+    },
+    "sao-jose-do-rio-preto": {
+      "nome": "São José do Rio Preto",
+      "nota": "Máquinas em produção",
+      "ordem": 15,
+      "uf": "SP"
+    },
+    "bauru": {
+      "categoria": "intencao",
+      "nota": "Franquia em compra",
+      "ordem": 16,
+      "uf": "SP",
+      "nome": "Bauru"
+    },
+    "campo-grande": {
+      "nome": "Campo Grande",
+      "nota": "Operando",
+      "ordem": 1,
+      "uf": "MS"
+    },
+    "ponta-pora": {
+      "nome": "Ponta Porã",
+      "nota": "Falta 1 máquina",
+      "ordem": 2,
+      "uf": "MS"
+    },
+    "dracena": {
+      "nome": "Dracena",
+      "nota": "Operando",
+      "ordem": 3,
+      "uf": "SP"
+    },
+    "sinop": {
+      "nome": "Sinop",
+      "nota": "2 máquinas para reparo",
+      "ordem": 4,
+      "uf": "MT"
+    },
+    "cuiaba": {
+      "nome": "Cuiabá",
+      "nota": "Operando",
+      "ordem": 5,
+      "uf": "MT"
+    },
+    "belo-horizonte": {
+      "nome": "Belo Horizonte",
+      "nota": "Operando",
+      "ordem": 6,
+      "uf": "MG"
+    },
+    "brasilia": {
+      "nome": "Brasília",
+      "nota": "1 máquina tem que ser produzida",
+      "ordem": 7,
+      "uf": "DF"
+    },
+    "sao-paulo": {
+      "nome": "São Paulo",
+      "nota": "2 máquinas com problema de acabamento",
+      "ordem": 8,
+      "uf": "SP"
+    },
+    "curitiba": {
+      "nome": "Curitiba",
+      "nota": "Operando",
+      "ordem": 9,
+      "uf": "PR"
+    },
+    "manaus": {
+      "nome": "Manaus",
+      "nota": "Devolução da franquia",
+      "ordem": 10,
+      "uf": "AM"
+    },
+    "balneario-camboriu": {
+      "nome": "Balneário Camboriú",
+      "nota": "Máquinas em produção",
+      "ordem": 11,
+      "uf": "SC"
+    },
+    "uberlandia": {
+      "nome": "Uberlândia",
+      "nota": "Máquinas em envio",
+      "ordem": 12,
+      "uf": "MG"
+    },
+    "dourados": {
+      "nome": "Dourados",
+      "nota": "Máquinas em produção",
+      "ordem": 13,
+      "uf": "MS"
+    }
   },
-  "bauru": {
-   "categoria": "intencao",
-   "nome": "Bauru",
-   "nota": "Franquia em compra",
-   "ordem": 16,
-   "uf": "SP"
+  "frota_maquinas": {
+    "dourados-m2": {
+      "nota": "",
+      "unidade": "dourados",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "DOU-M2"
+    },
+    "dourados-t1": {
+      "nota": "",
+      "unidade": "dourados",
+      "modelo": "TECH",
+      "status": "producao",
+      "serie": "DOU-T1"
+    },
+    "sao-gabriel-do-oeste-m1": {
+      "nota": "",
+      "unidade": "sao-gabriel-do-oeste",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "SGO-M1"
+    },
+    "sao-gabriel-do-oeste-m2": {
+      "nota": "",
+      "unidade": "sao-gabriel-do-oeste",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "SGO-M2"
+    },
+    "sao-gabriel-do-oeste-t1": {
+      "nota": "",
+      "unidade": "sao-gabriel-do-oeste",
+      "modelo": "TECH",
+      "status": "producao",
+      "serie": "SGO-T1"
+    },
+    "sao-jose-do-rio-preto-m1": {
+      "nota": "",
+      "unidade": "sao-jose-do-rio-preto",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "RPO-M1"
+    },
+    "sao-jose-do-rio-preto-m2": {
+      "nota": "",
+      "unidade": "fabrica",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "RPO-M2"
+    },
+    "sao-jose-do-rio-preto-t1": {
+      "nota": "",
+      "unidade": "sao-jose-do-rio-preto",
+      "modelo": "TECH",
+      "status": "producao",
+      "serie": "RPO-T1"
+    },
+    "bauru-m1": {
+      "nota": "",
+      "unidade": "bauru",
+      "modelo": "MINI",
+      "status": "aguardando",
+      "serie": "BAU-M1"
+    },
+    "bauru-m2": {
+      "nota": "",
+      "unidade": "bauru",
+      "modelo": "MINI",
+      "status": "aguardando",
+      "serie": "BAU-M2"
+    },
+    "bauru-t1": {
+      "nota": "",
+      "unidade": "bauru",
+      "modelo": "TECH",
+      "status": "aguardando",
+      "serie": "BAU-T1"
+    },
+    "campo-grande-m1": {
+      "nota": "",
+      "unidade": "campo-grande",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CGR-M1"
+    },
+    "campo-grande-m2": {
+      "nota": "",
+      "unidade": "campo-grande",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CGR-M2"
+    },
+    "campo-grande-t1": {
+      "nota": "",
+      "unidade": "campo-grande",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "CGR-T1"
+    },
+    "ponta-pora-m1": {
+      "nota": "",
+      "unidade": "ponta-pora",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "PPO-M1"
+    },
+    "ponta-pora-m2": {
+      "nota": "Falta 1 máquina",
+      "unidade": "ponta-pora",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "PPO-M2"
+    },
+    "ponta-pora-t1": {
+      "nota": "",
+      "unidade": "ponta-pora",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "PPO-T1"
+    },
+    "dracena-m1": {
+      "nota": "Falta 1 Fonte\nE a maquina não liga.",
+      "unidade": "dracena",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "DRA-M1"
+    },
+    "dracena-m2": {
+      "nota": "",
+      "unidade": "dracena",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "DRA-M2"
+    },
+    "dracena-t1": {
+      "nota": "Funcionando somente 4 bombas",
+      "unidade": "dracena",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "DRA-T1"
+    },
+    "sinop-m1": {
+      "nota": "Para reparo (confirmar modelo)",
+      "unidade": "sinop",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "SIN-M1"
+    },
+    "sinop-m2": {
+      "nota": "Para reparo (confirmar modelo)",
+      "unidade": "sinop",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "SIN-M2"
+    },
+    "sinop-t1": {
+      "nota": "",
+      "unidade": "sinop",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "SIN-T1"
+    },
+    "cuiaba-m1": {
+      "nota": "",
+      "unidade": "cuiaba",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CBA-M1"
+    },
+    "cuiaba-m2": {
+      "nota": "",
+      "unidade": "sinop",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CBA-M2"
+    },
+    "cuiaba-t1": {
+      "nota": "",
+      "unidade": "cuiaba",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "CBA-T1"
+    },
+    "belo-horizonte-m1": {
+      "nota": "",
+      "unidade": "belo-horizonte",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "BHZ-M1"
+    },
+    "belo-horizonte-m2": {
+      "nota": "",
+      "unidade": "belo-horizonte",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "BHZ-M2"
+    },
+    "belo-horizonte-t1": {
+      "nota": "",
+      "unidade": "belo-horizonte",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "BHZ-T1"
+    },
+    "brasilia-m1": {
+      "nota": "",
+      "unidade": "brasilia",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "BSB-M1"
+    },
+    "brasilia-m2": {
+      "nota": "Tem que ser produzida (confirmar modelo)",
+      "unidade": "brasilia",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "BSB-M2"
+    },
+    "brasilia-t1": {
+      "nota": "",
+      "unidade": "brasilia",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "BSB-T1"
+    },
+    "sao-paulo-m1": {
+      "nota": "Problema de acabamento (confirmar modelo)",
+      "unidade": "sao-paulo",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "SPA-M1"
+    },
+    "sao-paulo-m2": {
+      "nota": "Problema de acabamento",
+      "unidade": "sao-paulo",
+      "modelo": "MINI",
+      "status": "manutencao",
+      "serie": "SPA-M2"
+    },
+    "sao-paulo-t1": {
+      "nota": "Problema de acabamento",
+      "unidade": "sao-paulo",
+      "modelo": "TECH",
+      "status": "manutencao",
+      "serie": "SPA-T1"
+    },
+    "curitiba-m1": {
+      "nota": "",
+      "unidade": "curitiba",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CWB-M1"
+    },
+    "curitiba-m2": {
+      "nota": "",
+      "unidade": "curitiba",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "CWB-M2"
+    },
+    "curitiba-t1": {
+      "nota": "",
+      "unidade": "curitiba",
+      "modelo": "TECH",
+      "status": "manutencao",
+      "serie": "CWB-T1"
+    },
+    "manaus-m1": {
+      "nota": "Devolução da franquia",
+      "unidade": "manaus",
+      "modelo": "MINI",
+      "status": "devolucao",
+      "serie": "MAO-M1"
+    },
+    "manaus-m2": {
+      "nota": "Devolução da franquia",
+      "unidade": "manaus",
+      "modelo": "MINI",
+      "status": "devolucao",
+      "serie": "MAO-M2"
+    },
+    "manaus-t1": {
+      "nota": "Devolução da franquia",
+      "unidade": "manaus",
+      "modelo": "TECH",
+      "status": "devolucao",
+      "serie": "MAO-T1"
+    },
+    "balneario-camboriu-m1": {
+      "nota": "",
+      "unidade": "balneario-camboriu",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "BCA-M1"
+    },
+    "balneario-camboriu-m2": {
+      "nota": "",
+      "unidade": "balneario-camboriu",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "BCA-M2"
+    },
+    "balneario-camboriu-t1": {
+      "nota": "",
+      "unidade": "balneario-camboriu",
+      "modelo": "TECH",
+      "status": "producao",
+      "serie": "BCA-T1"
+    },
+    "uberlandia-m1": {
+      "nota": "",
+      "unidade": "uberlandia",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "UDI-M1"
+    },
+    "uberlandia-m2": {
+      "nota": "",
+      "unidade": "uberlandia",
+      "modelo": "MINI",
+      "status": "operando",
+      "serie": "UDI-M2"
+    },
+    "uberlandia-t1": {
+      "nota": "",
+      "unidade": "uberlandia",
+      "modelo": "TECH",
+      "status": "operando",
+      "serie": "UDI-T1"
+    },
+    "dourados-m1": {
+      "nota": "",
+      "unidade": "dourados",
+      "modelo": "MINI",
+      "status": "producao",
+      "serie": "DOU-M1"
+    }
   },
-  "belo-horizonte": {
-   "nome": "Belo Horizonte",
-   "nota": "Operando",
-   "ordem": 6,
-   "uf": "MG"
-  },
-  "brasilia": {
-   "nome": "Brasília",
-   "nota": "1 máquina tem que ser produzida",
-   "ordem": 7,
-   "uf": "DF"
-  },
-  "campo-grande": {
-   "nome": "Campo Grande",
-   "nota": "Operando",
-   "ordem": 1,
-   "uf": "MS"
-  },
-  "cuiaba": {
-   "nome": "Cuiabá",
-   "nota": "Operando",
-   "ordem": 5,
-   "uf": "MT"
-  },
-  "curitiba": {
-   "nome": "Curitiba",
-   "nota": "Operando",
-   "ordem": 9,
-   "uf": "PR"
-  },
-  "dourados": {
-   "nome": "Dourados",
-   "nota": "Máquinas em produção",
-   "ordem": 13,
-   "uf": "MS"
-  },
-  "dracena": {
-   "nome": "Dracena",
-   "nota": "Operando",
-   "ordem": 3,
-   "uf": "SP"
-  },
-  "manaus": {
-   "nome": "Manaus",
-   "nota": "Devolução da franquia",
-   "ordem": 10,
-   "uf": "AM"
-  },
-  "ponta-pora": {
-   "nome": "Ponta Porã",
-   "nota": "Falta 1 máquina",
-   "ordem": 2,
-   "uf": "MS"
-  },
-  "sao-gabriel-do-oeste": {
-   "nome": "São Gabriel do Oeste",
-   "nota": "Máquinas em produção",
-   "ordem": 14,
-   "uf": "MS"
-  },
-  "sao-jose-do-rio-preto": {
-   "nome": "São José do Rio Preto",
-   "nota": "Máquinas em produção",
-   "ordem": 15,
-   "uf": "SP"
-  },
-  "sao-paulo": {
-   "nome": "São Paulo",
-   "nota": "2 máquinas com problema de acabamento",
-   "ordem": 8,
-   "uf": "SP"
-  },
-  "sinop": {
-   "nome": "Sinop",
-   "nota": "2 máquinas para reparo",
-   "ordem": 4,
-   "uf": "MT"
-  },
-  "uberlandia": {
-   "nome": "Uberlândia",
-   "nota": "Máquinas em envio",
-   "ordem": 12,
-   "uf": "MG"
+  "frota_movimentos": {
+    "wd80tk2o5lbfyp29zmiy": {
+      "deNome": "Brasília",
+      "para": "balneario-camboriu",
+      "ts": "2026-11-05T16:43:27.202Z",
+      "rotulo": "Tech Go · BCA-T1",
+      "de": "brasilia",
+      "maquina": "balneario-camboriu-t1",
+      "paraNome": "Balneário Camboriú",
+      "status": "producao",
+      "por": "u_6kYO7BgEIo0PiCbbUe4B4g"
+    },
+    "xwk9bpdry3elk4jmsg80": {
+      "deNome": "Balneário Camboriú",
+      "para": "brasilia",
+      "ts": "2026-11-05T16:43:20.923Z",
+      "rotulo": "Tech Go · BCA-T1",
+      "de": "balneario-camboriu",
+      "maquina": "balneario-camboriu-t1",
+      "paraNome": "Brasília",
+      "status": "producao",
+      "por": "u_6kYO7BgEIo0PiCbbUe4B4g"
+    },
+    "y0m2qb0h6wnqshu5xvdk": {
+      "deNome": "Cuiabá",
+      "para": "sinop",
+      "ts": "2026-11-05T16:39:38.412Z",
+      "rotulo": "Mini Go · CBA-M2",
+      "de": "cuiaba",
+      "maquina": "cuiaba-m2",
+      "paraNome": "Sinop",
+      "status": "operando",
+      "por": "u_6kYO7BgEIo0PiCbbUe4B4g"
+    },
+    "dmw2egvyyb2ds9": {
+      "deNome": "Uberlândia",
+      "para": "brasilia",
+      "ts": "2026-11-04T17:37:59.770Z",
+      "rotulo": "Tech Go · BSB-T1",
+      "de": "uberlandia",
+      "maquina": "brasilia-t1",
+      "paraNome": "Brasília",
+      "status": "operando",
+      "por": "admin"
+    },
+    "dmw2egulrw5k1i": {
+      "deNome": "Brasília",
+      "para": "uberlandia",
+      "ts": "2026-11-04T17:37:57.998Z",
+      "rotulo": "Tech Go · BSB-T1",
+      "de": "brasilia",
+      "maquina": "brasilia-t1",
+      "paraNome": "Uberlândia",
+      "status": "operando",
+      "por": "admin"
+    },
+    "dmw26mdlc8v9js": {
+      "deNome": "São José do Rio Preto",
+      "para": "fabrica",
+      "ts": "2026-11-04T13:58:18.959Z",
+      "rotulo": "Mini Go · RPO-M2",
+      "de": "sao-jose-do-rio-preto",
+      "maquina": "sao-jose-do-rio-preto-m2",
+      "paraNome": "Fábrica · Estoque",
+      "status": "producao",
+      "por": "admin"
+    }
   }
- },
- "frota_maquinas": {
-  "balneario-camboriu-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BCA-M1",
-   "status": "producao",
-   "unidade": "balneario-camboriu"
-  },
-  "balneario-camboriu-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BCA-M2",
-   "status": "producao",
-   "unidade": "balneario-camboriu"
-  },
-  "balneario-camboriu-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "BCA-T1",
-   "status": "producao",
-   "unidade": "balneario-camboriu"
-  },
-  "bauru-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BAU-M1",
-   "status": "aguardando",
-   "unidade": "bauru"
-  },
-  "bauru-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BAU-M2",
-   "status": "aguardando",
-   "unidade": "bauru"
-  },
-  "bauru-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "BAU-T1",
-   "status": "aguardando",
-   "unidade": "bauru"
-  },
-  "belo-horizonte-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BHZ-M1",
-   "status": "operando",
-   "unidade": "belo-horizonte"
-  },
-  "belo-horizonte-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BHZ-M2",
-   "status": "manutencao",
-   "unidade": "belo-horizonte"
-  },
-  "belo-horizonte-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "BHZ-T1",
-   "status": "operando",
-   "unidade": "belo-horizonte"
-  },
-  "brasilia-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "BSB-M1",
-   "status": "operando",
-   "unidade": "brasilia"
-  },
-  "brasilia-m2": {
-   "modelo": "MINI",
-   "nota": "Tem que ser produzida (confirmar modelo)",
-   "serie": "BSB-M2",
-   "status": "manutencao",
-   "unidade": "brasilia"
-  },
-  "brasilia-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "BSB-T1",
-   "status": "operando",
-   "unidade": "brasilia"
-  },
-  "campo-grande-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CGR-M1",
-   "status": "operando",
-   "unidade": "campo-grande"
-  },
-  "campo-grande-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CGR-M2",
-   "status": "operando",
-   "unidade": "campo-grande"
-  },
-  "campo-grande-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "CGR-T1",
-   "status": "operando",
-   "unidade": "campo-grande"
-  },
-  "cuiaba-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CBA-M1",
-   "status": "operando",
-   "unidade": "cuiaba"
-  },
-  "cuiaba-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CBA-M2",
-   "status": "operando",
-   "unidade": "sinop"
-  },
-  "cuiaba-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "CBA-T1",
-   "status": "operando",
-   "unidade": "cuiaba"
-  },
-  "curitiba-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CWB-M1",
-   "status": "operando",
-   "unidade": "curitiba"
-  },
-  "curitiba-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "CWB-M2",
-   "status": "operando",
-   "unidade": "curitiba"
-  },
-  "curitiba-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "CWB-T1",
-   "status": "operando",
-   "unidade": "curitiba"
-  },
-  "dourados-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "DOU-M1",
-   "status": "producao",
-   "unidade": "dourados"
-  },
-  "dourados-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "DOU-M2",
-   "status": "producao",
-   "unidade": "dourados"
-  },
-  "dourados-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "DOU-T1",
-   "status": "producao",
-   "unidade": "dourados"
-  },
-  "dracena-m1": {
-   "modelo": "MINI",
-   "nota": "Falta 1 Fonte\nE a maquina não liga.",
-   "serie": "DRA-M1",
-   "status": "manutencao",
-   "unidade": "dracena"
-  },
-  "dracena-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "DRA-M2",
-   "status": "operando",
-   "unidade": "dracena"
-  },
-  "dracena-t1": {
-   "modelo": "TECH",
-   "nota": "Funcionando somente 4 bombas",
-   "serie": "DRA-T1",
-   "status": "operando",
-   "unidade": "dracena"
-  },
-  "manaus-m1": {
-   "modelo": "MINI",
-   "nota": "Devolução da franquia",
-   "serie": "MAO-M1",
-   "status": "devolucao",
-   "unidade": "manaus"
-  },
-  "manaus-m2": {
-   "modelo": "MINI",
-   "nota": "Devolução da franquia",
-   "serie": "MAO-M2",
-   "status": "devolucao",
-   "unidade": "manaus"
-  },
-  "manaus-t1": {
-   "modelo": "TECH",
-   "nota": "Devolução da franquia",
-   "serie": "MAO-T1",
-   "status": "devolucao",
-   "unidade": "manaus"
-  },
-  "ponta-pora-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "PPO-M1",
-   "status": "operando",
-   "unidade": "ponta-pora"
-  },
-  "ponta-pora-m2": {
-   "modelo": "MINI",
-   "nota": "Falta 1 máquina",
-   "serie": "PPO-M2",
-   "status": "manutencao",
-   "unidade": "ponta-pora"
-  },
-  "ponta-pora-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "PPO-T1",
-   "status": "operando",
-   "unidade": "ponta-pora"
-  },
-  "sao-gabriel-do-oeste-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "SGO-M1",
-   "status": "producao",
-   "unidade": "sao-gabriel-do-oeste"
-  },
-  "sao-gabriel-do-oeste-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "SGO-M2",
-   "status": "producao",
-   "unidade": "sao-gabriel-do-oeste"
-  },
-  "sao-gabriel-do-oeste-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "SGO-T1",
-   "status": "producao",
-   "unidade": "sao-gabriel-do-oeste"
-  },
-  "sao-jose-do-rio-preto-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "RPO-M1",
-   "status": "producao",
-   "unidade": "sao-jose-do-rio-preto"
-  },
-  "sao-jose-do-rio-preto-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "RPO-M2",
-   "status": "producao",
-   "unidade": "fabrica"
-  },
-  "sao-jose-do-rio-preto-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "RPO-T1",
-   "status": "producao",
-   "unidade": "sao-jose-do-rio-preto"
-  },
-  "sao-paulo-m1": {
-   "modelo": "MINI",
-   "nota": "Problema de acabamento (confirmar modelo)",
-   "serie": "SPA-M1",
-   "status": "operando",
-   "unidade": "sao-paulo"
-  },
-  "sao-paulo-m2": {
-   "modelo": "MINI",
-   "nota": "Problema de acabamento",
-   "serie": "SPA-M2",
-   "status": "manutencao",
-   "unidade": "sao-paulo"
-  },
-  "sao-paulo-t1": {
-   "modelo": "TECH",
-   "nota": "Problema de acabamento",
-   "serie": "SPA-T1",
-   "status": "manutencao",
-   "unidade": "sao-paulo"
-  },
-  "sinop-m1": {
-   "modelo": "MINI",
-   "nota": "Para reparo (confirmar modelo)",
-   "serie": "SIN-M1",
-   "status": "manutencao",
-   "unidade": "sinop"
-  },
-  "sinop-m2": {
-   "modelo": "MINI",
-   "nota": "Para reparo (confirmar modelo)",
-   "serie": "SIN-M2",
-   "status": "manutencao",
-   "unidade": "sinop"
-  },
-  "sinop-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "SIN-T1",
-   "status": "operando",
-   "unidade": "sinop"
-  },
-  "uberlandia-m1": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "UDI-M1",
-   "status": "envio",
-   "unidade": "uberlandia"
-  },
-  "uberlandia-m2": {
-   "modelo": "MINI",
-   "nota": "",
-   "serie": "UDI-M2",
-   "status": "envio",
-   "unidade": "uberlandia"
-  },
-  "uberlandia-t1": {
-   "modelo": "TECH",
-   "nota": "",
-   "serie": "UDI-T1",
-   "status": "envio",
-   "unidade": "uberlandia"
-  }
- },
- "frota_movimentos": {
-  "wd80tk2o5lbfyp29zmiy": {
-   "de": "brasilia",
-   "deNome": "Brasília",
-   "maquina": "balneario-camboriu-t1",
-   "para": "balneario-camboriu",
-   "paraNome": "Balneário Camboriú",
-   "por": "u_6kYO7BgEIo0PiCbbUe4B4g",
-   "rotulo": "Tech Go · BCA-T1",
-   "status": "producao",
-   "ts": "2026-11-05T16:43:27.202Z"
-  },
-  "xwk9bpdry3elk4jmsg80": {
-   "de": "balneario-camboriu",
-   "deNome": "Balneário Camboriú",
-   "maquina": "balneario-camboriu-t1",
-   "para": "brasilia",
-   "paraNome": "Brasília",
-   "por": "u_6kYO7BgEIo0PiCbbUe4B4g",
-   "rotulo": "Tech Go · BCA-T1",
-   "status": "producao",
-   "ts": "2026-11-05T16:43:20.923Z"
-  },
-  "y0m2qb0h6wnqshu5xvdk": {
-   "de": "cuiaba",
-   "deNome": "Cuiabá",
-   "maquina": "cuiaba-m2",
-   "para": "sinop",
-   "paraNome": "Sinop",
-   "por": "u_6kYO7BgEIo0PiCbbUe4B4g",
-   "rotulo": "Mini Go · CBA-M2",
-   "status": "operando",
-   "ts": "2026-11-05T16:39:38.412Z"
-  },
-  "dmw2egvyyb2ds9": {
-   "de": "uberlandia",
-   "deNome": "Uberlândia",
-   "maquina": "brasilia-t1",
-   "para": "brasilia",
-   "paraNome": "Brasília",
-   "por": "admin",
-   "rotulo": "Tech Go · BSB-T1",
-   "status": "operando",
-   "ts": "2026-11-04T17:37:59.770Z"
-  },
-  "dmw2egulrw5k1i": {
-   "de": "brasilia",
-   "deNome": "Brasília",
-   "maquina": "brasilia-t1",
-   "para": "uberlandia",
-   "paraNome": "Uberlândia",
-   "por": "admin",
-   "rotulo": "Tech Go · BSB-T1",
-   "status": "operando",
-   "ts": "2026-11-04T17:37:57.998Z"
-  },
-  "dmw26mdlc8v9js": {
-   "de": "sao-jose-do-rio-preto",
-   "deNome": "São José do Rio Preto",
-   "maquina": "sao-jose-do-rio-preto-m2",
-   "para": "fabrica",
-   "paraNome": "Fábrica · Estoque",
-   "por": "admin",
-   "rotulo": "Mini Go · RPO-M2",
-   "status": "producao",
-   "ts": "2026-11-04T13:58:18.959Z"
-  }
- }
 }

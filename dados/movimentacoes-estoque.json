@@ -1,0 +1,266 @@
+{
+  "3jkx8p2oljpbtu7a620y": {
+    "data": "2026-10-29",
+    "ts": "2026-10-30T00:11:23.746Z",
+    "tipo": "entrada",
+    "itemId": "co-manp04",
+    "motivo": "Lançamento manual",
+    "qtd": 1
+  },
+  "dmvug39azb3bjf": {
+    "data": "2026-10-30",
+    "ts": "2026-10-30T04:01:13.691Z",
+    "tipo": "saida",
+    "itemId": "co-manp04",
+    "motivo": "Lançamento manual",
+    "qtd": 1
+  },
+  "dmvug3gag1hvfu": {
+    "data": "2026-10-30",
+    "ts": "2026-10-30T04:01:22.744Z",
+    "tipo": "entrada",
+    "itemId": "co-manp04",
+    "motivo": "Lançamento manual",
+    "qtd": 1
+  },
+  "dmvug3if4fsybc": {
+    "data": "2026-10-30",
+    "ts": "2026-10-30T04:01:25.504Z",
+    "tipo": "saida",
+    "itemId": "co-manp04",
+    "motivo": "Lançamento manual",
+    "qtd": 1
+  },
+  "dmwcjvvfmctdl4": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:07:18.753Z",
+    "tipo": "ajuste",
+    "itemId": "co-manp04",
+    "motivo": "Ajuste de inventário",
+    "qtd": 1
+  },
+  "dmwcjvy9s2pt9g": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:07:22.432Z",
+    "tipo": "ajuste",
+    "itemId": "co-manp04",
+    "motivo": "Ajuste de inventário",
+    "qtd": 0
+  },
+  "dmwckqhdbbv70b": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:31:06.863Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0005",
+    "motivo": "Lançamento manual",
+    "qtd": 1
+  },
+  "dmwckr8e3dlb4g": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:31:41.883Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0006",
+    "motivo": "Lançamento manual",
+    "qtd": 3
+  },
+  "dmwckrct5wop5i": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:31:47.609Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0007",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwckrmgllje00": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:32:00.117Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0008",
+    "motivo": "Lançamento manual",
+    "qtd": 7
+  },
+  "dmwcks06p6y1yr": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:32:17.905Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0009",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcks5exjzfs7": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:32:24.681Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0010",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcksoli3zheq": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:32:49.542Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0012",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcksqugf5z5r": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:32:52.456Z",
+    "tipo": "entrada",
+    "itemId": "pa-petg-0013",
+    "motivo": "Lançamento manual",
+    "qtd": 5
+  },
+  "dmwckt4h3at72g": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:33:10.119Z",
+    "tipo": "entrada",
+    "itemId": "pp-abu-0404",
+    "motivo": "Lançamento manual",
+    "qtd": 5
+  },
+  "dmwckts4qd33rj": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:33:40.778Z",
+    "tipo": "entrada",
+    "itemId": "pp-adp-hdmi-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwckucfpt9weo": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:34:07.093Z",
+    "tipo": "entrada",
+    "itemId": "pp-btn-0002",
+    "motivo": "Lançamento manual",
+    "qtd": 9
+  },
+  "dmwckuqwkcmfyf": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:34:25.844Z",
+    "tipo": "entrada",
+    "itemId": "pp-btn-0004",
+    "motivo": "Lançamento manual",
+    "qtd": 4
+  },
+  "dmwckyiqcnwv70": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:37:21.876Z",
+    "tipo": "entrada",
+    "itemId": "pp-cb-usb-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwckyr38lwu3i": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:37:32.708Z",
+    "tipo": "entrada",
+    "itemId": "pp-cb-usb-0002",
+    "motivo": "Lançamento manual",
+    "qtd": 6
+  },
+  "dmwcl0joipzh8a": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:38:56.418Z",
+    "tipo": "entrada",
+    "itemId": "pp-cb-usbc-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 6
+  },
+  "dmwcl1m2lovf3l": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:39:46.173Z",
+    "tipo": "entrada",
+    "itemId": "pp-cne-0004",
+    "motivo": "Lançamento manual",
+    "qtd": 6
+  },
+  "dmwcl268bfqlhj": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:40:12.299Z",
+    "tipo": "entrada",
+    "itemId": "pp-cne-0007-f",
+    "motivo": "Lançamento manual",
+    "qtd": 6
+  },
+  "dmwcl3qnz03zzp": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:41:25.439Z",
+    "tipo": "entrada",
+    "itemId": "pp-fnt-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 7
+  },
+  "dmwcl48igypl47": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:41:48.568Z",
+    "tipo": "entrada",
+    "itemId": "pp-fnt-0002",
+    "motivo": "Lançamento manual",
+    "qtd": 5
+  },
+  "dmwcl4lx9oq3u6": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:42:05.949Z",
+    "tipo": "entrada",
+    "itemId": "pp-kk-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 10
+  },
+  "dmwcl51a94hzhe": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:42:25.857Z",
+    "tipo": "entrada",
+    "itemId": "pp-kre3-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcl5bi4sydh7": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:42:39.100Z",
+    "tipo": "entrada",
+    "itemId": "pp-led-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 3
+  },
+  "dmwcl6a1ruxesk": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:43:23.871Z",
+    "tipo": "entrada",
+    "itemId": "pp-paff-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 5
+  },
+  "dmwcl6vrgckxgl": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:43:52.012Z",
+    "tipo": "entrada",
+    "itemId": "pp-pafi-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcl72kkxnnus": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:44:00.836Z",
+    "tipo": "entrada",
+    "itemId": "pp-pafi-0001",
+    "motivo": "Lançamento manual",
+    "qtd": 2
+  },
+  "dmwcl7ntlons68": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:44:28.377Z",
+    "tipo": "entrada",
+    "itemId": "pp-pafi-0005",
+    "motivo": "Lançamento manual",
+    "qtd": 8
+  },
+  "dmwcl833v1rv7o": {
+    "data": "2026-11-11",
+    "ts": "2026-11-11T20:44:48.187Z",
+    "tipo": "entrada",
+    "itemId": "pp-pci-0003",
+    "motivo": "Lançamento manual",
+    "qtd": 3
+  }
+}
