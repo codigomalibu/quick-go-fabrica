@@ -50,6 +50,7 @@ h3{font-size:23px}
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
 .stat .lbl{font-family:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:600}
 .stat .val{font-family:var(--display);font-size:36px;margin-top:6px;font-variant-numeric:tabular-nums;line-height:1}
@@ -408,7 +409,7 @@ const PRECO_KEYS = ["custo", "precoAvulso", "link", "fornecedor"];
 const ROLE_NAME = { admin: "Administrador", tecnico: "Montagem Técnica", leitura: "Somente leitura" };
 
 const S = { db: null, assets: null, user: null, role: "leitura", canWrite: false, loaded: { itens: false }, itens: {}, precos: {}, cfg: null, mont: null, compras: {}, movs: [], pracas: {}, links: {}, producao: [], arquivos: null };
-const UI = { view: "inicio", pecasSub: "peca", grupo: "", conj: "", q: "", modo: "cards", estoqueQ: "", estoqueF: "todos", linksModel: "MINI", custoModel: "MINI", praca: null };
+const UI = { view: "inicio", pecasSub: "peca", grupo: "", conj: "", q: "", modo: "cards", estoqueQ: "", intMini: "", intTech: "", intReserva: true, estoqueF: "todos", linksModel: "MINI", custoModel: "MINI", praca: null };
 const ADM = () => S.role === "admin";
 const W = () => S.canWrite;
 
@@ -817,6 +818,81 @@ function vCustos() {
   </tbody></table></div></div>`;
 }
 
+// ---------- inteligência de produção ----------
+// Mesma conta das praças: máquinas prontas, máquinas acabadas e conjuntos já montados saem do estoque antes das peças soltas.
+const PRACA_ATIVA = (p) => !p.baixado && !["cancelada", "expedida", "entregue"].includes(p.status);
+function baseLivre(descontar) {
+  const stock = {}; for (const [id, it] of Object.entries(S.itens)) stock[id] = Math.max(0, num(it.estoque));
+  const ms = mont();
+  if (descontar) Object.entries(S.pracas).map(([id, v]) => ({ id, ...v })).filter(PRACA_ATIVA)
+    .sort((a, b) => String(a.criadoEm || "").localeCompare(String(b.criadoEm || ""))).forEach((p) => planOne(p, stock, ms));
+  return { stock, ms };
+}
+const simPlano = (qtd, b) => planOne({ id: "_int", qtd, dataInicio: today() }, { ...b.stock }, JSON.parse(JSON.stringify(b.ms)));
+// Maior quantidade que o estoque cobre. Com "fabricando", as peças de produção própria não limitam (saem da matéria-prima).
+function capacidade(qtdDe, b, fabricando) {
+  const faltas = (n) => simPlano(qtdDe(n), b).linhas.filter((l) => l.falta > 1e-9 && !(fabricando && l.acao === "fabricar"));
+  const ok = (n) => !faltas(n).length;
+  let lo = 0, hi = 1;
+  while (hi <= 4096 && ok(hi)) { lo = hi; hi *= 2; }
+  if (hi > 4096) return { n: lo, falta: [] };
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (ok(mid)) lo = mid; else hi = mid; }
+  return { n: lo, falta: faltas(lo + 1) };
+}
+function intCalc() {
+  const ativas = Object.values(S.pracas).filter(PRACA_ATIVA).length;
+  const desc = ativas > 0 && UI.intReserva;
+  const b = baseLivre(desc);
+  const mi = Math.max(0, Math.floor(num(UI.intMini))), te = Math.max(0, Math.floor(num(UI.intTech)));
+  const pl = mi + te ? simPlano({ MINI: mi, TECH: te }, b) : null;
+  const pedidoAvulso = (id) => Object.values(S.compras).filter((x) => x.itemId === id && !x.pracaId && (x.status === "pendente" || x.status === "pedido")).reduce((s, x) => s + num(x.qtd), 0);
+  const comprar = pl ? pl.linhas.filter((l) => l.acao === "comprar").map((l) => { const precisa = Math.ceil(l.falta - 1e-9); const ped = pedidoAvulso(l.id); return { ...l, precisa, ped, qtd: Math.max(0, precisa - ped) }; }) : [];
+  const fabricar = pl ? pl.linhas.filter((l) => l.acao === "fabricar").map((l) => ({ ...l, qtd: Math.ceil(l.falta - 1e-9) })) : [];
+  const aComprar = comprar.filter((l) => l.qtd > 0);
+  return { ativas, desc, b, mi, te, pl, comprar, fabricar, aComprar, custo: aComprar.reduce((s, l) => s + l.qtd * num(l.it.custo), 0) };
+}
+function intTexto(k) {
+  const L = [`Quick GO · compra para ${k.mi} Mini e ${k.te} Tech (${fmtD(today())})`, ""];
+  L.push(...(k.aComprar.length ? k.aComprar.map((l) => `${l.it.codigo} | ${l.it.nome} | ${fmtN(l.qtd)} un | ${l.it.link || "sem link"}`) : ["Nada a comprar."]));
+  if (k.fabricar.length) { L.push("", "Fabricar na fábrica:"); L.push(...k.fabricar.map((l) => `${l.it.codigo} | ${l.it.nome} | ${fmtN(l.qtd)} un${l.it.mp ? " | " + l.it.mp : ""}`)); }
+  return L.join("\n");
+}
+function secInteligencia(adm) {
+  const c = cfg(); const k = intCalc();
+  const nomes = (fl) => fl.slice(0, 3).map((l) => `${esc(l.it.nome)} (faltam ${fmtN(Math.ceil(l.falta - 1e-9))})`).join(", ") + (fl.length > 3 ? ` e mais ${fl.length - 3}` : "");
+  const tiles = [
+    ["Só Mini Go", (n) => ({ MINI: n, TECH: 0 }), "Mini"],
+    ["Só Tech Go", (n) => ({ MINI: 0, TECH: n }), "Tech"],
+    [`Praças completas (${c.combo.MINI} Mini + ${c.combo.TECH} Tech)`, (n) => ({ MINI: n * c.combo.MINI, TECH: n * c.combo.TECH }), "praças"],
+  ].map(([rot, f, un]) => {
+    const a = capacidade(f, k.b, false), fab = capacidade(f, k.b, true);
+    return `<div class="panel stat"><div class="lbl">${rot}</div><div class="val">${a.n} <span class="small muted">${un}</span></div><div class="sub">${fab.n !== a.n ? `${fab.n} se fabricar as peças próprias<br>` : ""}${a.falta.length ? `Para a próxima falta: ${nomes(a.falta)}` : "Sem limite pelo estoque"}</div></div>`;
+  }).join("");
+  const res = k.ativas ? `<label class="small" style="display:flex;gap:8px;align-items:center;margin:0 0 12px"><input id="int-res" type="checkbox" ${k.desc ? "checked" : ""}> Descontar o que já está reservado para ${k.ativas} praça${k.ativas > 1 ? "s" : ""} em andamento</label>` : "";
+  let plano;
+  if (!k.pl) plano = `<div class="empty">Informe quantas Mini e quantas Tech quer fazer para ver o que comprar e o que fabricar.</div>`;
+  else {
+    const st = k.pl.steps; const soma = (f) => MODELS.reduce((s, m) => s + f(st[m]), 0);
+    const prontas = soma((x) => x.prontas), acab = soma((x) => x.acabados), conj = soma((x) => Object.values(x.semiUsed).reduce((a, v) => a + v, 0));
+    const doEstoque = [prontas && `${prontas} máquina${prontas > 1 ? "s" : ""} pronta${prontas > 1 ? "s" : ""}`, acab && `${acab} acabada${acab > 1 ? "s" : ""}`, conj && `${conj} conjunto${conj > 1 ? "s" : ""} já montado${conj > 1 ? "s" : ""}`].filter(Boolean);
+    const prazoMax = k.aComprar.reduce((m, l) => Math.max(m, num(l.it.prazo)), 0);
+    const resumo = `<div class="grid g4">
+      <div class="panel stat"><div class="lbl">Itens a comprar</div><div class="val">${k.aComprar.length}</div><div class="sub">${k.comprar.length - k.aComprar.length ? `${k.comprar.length - k.aComprar.length} já pedidos em compras avulsas` : "&nbsp;"}</div></div>
+      ${adm ? `<div class="panel stat"><div class="lbl">Custo estimado da compra</div><div class="val">${brl(k.custo)}</div></div>` : ""}
+      <div class="panel stat"><div class="lbl">Chegada estimada</div><div class="val">${k.aComprar.length ? fmtD(addDays(today(), prazoMax, false)) : "—"}</div><div class="sub">${k.aComprar.length ? `maior prazo: ${prazoMax} dias` : "&nbsp;"}</div></div>
+      <div class="panel stat"><div class="lbl">Peças a fabricar</div><div class="val">${k.fabricar.length}</div></div></div>
+      ${doEstoque.length ? `<p class="notice" style="margin-top:12px">Sai do estoque antes das peças soltas: ${doEstoque.join(", ")}.</p>` : ""}`;
+    const tCompra = k.comprar.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th class="n">Precisa</th><th class="n">Usa do estoque</th><th class="n">Já pedido</th><th class="n">Comprar</th>${adm ? '<th class="n">Custo est.</th>' : ""}<th class="n">Prazo</th>${adm ? "<th>Link</th>" : ""}</tr></thead><tbody>${k.comprar.map((l) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td><td class="n">${l.ped ? fmtN(l.ped) : "—"}</td><td class="n"><b>${l.qtd ? fmtN(l.qtd) : "—"}</b></td>${adm ? `<td class="n">${brl(l.qtd * num(l.it.custo))}</td>` : ""}<td class="n">${fmtN(l.it.prazo)} d</td>${adm ? `<td>${l.it.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(l.it.link)}">Link</a>` : ""}</td>` : ""}</tr>`).join("")}</tbody></table></div>` : `<div class="empty">O estoque cobre todas as peças compradas para ${k.mi} Mini e ${k.te} Tech.</div>`;
+    const tFab = k.fabricar.length ? `<div class="sec"><div class="sech"><h2>Fabricar na fábrica · ${k.fabricar.length} peças</h2></div><div class="tw"><table><thead><tr><th></th><th>Item</th><th>Matéria-prima</th><th>Maquinário</th><th class="n">Precisa</th><th class="n">Usa do estoque</th><th class="n">Fabricar</th></tr></thead><tbody>${k.fabricar.map((l) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="small">${esc(l.it.mp || "—")}</td><td class="small">${esc(l.it.maq || "—")}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td><td class="n"><b>${fmtN(l.qtd)}</b></td></tr>`).join("")}</tbody></table></div></div>` : "";
+    plano = `${resumo}<div class="sec"><div class="sech"><h2>Comprar · ${k.aComprar.length} itens</h2><div class="row"><button class="btn sm" data-intcopy="1">Copiar lista</button>${adm && k.aComprar.length && W() ? `<button class="btn sm pri" data-intgerar="1">Gerar pedidos de compra</button>` : ""}</div></div>${tCompra}</div>${tFab}`;
+  }
+  return `<div class="sec"><div class="sech"><h2>Inteligência de produção</h2></div>
+  <p class="muted small" style="margin:0 0 12px">Quantas máquinas o estoque de hoje permite fazer e o que falta para o plano que você informar. Usa as quantidades por Mini e por Tech de cada peça, as máquinas prontas e os conjuntos já montados.</p>
+  ${res}
+  <div class="grid g3">${tiles}</div>
+  <div class="panel" style="margin-top:14px"><div class="lbl">Quero fazer</div><div class="row" style="gap:14px;margin-top:8px;flex-wrap:wrap"><label class="small">Mini Go <input id="int-mini" type="number" inputmode="numeric" min="0" step="1" placeholder="0" value="${esc(UI.intMini)}" style="width:90px"></label><label class="small">Tech Go <input id="int-tech" type="number" inputmode="numeric" min="0" step="1" placeholder="0" value="${esc(UI.intTech)}" style="width:90px"></label><button class="btn sm ghost" data-intkit="1" type="button">+1 praça (${c.combo.MINI} Mini + ${c.combo.TECH} Tech)</button></div></div>
+  <div style="margin-top:14px">${plano}</div></div>`;
+}
 function vEstoque() {
   const adm = ADM(); const its = itemsArr(); const q = UI.estoqueQ.trim().toLowerCase();
   let list = its.filter((i) => !q || (i.codigo + " " + i.nome).toLowerCase().includes(q));
@@ -838,6 +914,7 @@ function vEstoque() {
   <div class="panel stat"><div class="lbl">Compras em aberto</div><div class="val">${abertas.length}</div><div class="sub">${abertas.filter((c) => c.status === "pendente").length} a pedir · ${abertas.filter((c) => c.status === "pedido").length} a caminho</div></div>` : `<div class="panel stat"><div class="lbl">Itens em estoque</div><div class="val">${its.filter((i) => num(i.estoque) > 0).length}</div><div class="sub">de ${its.length} cadastrados</div></div>`}
   <div class="panel stat"><div class="lbl">Itens em alerta</div><div class="val" style="color:var(--bad)">${its.filter((i) => statusEstoque(i)[0] !== "OK").length}</div></div>
   <div class="panel stat"><div class="lbl">Máquinas prontas</div><div class="val">${mont().MINI.maquina + mont().TECH.maquina}</div><div class="sub">${mont().MINI.maquina} Mini · ${mont().TECH.maquina} Tech</div></div></div>
+  ${secInteligencia(adm)}
   ${adm ? `<div class="sec"><div class="sech"><h2>Compras em aberto</h2></div>
   ${abertas.length ? `<div class="tw"><table>${thC}<tbody>${abertas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra em aberto. Gere os pedidos a partir de uma praça ou registre uma compra avulsa.</div>`}</div>` : ""}
   <div class="sec"><div class="sech"><h2>Saldo por item</h2>
@@ -1199,7 +1276,7 @@ function baixaPraca(pid) {
 document.addEventListener("click", async (e) => {
   const z = e.target.closest("[data-zoom]");
   if (z) { $("#layer").innerHTML = `<div class="lightbox" data-close="1"><img src="${esc(z.dataset.zoom)}" alt=""></div>`; return; }
-  const t = e.target.closest("[data-step],[data-addarq],[data-delarq],[data-go],[data-edit],[data-new],[data-sub],[data-modo],[data-close],[data-scrim],[data-delitem],[data-mc],[data-produce],[data-cm],[data-savecfg],[data-mv],[data-cp],[data-receber],[data-newcompra],[data-lm],[data-addlink],[data-dellink],[data-copylinks],[data-gerar],[data-baixa],[data-delpraca],[data-savetempos],[data-usarsug]");
+  const t = e.target.closest("[data-step],[data-addarq],[data-delarq],[data-go],[data-edit],[data-new],[data-sub],[data-modo],[data-close],[data-scrim],[data-delitem],[data-mc],[data-produce],[data-cm],[data-savecfg],[data-mv],[data-cp],[data-receber],[data-newcompra],[data-lm],[data-addlink],[data-dellink],[data-copylinks],[data-gerar],[data-baixa],[data-delpraca],[data-savetempos],[data-usarsug],[data-intcopy],[data-intgerar],[data-intkit]");
   if (!t) return;
   const d = t.dataset;
   if (d.scrim && e.target !== t) return;
@@ -1243,6 +1320,19 @@ document.addEventListener("click", async (e) => {
     catch (_) { drawer(`<div class="row" style="justify-content:space-between"><h2>Copiar lista</h2><button class="btn ghost" data-close="1">Fechar</button></div><p class="muted">Selecione o texto e copie.</p><textarea id="cpy" style="min-height:60vh;font-family:var(--mono);font-size:12px">${esc(txt)}</textarea>`); $("#cpy").select(); }
     return;
   }
+  if (d.intkit) { const c = cfg(); UI.intMini = String(Math.max(0, Math.floor(num(UI.intMini))) + c.combo.MINI); UI.intTech = String(Math.max(0, Math.floor(num(UI.intTech))) + c.combo.TECH); return render(); }
+  if (d.intcopy) {
+    const txt = intTexto(intCalc());
+    try { await navigator.clipboard.writeText(txt); toast("Lista copiada"); }
+    catch (_) { drawer(`<div class="row" style="justify-content:space-between"><h2>Copiar lista</h2><button class="btn ghost" data-close="1">Fechar</button></div><p class="muted">Selecione o texto e copie.</p><textarea id="cpy" style="min-height:60vh;font-family:var(--mono);font-size:12px">${esc(txt)}</textarea>`); $("#cpy").select(); }
+    return;
+  }
+  if (d.intgerar) {
+    const k = intCalc(); const l = k.aComprar; if (!l.length) return;
+    return confirmDrawer("Gerar pedidos de compra", `Cria ${l.length} compras avulsas com status "A pedir" para ${k.mi} Mini e ${k.te} Tech. Elas aparecem em Compras em aberto e passam a contar como já pedidas nesta conta.`, "Gerar pedidos", () => guard(async () => {
+      for (const x of l) await S.db.collection("compras").add({ itemId: x.id, qtd: x.qtd, custoUnit: num(x.it.custo), status: "pendente", pracaId: "", prazo: num(x.it.prazo), dataPedido: "", previsao: addDays(today(), num(x.it.prazo), false), link: x.it.link || "", criadoEm: new Date().toISOString() });
+    }, l.length + " pedidos criados em Compras em aberto"));
+  }
   if (d.gerar) return gerarPedidos(d.gerar);
   if (d.baixa) return baixaPraca(d.baixa);
   if (d.delpraca) return confirmDrawer("Excluir praça", "A praça sai da lista e deixa de reservar estoque. Os pedidos de compra já criados continuam em Estoque & compras.", "Excluir", () => guard(async () => { await S.db.collection("pracas").doc(d.delpraca).delete(); location.hash = "#pracas"; }, "Praça excluída"));
@@ -1256,12 +1346,15 @@ document.addEventListener("input", (e) => {
   const id = e.target.id;
   if (id === "q") { UI.q = e.target.value; schedule(); }
   if (id === "eq") { UI.estoqueQ = e.target.value; schedule(); }
+  if (id === "int-mini") { UI.intMini = e.target.value; schedule(); }
+  if (id === "int-tech") { UI.intTech = e.target.value; schedule(); }
 });
 document.addEventListener("change", (e) => {
   const id = e.target.id;
   if (id === "grupo") { UI.grupo = e.target.value; render(); }
   if (id === "conj") { UI.conj = e.target.value; render(); }
   if (id === "ef") { UI.estoqueF = e.target.value; render(); }
+  if (id === "int-res") { UI.intReserva = e.target.checked; render(); }
   if (id === "pst" && UI.praca && ADM()) {
     const st = e.target.value; const p = S.pracas[UI.praca]; const upd = { status: st };
     if (st === "expedida" && !p.expedidaEm) upd.expedidaEm = today();
