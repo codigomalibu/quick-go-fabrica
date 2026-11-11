@@ -662,7 +662,7 @@ function render() {
   if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); if (sel) try { el.setSelectionRange(sel[0], sel[1]); } catch (_) {} } }
 }
 // ---------- frota (só administradores): pátio 3D e mapa das microfranquias ----------
-const FROTA_BASE = "https://cdn.jsdelivr.net/gh/codigomalibu/quick-go-fabrica@347fe2f";
+const FROTA_BASE = "https://cdn.jsdelivr.net/gh/codigomalibu/quick-go-fabrica@2205c78";
 const FROTA_JS = ["https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/geometries/RoundedBoxGeometry.js", FROTA_BASE + "/frota/modelos.js", FROTA_BASE + "/frota/brasil.js", FROTA_BASE + "/frota/frota.js"];
 let frotaCarga = null;
 // A Frota usa as peças da fábrica: escolhe a peça do reparo e dá a saída no estoque
