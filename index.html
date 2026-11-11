@@ -622,7 +622,7 @@ function allPlans() {
 const emAndamento = (p) => !["entregue", "cancelada"].includes(p.status);
 
 // ---------- shell ----------
-const TABS_ALL = [["inicio", "Visão geral", "all"], ["pecas", "Peças", "all"], ["montagem", "Montagem", "all"], ["acessorios", "Acessórios", "admin"], ["custos", "Custos & preços", "admin"], ["estoque", "Estoque", "all"], ["links", "Links de compra", "admin"], ["pracas", "Praças", "all"], ["frota", "Frota", "admin"], ["manuais", "Manuais", "all"]];
+const TABS_ALL = [["inicio", "Visão geral", "all"], ["pecas", "Peças", "all"], ["montagem", "Montagem", "all"], ["acessorios", "Acessórios", "admin"], ["custos", "Custos & preços", "admin"], ["estoque", "Estoque", "all"], ["pracas", "Praças", "all"], ["frota", "Frota", "admin"], ["manuais", "Manuais", "all"]];
 const tabs = () => TABS_ALL.filter((t) => t[2] === "all" || ADM()).map((t) => [t[0], t[0] === "estoque" && ADM() ? "Estoque & compras" : t[0] === "pracas" ? (ADM() ? "Praças" : "Praças em andamento") : t[1]]);
 function renderTabs() { $("#tabs").innerHTML = tabs().map(([k, n]) => `<a href="#${k}" class="${UI.view === k ? "on" : ""}">${n}</a>`).join(""); }
 function route() {
@@ -642,7 +642,7 @@ function render() {
   if (window.QGFrota) window.QGFrota.parar();
   const ae = document.activeElement; const fid = ae && ae.id && $("#view").contains(ae) ? ae.id : null;
   const sel = fid && "selectionStart" in ae ? [ae.selectionStart, ae.selectionEnd] : null;
-  const V = { inicio: vInicio, pecas: vPecas, montagem: vMontagem, acessorios: vAcess, custos: vCustos, estoque: vEstoque, links: vLinks, pracas: vPracas, manuais: vManuais }[UI.view];
+  const V = { inicio: vInicio, pecas: vPecas, montagem: vMontagem, acessorios: vAcess, custos: vCustos, estoque: vEstoque, pracas: vPracas, manuais: vManuais }[UI.view];
   if (UI.view !== "manuais" && !S.loaded.itens) { $("#view").innerHTML = S.db === false ? noDb() : `<div class="empty">Carregando a base da fábrica…</div>`; return; }
   $("#view").innerHTML = V();
   cardify($("#view"));
@@ -1037,6 +1037,8 @@ function secInteligencia(adm) {
     const a = capacidade(f, k.b, false), fab = capacidade(f, k.b, true);
     return `<div class="panel stat"><div class="lbl">${rot}</div><div class="val">${a.n} <span class="small muted">${un}</span></div><div class="sub">${fab.n !== a.n ? `${fab.n} se fabricar as peças próprias<br>` : ""}${a.falta.length ? `Para a próxima falta: ${nomes(a.falta)}` : "Sem limite pelo estoque"}</div></div>`;
   }).join("");
+  const semLink = adm ? itemsArr().filter((i) => i.tipo !== "peca" && !i.link).sort((a, b) => (a.codigo || "").localeCompare(b.codigo || "")) : [];
+  const avisoLink = semLink.length ? `<details class="notice" style="margin:0 0 12px"><summary><b>${semLink.length} ${semLink.length === 1 ? "item comprado está" : "itens comprados estão"} sem link de compra.</b> Abra para ver e cadastrar o link de cada um.</summary><div class="row" style="gap:6px;margin-top:10px">${semLink.map((i) => `<button class="btn sm" data-edit="${i.id}" title="${esc(i.nome)}">${esc(i.codigo)} · ${esc(curto(i.nome, 26))}</button>`).join("")}</div></details>` : "";
   const res = k.ativas ? `<label class="small" style="display:flex;gap:8px;align-items:center;margin:0 0 12px"><input id="int-res" type="checkbox" ${k.desc ? "checked" : ""}> Descontar o que já está reservado para ${k.ativas} praça${k.ativas > 1 ? "s" : ""} em andamento</label>` : "";
   let plano;
   if (!k.pl) plano = `<div class="empty">Informe quantas Mini e quantas Tech quer fazer para ver o que comprar e o que fabricar.</div>`;
@@ -1051,13 +1053,13 @@ function secInteligencia(adm) {
       <div class="panel stat"><div class="lbl">Chegada estimada</div><div class="val">${k.aComprar.length ? fmtD(addDays(today(), prazoMax, false)) : "—"}</div><div class="sub">${k.aComprar.length ? `maior prazo: ${prazoMax} dias` : "&nbsp;"}</div></div>
       <div class="panel stat"><div class="lbl">Peças a fabricar</div><div class="val">${k.fabricar.length}</div></div></div>
       ${doEstoque.length ? `<p class="notice" style="margin-top:12px">Sai do estoque antes das peças soltas: ${doEstoque.join(", ")}.</p>` : ""}`;
-    const tCompra = k.comprar.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th class="n">Precisa</th><th class="n">Usa do estoque</th><th class="n">Já pedido</th><th class="n">Comprar</th>${adm ? '<th class="n">Custo est.</th>' : ""}<th class="n">Prazo</th>${adm ? "<th>Link</th>" : ""}</tr></thead><tbody>${k.comprar.map((l) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td><td class="n">${l.ped ? fmtN(l.ped) : "—"}</td><td class="n"><b>${l.qtd ? fmtN(l.qtd) : "—"}</b></td>${adm ? `<td class="n">${brl(l.qtd * num(l.it.custo))}</td>` : ""}<td class="n">${fmtN(l.it.prazo)} d</td>${adm ? `<td>${l.it.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(l.it.link)}">Link</a>` : ""}</td>` : ""}</tr>`).join("")}</tbody></table></div>` : `<div class="empty">O estoque cobre todas as peças compradas para ${k.mi} Mini e ${k.te} Tech.</div>`;
+    const tCompra = k.comprar.length ? `<div class="tw"><table><thead><tr><th></th><th>Item</th><th class="n">Precisa</th><th class="n">Usa do estoque</th><th class="n">Já pedido</th><th class="n">Comprar</th>${adm ? '<th class="n">Custo est.</th>' : ""}<th class="n">Prazo</th>${adm ? "<th>Link</th>" : ""}</tr></thead><tbody>${k.comprar.map((l) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td><td class="n">${l.ped ? fmtN(l.ped) : "—"}</td><td class="n"><b>${l.qtd ? fmtN(l.qtd) : "—"}</b></td>${adm ? `<td class="n">${brl(l.qtd * num(l.it.custo))}</td>` : ""}<td class="n">${fmtN(l.it.prazo)} d</td>${adm ? `<td>${l.it.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(l.it.link)}">Link</a>` : `<button class="btn sm ghost" data-edit="${l.id}" style="color:var(--bad)">Sem link</button>`}</td>` : ""}</tr>`).join("")}</tbody></table></div>` : `<div class="empty">O estoque cobre todas as peças compradas para ${k.mi} Mini e ${k.te} Tech.</div>`;
     const tFab = k.fabricar.length ? `<div class="sec"><div class="sech"><h2>Fabricar na fábrica · ${k.fabricar.length} peças</h2></div><div class="tw"><table><thead><tr><th></th><th>Item</th><th>Matéria-prima</th><th>Maquinário</th><th class="n">Precisa</th><th class="n">Usa do estoque</th><th class="n">Fabricar</th></tr></thead><tbody>${k.fabricar.map((l) => `<tr><td class="ph">${thumb(l.it)}</td><td><span class="code muted">${esc(l.it.codigo)}</span><br>${esc(l.it.nome)}</td><td class="small">${esc(l.it.mp || "—")}</td><td class="small">${esc(l.it.maq || "—")}</td><td class="n">${fmtN(l.need)}</td><td class="n">${fmtN(l.have)}</td><td class="n"><b>${fmtN(l.qtd)}</b></td></tr>`).join("")}</tbody></table></div></div>` : "";
     plano = `${resumo}<div class="sec"><div class="sech"><h2>Comprar · ${k.aComprar.length} itens</h2><div class="row"><button class="btn sm" data-intcopy="1">Copiar lista</button>${adm && k.aComprar.length && W() ? `<button class="btn sm pri" data-intgerar="1">Gerar pedidos de compra</button>` : ""}</div></div>${tCompra}</div>${tFab}`;
   }
   return `<div class="sec"><div class="sech"><h2>Inteligência de produção</h2></div>
   <p class="muted small" style="margin:0 0 12px">Quantas máquinas o estoque de hoje permite fazer e o que falta para o plano que você informar. Usa as quantidades por Mini e por Tech de cada peça, as máquinas prontas e os conjuntos já montados.</p>
-  ${res}
+  ${avisoLink}${res}
   <div class="grid g3">${tiles}</div>
   <div class="panel" style="margin-top:14px"><div class="lbl">Quero fazer</div><div class="row" style="gap:14px;margin-top:8px;flex-wrap:wrap"><label class="small">Mini Go <input id="int-mini" type="number" inputmode="numeric" min="0" step="1" placeholder="0" value="${esc(UI.intMini)}" style="width:90px"></label><label class="small">Tech Go <input id="int-tech" type="number" inputmode="numeric" min="0" step="1" placeholder="0" value="${esc(UI.intTech)}" style="width:90px"></label><button class="btn sm ghost" data-intkit="1" type="button">+1 praça (${c.combo.MINI} Mini + ${c.combo.TECH} Tech)</button></div></div>
   <div style="margin-top:14px">${plano}</div></div>`;
@@ -1097,19 +1099,6 @@ function vEstoque() {
     <div><div class="sech"><h2>Movimentações recentes</h2></div>${movs.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Item</th><th>Tipo</th><th class="n">Qtd</th><th>Motivo</th></tr></thead><tbody>${movs.map((m) => { const it = S.itens[m.itemId] || {}; return `<tr><td class="small">${fmtDs(m.data)}</td><td><span class="code">${esc(it.codigo || "?")}</span></td><td><span class="pill ${m.tipo === "entrada" ? "p-ok" : m.tipo === "saida" ? "p-warn" : "p-neu"}">${esc(m.origem === "reparo" ? "reparo" : m.tipo)}</span></td><td class="n">${fmtN(m.qtd)}</td><td class="small muted">${esc(m.motivo || "")}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">As entradas, saídas e ajustes aparecem aqui.</div>`}</div>
     ${adm ? `<div><div class="sech"><h2>Compras concluídas</h2></div>${fechadas.length ? `<div class="tw"><table>${thC}<tbody>${fechadas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra concluída ainda.</div>`}</div>` : ""}
   </div>`;
-}
-
-function vLinks() {
-  const m = UI.linksModel; const its = itemsArr().filter((i) => m === "TODOS" ? true : qtyOf(i, m) > 0).filter((i) => i.tipo !== "peca").sort((a, b) => (a.grupo || "").localeCompare(b.grupo || "") || (a.codigo || "").localeCompare(b.codigo || ""));
-  const extras = Object.entries(S.links).map(([id, v]) => ({ id, ...v }));
-  const semLink = its.filter((i) => !i.link && !extras.some((e) => e.itemId === i.id));
-  return `<div class="head"><div><div class="eyebrow">Compras</div><h1>Links de compra</h1><p class="lead">Repositório dos links de compra de tudo que vai em cada máquina. Peças fabricadas ficam de fora. Guarde fornecedores alternativos em cada item.</p></div>
-  <div class="row"><div class="seg">${[...MODELS, "TODOS"].map((k) => `<button data-lm="${k}" class="${m === k ? "on" : ""}">${k === "TODOS" ? "Todos" : MODEL_NAME[k]}</button>`).join("")}</div><button class="btn pri" data-copylinks="1">Copiar lista</button></div></div>
-  ${semLink.length ? `<div class="notice" style="margin-bottom:14px"><b>${semLink.length} itens sem link:</b> ${semLink.map((i) => esc(i.codigo)).join(", ")}</div>` : ""}
-  <div class="tw"><table><thead><tr><th></th><th>Item</th><th>Grupo</th>${m !== "TODOS" ? '<th class="n">Qtd</th>' : ""}<th class="n">Custo ref.</th><th>Link principal</th><th>Alternativos</th><th></th></tr></thead><tbody>
-  ${its.map((i) => { const ex = extras.filter((e) => e.itemId === i.id); let host = ""; try { host = i.link ? new URL(i.link).hostname.replace("www.", "") : ""; } catch (_) { host = i.link; }
-    return `<tr><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="small">${esc(i.grupo)}</td>${m !== "TODOS" ? `<td class="n">${fmtN(qtyOf(i, m))}</td>` : ""}<td class="n">${brl(i.custo)}</td><td>${i.link ? `<a class="lk small" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(host)}</a>` : `<span class="muted small">${esc(i.fornecedor || "—")}</span>`}</td><td class="small">${ex.map((e) => `<div><a class="lk" href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.fornecedor || "link")}</a>${num(e.preco) ? " · " + brl(e.preco) : ""} <button class="btn sm ghost danger" data-dellink="${e.id}" aria-label="Remover link">×</button></div>`).join("") || '<span class="muted">—</span>'}</td><td><button class="btn sm" data-addlink="${i.id}">Adicionar link</button></td></tr>`; }).join("")}
-  </tbody></table></div>`;
 }
 
 function vPracas() {
