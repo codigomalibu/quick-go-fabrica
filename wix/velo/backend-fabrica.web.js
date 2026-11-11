@@ -3,6 +3,7 @@
 // As senhas e a chave de assinatura ficam só aqui no servidor; o navegador nunca as vê.
 // CÓPIA PARA O REPOSITÓRIO: os valores de SENHAS e CHAVE foram retirados e só existem no editor do Wix.
 import { Permissions, webMethod } from "wix-web-module";
+import { currentMember } from "wix-members-backend";
 import wixData from "wix-data";
 import crypto from "crypto";
 
@@ -14,19 +15,22 @@ const SENHAS = {
 const CHAVE = "<chave secreta de assinatura, só no editor do Wix>";
 const VALIDADE_MS = 12 * 60 * 60 * 1000; // 12 horas
 const opts = { suppressAuth: true };
+// Versão do servidor: 2 = soma entradas e saídas de estoque aqui ($inc) e aceita login com Google
+const VERSAO = 2;
 
 // Coleções que só a administração lê e altera
-const SO_ADMIN = ["precos", "compras", "links", "frota_unidades", "frota_maquinas", "frota_movimentos"]; // frota: só administração lê e altera
+const SO_ADMIN = ["precos", "compras", "links", "frota_unidades", "frota_maquinas", "frota_movimentos", "usuarios"]; // frota e usuários: só administração
 const SO_ADMIN_DOCS = ["config/geral"];
 // Coleções que todos leem, mas só a administração altera
 const ESCRITA_ADMIN = ["pracas", "arquivos"];
 
 const hash = (s) => crypto.createHash("sha256").update(s).digest("hex");
 const assinar = (p) => crypto.createHmac("sha256", CHAVE).update(p).digest("hex");
-function gerarToken(perfil) {
+function gerarToken(perfil, conta) {
   const exp = Date.now() + VALIDADE_MS;
-  const p = Buffer.from(JSON.stringify({ perfil, exp })).toString("base64");
-  return { token: p + "." + assinar(p), perfil, exp };
+  const email = (conta && conta.email) || "";
+  const p = Buffer.from(JSON.stringify({ perfil, exp, email })).toString("base64");
+  return { token: p + "." + assinar(p), perfil, exp, email, nome: (conta && conta.nome) || "" };
 }
 function lerToken(token) {
   if (!token || typeof token !== "string" || token.indexOf(".") < 0) throw erro("sessao", "Sessão inválida");
@@ -41,6 +45,15 @@ function erro(code) { return new Error(code); }
 const podeLer = (perfil, col, id) => perfil === "admin" || (!SO_ADMIN.includes(col) && !SO_ADMIN_DOCS.includes(col + "/" + id));
 const ESCRITA_TECNICO = ["itens", "movs", "producao"];
 const podeEscrever = (perfil, col, id) => perfil === "admin" || ESCRITA_TECNICO.includes(col) || (col === "config" && id === "montagem");
+// Aplica um patch; {campo: {$inc: n}} soma n ao valor que está na base
+function aplicar(base, patch) {
+  const out = { ...(base || {}) };
+  for (const [k, v] of Object.entries(patch || {})) {
+    if (v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).length === 1 && typeof v.$inc === "number") out[k] = (Number(out[k]) || 0) + v.$inc;
+    else out[k] = v;
+  }
+  return out;
+}
 
 const tentativas = {};
 export const entrar = webMethod(Permissions.Anyone, async (senha) => {
@@ -53,6 +66,20 @@ export const entrar = webMethod(Permissions.Anyone, async (senha) => {
   return gerarToken(perfil);
 });
 
+// Login com Google: o Wix autentica o membro; aqui o e-mail precisa estar na lista de usuários e ativo
+export const entrarGoogle = webMethod(Permissions.SiteMember, async () => {
+  const m = await currentMember.getMember({ fieldsets: ["FULL"] });
+  const email = String((m && m.loginEmail) || "").trim().toLowerCase();
+  if (!email) throw erro("conta");
+  const r = await wixData.query(COLECAO).eq("colecao", "usuarios").limit(1000).find(opts);
+  const it = r.items.find((x) => String((x.dados || {}).email || "").trim().toLowerCase() === email);
+  const u = it && it.dados;
+  if (!u || u.ativo === false) throw new Error("naocadastrado:" + email);
+  it.dados = { ...u, ultimoAcesso: new Date().toISOString() };
+  await wixData.update(COLECAO, it, opts);
+  return gerarToken(u.perfil === "admin" ? "admin" : "tecnico", { email, nome: u.nome || "" });
+});
+
 export const carregar = webMethod(Permissions.Anyone, async (token) => {
   const perfil = lerToken(token);
   const out = {};
@@ -60,6 +87,7 @@ export const carregar = webMethod(Permissions.Anyone, async (token) => {
   const juntar = (items) => items.forEach((it) => { if (podeLer(perfil, it.colecao, it.docId)) (out[it.colecao] = out[it.colecao] || {})[it.docId] = it.dados || {}; });
   juntar(res.items);
   while (res.hasNext()) { res = await res.next(); juntar(res.items); }
+  out.__servidor = { v: VERSAO };
   return out;
 });
 
@@ -83,9 +111,9 @@ export const atualizar = webMethod(Permissions.Anyone, async (token, col, id, pa
   if (!atual) throw erro("inexistente", "Documento não encontrado");
   let p = patch || {};
   if (perfil !== "admin" && col === "itens") p = Object.fromEntries(Object.entries(p).filter(([k]) => k === "estoque" || k === "minimo"));
-  atual.dados = { ...(atual.dados || {}), ...p };
+  atual.dados = aplicar(atual.dados, p);
   await wixData.update(COLECAO, atual, opts);
-  return true;
+  return { ok: true, dados: atual.dados };
 });
 
 export const excluir = webMethod(Permissions.Anyone, async (token, col, id) => {

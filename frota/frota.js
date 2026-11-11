@@ -108,6 +108,55 @@ const ESTILO = `
 .qgf .linha{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .qgf .acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .qgf .conf{border:1px solid #6b3a35;background:rgba(224,96,79,.1);border-radius:10px;padding:10px 12px;font-size:14px;display:grid;gap:8px}
+.qgf .mq small.rp{font:700 9px var(--rotulo);letter-spacing:.06em;text-transform:uppercase;color:#24190a;background:var(--ambar);border-radius:99px;padding:1px 6px}
+.qgf .mq small.rp.falta{background:var(--st-manutencao);color:#fff}
+.qgf .rep{border:1px solid #6b3a35;background:rgba(224,96,79,.07);border-radius:12px;padding:12px;display:grid;gap:12px}
+.qgf .rep.fim{border-color:#2f5d47;background:rgba(79,174,127,.08)}
+.qgf .rep h3{margin:0;font:600 11px var(--rotulo);letter-spacing:.12em;text-transform:uppercase;color:#f19a8e}
+.qgf .rep.fim h3{color:#8fd6b0}
+.qgf .rep .dica2{font-size:13px;color:var(--texto-2)}
+.qgf .rotulo{font:600 10px var(--rotulo);letter-spacing:.14em;text-transform:uppercase;color:var(--texto-2);margin-bottom:-6px}
+.qgf .vias{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qgf .via{position:relative;border:1px solid var(--linha);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--petroleo);display:grid;gap:2px;font:400 13px var(--corpo);color:var(--texto-2);text-transform:none;letter-spacing:0}
+.qgf .via b{font:600 12px var(--rotulo);color:var(--linho);letter-spacing:.02em}
+.qgf .via input{position:absolute;opacity:0;pointer-events:none}
+.qgf .via.on{border-color:var(--ambar);background:rgba(215,154,69,.14);box-shadow:inset 0 0 0 1px var(--ambar)}
+.qgf .via:focus-within{outline:2px solid var(--ambar);outline-offset:2px}
+.qgf .pecas{display:grid;gap:6px}
+.qgf .peca{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--linha);border-radius:8px;padding:7px 9px;background:var(--petroleo);font-size:13px}
+.qgf .peca b{font:600 10.5px var(--rotulo);color:var(--nevoa)}
+.qgf .peca .q{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--linho)}
+.qgf .peca.ok{border-color:#2f5d47}
+.qgf .peca button{padding:2px 9px;min-height:0}
+.qgf .tag{display:inline-block;font:600 9.5px var(--rotulo);letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:var(--petroleo-3);color:var(--texto-2);white-space:nowrap}
+.qgf .tag.ok{background:#1f4636;color:#9fd8b8}
+.qgf .tag.pend,.qgf .tag.fabrica{background:#4a3a1c;color:#f0c27a}
+.qgf .tag.tecnico{background:#2b3a5e;color:#b9c6f2}
+.qgf .tag.falta{background:#5a2a24;color:#f6b1a6}
+.qgf .addp{display:grid;grid-template-columns:90px auto;justify-content:start;gap:6px}
+.qgf .addp select{grid-column:1/-1}
+.qgf .addp select,.qgf .addp input{background:var(--campo);border:1px solid var(--linha);border-radius:10px;padding:8px 10px;color:var(--linho);min-width:0;font:400 14px var(--corpo)}
+.qgf .rpres{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.qgf .rpres div{border:1px solid var(--linha);border-radius:10px;background:var(--petroleo);padding:8px 4px;text-align:center}
+.qgf .rpres b{display:block;font:400 26px/1 var(--display);color:var(--linho)}
+.qgf .rpres span{font:600 9px var(--rotulo);letter-spacing:.08em;text-transform:uppercase;color:var(--texto-2)}
+.qgf .rpres .alerta{border-color:#6b3a35;background:rgba(224,96,79,.12)}
+.qgf .rpl{display:grid;gap:4px;text-align:left;width:100%;border:1px solid var(--linha);border-left:4px solid var(--st-manutencao);border-radius:10px;padding:10px 12px;background:var(--petroleo);color:var(--linho);cursor:pointer;font:inherit}
+.qgf .rpl:hover{border-color:var(--mineral)}
+.qgf .rpl.tecnico{border-left-color:#7f93d6}
+.qgf .rpl.fabrica{border-left-color:var(--ambar)}
+.qgf .rpl.sem{border-style:dashed;border-left-style:solid}
+.qgf .rpl.fech{cursor:default;opacity:.85;border-left-color:var(--st-operando)}
+.qgf .rpl .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qgf .rpl .t b{font:600 12px var(--rotulo);letter-spacing:.03em}
+.qgf .rpl .t span:not(.tag){font-size:12.5px;color:var(--texto-2)}
+.qgf .rpl .t .tag{margin-left:auto}
+.qgf .rpl .pb{font-size:14.5px}
+.qgf .rpl .mt{font-size:12.5px;color:var(--texto-2)}
+.qgf .falta{color:#f19a8e}
+.qgf .subt{margin:10px 0 0;font:600 10px var(--rotulo);letter-spacing:.14em;text-transform:uppercase;color:var(--nevoa)}
+
+@media (max-width:700px){ .qgf .vias{grid-template-columns:1fr} .qgf .rpres b{font-size:22px} }
 @media (max-width:900px){
   .qgf{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(380px,60svh) auto;height:auto}
   .qgf .lado{grid-column:1;grid-row:3;border-left:0;border-top:1px solid var(--linha);min-height:70svh}
@@ -161,6 +210,7 @@ const MARKUP = `
   <div class="lado">
     <div class="abas" role="tablist">
       <button role="tab" id="ab-un" aria-selected="true">Unidades</button>
+      <button role="tab" id="ab-rp" aria-selected="false">Reparos</button>
       <button role="tab" id="ab-mv" aria-selected="false">Movimentos</button>
       <button role="tab" id="ab-lg" aria-selected="false">Legenda</button>
       <span class="sp"></span>
@@ -203,10 +253,16 @@ const cssv = (k) => getComputedStyle(document.documentElement).getPropertyValue(
 const COR_PADRAO = {operando:'#4fae7f', manutencao:'#e0604f', acabamento:'#e0a24a', faltando:'#e89a82', a_produzir:'#8494d4', producao:'#5aa6ba', envio:'#b98bb6', devolucao:'#8e9799', aguardando:'#a9cad5'};
 const COR = Object.fromEntries(Object.keys(STATUS).map(k => [k, cssv('--st-' + k) || COR_PADRAO[k] || '#888']));
 const MODELO = {MINI:'Mini Go', TECH:'Tech Go'};
+// Reparo: motivo, como resolve e peças usadas (com baixa no estoque da Fábrica)
+const MOTIVOS = {peca:'Peça com defeito', eletrica:'Falha elétrica ou eletrônica', hidraulica:'Vazamento ou hidráulica', software:'Tela ou software', acabamento:'Acabamento ou estrutura', desgaste:'Desgaste de uso', mau_uso:'Mau uso ou acidente', outro:'Outro'};
+const VIAS = {tecnico:{n:'Técnico homologado', d:'O técnico vai até a unidade', t:'Téc'}, fabrica:{n:'Enviar para a fábrica', d:'A máquina volta para reparo na fábrica', t:'Fáb'}};
+const hojeIso = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const diasDesde = (iso) => iso ? Math.max(0, Math.round((new Date(hojeIso()) - new Date(iso)) / 864e5)) : null;
+const fmtData = (iso) => iso ? iso.split('-').reverse().join('/') : '';
 const FAB = 'fabrica';
 const UFS = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ');
 
-const S = {db:null, user:null, uid:null, canWrite:true, unidades:{}, maquinas:{}, movs:[], ok:{u:false,m:false}, erro:null};
+const S = {db:null, user:null, uid:null, canWrite:true, unidades:{}, maquinas:{}, movs:[], ok:{u:false,m:false}, erro:null, host:null};
 const UI = {aba:'un', filtro:null, q:'', sel:null, gaveta:null, foco:null, modo:'patio'};
 try { if (localStorage.getItem('qgf-vista') === 'rotas') UI.modo = 'rotas'; } catch(_){}
 // Fábrica em Campo Grande - MS. Coordenadas (lat, lon) das cidades para a visão de rotas.
@@ -269,7 +325,7 @@ async function mover(id, para){
 async function boot(ctx){
   const db = ctx && ctx.db;
   if (!db){ S.erro='sem-db'; renderAll(); return; }
-  S.db = db; S.canWrite = !!(ctx && ctx.canWrite);
+  S.db = db; S.canWrite = !!(ctx && ctx.canWrite); S.host = (ctx && ctx.host) || null;
   if (ctx.user && ctx.user.id) ctx.user.id().then(id => { S.uid = id; }).catch(()=>{});
   const timer = setTimeout(()=>{ if (!S.ok.u || !S.ok.m){ S.erro='lento'; renderAll(); } }, 10000);
   const fail = (e) => { clearTimeout(timer); S.erro = (e && e.code) || 'unavailable'; renderAll(); };
@@ -295,14 +351,34 @@ function cardUn(u, fab){
   return `<section class="un${fab?' fab':''}${apagada?' apagada':''}" data-drop="${esc(u.id)}">
     <header data-un="${esc(u.id)}" title="${fab?'Máquinas sem unidade':'Editar unidade'}"><span class="nm">${esc(u.nome)}</span>${u.uf?`<span class="uf">${esc(u.uf)}</span>`:''}<span class="num">${fab?'':(u.ordem??'')}</span></header>
     ${u.categoria==='intencao'?`<div class="comp" style="color:var(--mineral)">Intenção de compra</div>`:''}${u.implantacao?`<div class="nota">Implantada em ${esc(u.implantacao.split('-').reverse().join('/'))}</div>`:''}${u.nota?`<div class="nota">${esc(u.nota)}</div>`:''}${comp}
-    <div class="mqs">${ms.length? ms.map(m=>`<span class="mq${UI.filtro&&m.status!==UI.filtro?' dim':''}${UI.sel===m.id?' sel':''}" draggable="${S.canWrite}" data-mq="${esc(m.id)}" role="button" tabindex="0" title="${esc(STATUS[m.status]?.n||m.status)}${m.nota?' · '+esc(m.nota):''}"><i style="background:${COR[m.status]||'#888'}"></i>${esc(MODELO[m.modelo]||m.modelo)}<small>${esc(m.serie||'')}</small></span>`).join('') : `<span class="vazio">${fab?'Arraste máquinas para cá para tirá-las de uma unidade.':'Sem máquinas.'}</span>`}
+    <div class="mqs">${ms.length? ms.map(m=>`<span class="mq${UI.filtro&&m.status!==UI.filtro?' dim':''}${UI.sel===m.id?' sel':''}" draggable="${S.canWrite}" data-mq="${esc(m.id)}" role="button" tabindex="0" title="${esc(STATUS[m.status]?.n||m.status)}${m.status==='manutencao'&&m.reparo?' · '+esc(m.reparo.problema)+' · '+esc(VIAS[m.reparo.via]?.n||''):''}${m.nota?' · '+esc(m.nota):''}"><i style="background:${COR[m.status]||'#888'}"></i>${esc(MODELO[m.modelo]||m.modelo)}<small>${esc(m.serie||'')}</small>${m.status==='manutencao'?`<small class="rp${m.reparo?'':' falta'}">${m.reparo?esc(VIAS[m.reparo.via]?.t||'?'):'!'}</small>`:''}</span>`).join('') : `<span class="vazio">${fab?'Arraste máquinas para cá para tirá-las de uma unidade.':'Sem máquinas.'}</span>`}
     ${fab?`<button class="qbtn ghost" data-addmq="1" type="button" style="padding:4px 9px">+ Máquina</button>`:''}</div>
   </section>`;
 }
+const fmtQ = (n) => String(Math.round(Number(n||0)*100)/100).replace('.', ',');
+function listaReparos(){
+  const todas = Object.entries(S.maquinas).map(([id,v])=>({id,...v}));
+  const abertos = todas.filter(m=>m.status==='manutencao').sort((a,b)=>(a.reparo?1:0)-(b.reparo?1:0) || String(a.reparo?.aberto||'').localeCompare(String(b.reparo?.aberto||'')));
+  const nTec = abertos.filter(m=>m.reparo?.via==='tecnico').length, nFab = abertos.filter(m=>m.reparo?.via==='fabrica').length, nSem = abertos.filter(m=>!m.reparo).length;
+  const fechados = todas.flatMap(m=>(m.reparos||[]).map(r=>({...r, mid:m.id, m}))).sort((a,b)=>String(b.fechado||'').localeCompare(String(a.fechado||''))).slice(0,12);
+  const pecasTxt = (r) => (r.pecas||[]).map(p=>`${fmtQ(p.qtd)}× ${esc(p.nome||p.codigo||p.id)}${p.baixada?'':' <span class="falta">(baixa pendente)</span>'}`).join(', ');
+  const card = (m) => { const r = m.reparo;
+    return `<button class="rpl${r?' '+esc(r.via):' sem'}" type="button" data-mq="${esc(m.id)}">
+      <span class="t"><b>${esc(idMaq(m.id,m))}</b><span>${esc(nomeUn(m.unidade))}</span>${r?`<span class="tag ${esc(r.via)}">${esc(VIAS[r.via]?.n||'')}</span>`:'<span class="tag falta">Sem detalhes</span>'}</span>
+      ${r ? `<span class="pb">${esc(r.problema)}</span><span class="mt">${esc(MOTIVOS[r.motivo]||r.motivo||'')}${r.tecnico?' · '+esc(r.tecnico):''}${r.aberto?' · há '+diasDesde(r.aberto)+' dia(s)':''}${r.previsao?' · previsão '+fmtData(r.previsao):''}</span>${(r.pecas||[]).length?`<span class="mt">Peças: ${pecasTxt(r)}</span>`:''}`
+        : `<span class="mt">${m.nota?esc(m.nota)+' · ':''}Clique para informar o problema, o motivo e como vai ser resolvido.</span>`}
+    </button>`; };
+  return `<div class="rpres"><div><b>${abertos.length}</b><span>em reparo</span></div><div><b>${nTec}</b><span>com técnico</span></div><div><b>${nFab}</b><span>na fábrica</span></div><div class="${nSem?'alerta':''}"><b>${nSem}</b><span>sem detalhes</span></div></div>`
+    + (abertos.length ? abertos.map(card).join('') : `<div class="vazio">Nenhuma máquina em reparo.</div>`)
+    + (fechados.length ? `<h4 class="subt">Reparos concluídos</h4>` + fechados.map(r=>`<div class="rpl fech"><span class="t"><b>${esc(idMaq(r.mid,r.m))}</b><span>${esc(fmtData(r.fechado))}</span><span class="tag">${esc(VIAS[r.via]?.n||'')}</span></span><span class="pb">${esc(r.problema)}</span>${r.solucao?`<span class="mt">Solução: ${esc(r.solucao)}</span>`:''}${(r.pecas||[]).length?`<span class="mt">Peças: ${pecasTxt(r)}</span>`:''}</div>`).join('') : '');
+}
 function renderLista(){
-  ['un','mv','lg'].forEach(k => $('#ab-'+k).setAttribute('aria-selected', UI.aba===k));
+  ['un','rp','mv','lg'].forEach(k => $('#ab-'+k).setAttribute('aria-selected', UI.aba===k));
+  const nRep = Object.values(S.maquinas).filter(m=>m.status==='manutencao').length;
+  $('#ab-rp').textContent = 'Reparos' + (nRep ? ' · ' + nRep : '');
   $('#bt-nova').hidden = UI.aba!=='un' || !S.canWrite || !S.db;
   const L = $('#lista');
+  if (UI.aba==='rp'){ L.innerHTML = listaReparos(); return; }
   if (UI.aba==='lg'){
     L.innerHTML = `<div class="legenda">${ORDEM.slice().reverse().map(k=>`<div><i style="background:${COR[k]}"></i><span><b>${STATUS[k].n}</b><p>${STATUS[k].d}</p></span></div>`).join('')}
       <div><i style="background:transparent;border:1px solid var(--texto-2)"></i><span><b>Pedestal</b><p>O anel do pedestal mostra a pendência mais urgente da unidade. Cada unidade recebe 2 Mini Go e 1 Tech Go.</p></span></div></div>`;
@@ -348,6 +424,12 @@ function situacaoUn(u){
   if (m.length===3 && st.every(s=>s==='operando')) return {k:'ok', m, falt};
   return {k:'outras', m, falt};
 }
+// Detalhe do reparo para o relatório: problema, motivo, como resolve e peças usadas
+function repTexto(m){
+  const r = m.status==='manutencao' && m.reparo; if (!r) return '';
+  const pc = (r.pecas||[]).map(p=>`${fmtQ(p.qtd)}x ${p.nome||p.codigo}`).join(', ');
+  return ` · problema: ${r.problema} · motivo: ${MOTIVOS[r.motivo]||r.motivo} · resolução: ${VIAS[r.via]?.n||r.via}${r.tecnico?' ('+r.tecnico+')':''}${pc?' · peças: '+pc:''}`;
+}
 function relatorioTexto(){
   const hoje = new Date();
   const lista = unidadesOrd().map(u=>({u, s:situacaoUn(u)}));
@@ -360,7 +442,7 @@ function relatorioTexto(){
   const blocoOutras = outras.length ? outras.map(x=>{
     const cab = `${nomeUf(x.u)}${x.u.nota?' — '+x.u.nota:''}`;
     if (!x.s.m.some(m=>m.status==='manutencao')) return cab;
-    const linhas = x.s.m.map(m=>`  ${idMaq(m.id,m)}: ${STATUS[m.status]?.n || m.status}${m.nota?' · observação: '+m.nota:''}`);
+    const linhas = x.s.m.map(m=>`  ${idMaq(m.id,m)}: ${STATUS[m.status]?.n || m.status}${repTexto(m)}${m.nota?' · observação: '+m.nota:''}`);
     return [cab, ...linhas].join('\n');
   }).join('\n\n') : '- nenhuma';
   return [
@@ -393,7 +475,7 @@ function relatorioVisual(){
   const outrasHtml = outras.length ? outras.map(x=>{
     const head = `<div style="font:600 15px var(--display,serif)">${nome(x.u)}${x.u.nota?` <span style="font:400 13px var(--corpo,sans-serif);opacity:.75">· ${esc(x.u.nota)}</span>`:''}</div>`;
     if (!x.s.m.some(m=>m.status==='manutencao')) return `<div style="margin-top:12px">${head}</div>`;
-    const linhas = x.s.m.map(m=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0 0 6px;font-size:14px"><i style="width:9px;height:9px;border-radius:50%;background:${COR[m.status]||'#888'};display:inline-block;flex:none"></i><b>${esc(idMaq(m.id,m))}</b> · ${esc(STATUS[m.status]?.n||m.status)}${m.nota?`<span style="opacity:.75"> — ${esc(m.nota)}</span>`:''}</div>`).join('');
+    const linhas = x.s.m.map(m=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0 0 6px;font-size:14px"><i style="width:9px;height:9px;border-radius:50%;background:${COR[m.status]||'#888'};display:inline-block;flex:none"></i><b>${esc(idMaq(m.id,m))}</b> · ${esc(STATUS[m.status]?.n||m.status)}${repTexto(m)?`<span style="opacity:.85">${esc(repTexto(m))}</span>`:''}${m.nota?`<span style="opacity:.75"> — ${esc(m.nota)}</span>`:''}</div>`).join('');
     return `<div style="margin-top:12px">${head}${linhas}</div>`;
   }).join('') : '<div style="opacity:.7">Nenhuma</div>';
   const empHtml = emprest.length ? emprest.map(([id,m])=>`<div style="margin-top:6px"><b>${esc(idMaq(id,m))}</b> está em ${esc(S.unidades[m.unidade].nome)} <span style="opacity:.75">(origem: ${esc(S.unidades[baseDe(id,m)]?.nome || baseDe(id,m))})</span></div>`).join('') : '<div style="opacity:.7">Nenhuma</div>';
@@ -411,7 +493,63 @@ function relatorioHtml(){
     <div class="acoes"><button class="qbtn pri" type="button" data-copyrel="1">Copiar texto</button></div>
   </div>`;
 }
+function repInicial(m){
+  const r = m.reparo || {};
+  return {id:r.id||'', aberto:r.aberto||'', problema: r.problema || (m.status==='manutencao' ? (m.nota||'') : ''), motivo:r.motivo||'', via:r.via||'',
+    tecnico:r.tecnico||'', previsao:r.previsao||'', comPeca: !!(r.pecas && r.pecas.length), pecas:(r.pecas||[]).map(p=>({...p}))};
+}
+function lerRep(){
+  const g = UI.gaveta; if (!g || !g.rep) return; const r = g.rep;
+  const v = (id) => { const el = $('#'+id); return el ? el.value : null; };
+  if (v('rp-problema') !== null) r.problema = v('rp-problema');
+  if (v('rp-motivo') !== null) r.motivo = v('rp-motivo');
+  const via = $('#mq-rep input[name="rp-via"]:checked'); if (via) r.via = via.value;
+  if (v('rp-tecnico') !== null) r.tecnico = v('rp-tecnico');
+  if (v('rp-prev') !== null) r.previsao = v('rp-prev');
+  if (v('rp-compeca') !== null) r.comPeca = v('rp-compeca') === 'sim';
+  if (v('rp-sol') !== null) g.solucao = v('rp-sol');
+}
+function renderRep(){
+  const box = $('#mq-rep'); const g = UI.gaveta; if (!box || !g || !g.rep) return;
+  const st = $('#mq-status') ? $('#mq-status').value : '';
+  const m = g.tipo==='mq' ? S.maquinas[g.id] : null;
+  const ro = !S.canWrite || !S.db ? ' disabled' : '';
+  const r = g.rep;
+  if (st !== 'manutencao'){
+    box.innerHTML = (m && m.status==='manutencao' && m.reparo) ? `<div class="rep fim"><h3>Concluir o reparo</h3><div class="dica2">Ao salvar com outro status, o reparo vai para o histórico desta máquina.</div><label class="ff">O que foi feito<textarea id="rp-sol" maxlength="400"${ro} placeholder="Ex.: fonte trocada e máquina testada">${esc(g.solucao||'')}</textarea></label></div>` : '';
+    return;
+  }
+  const itens = S.host && S.host.itens ? S.host.itens() : [];
+  const grupos = {}; itens.forEach(i => (grupos[i.grupo||'Outros'] = grupos[i.grupo||'Outros'] || []).push(i));
+  const opt = Object.keys(grupos).sort().map(gr => `<optgroup label="${esc(gr)}">${grupos[gr].sort((a,b)=>String(a.codigo).localeCompare(String(b.codigo))).map(i=>`<option value="${esc(i.id)}">${esc(i.codigo)} · ${esc(i.nome)} (estoque ${fmtQ(i.estoque)})</option>`).join('')}</optgroup>`).join('');
+  const viaExtra = r.via==='tecnico' ? `<div class="linha"><label class="ff">Técnico homologado<input id="rp-tecnico" value="${esc(r.tecnico)}" maxlength="60"${ro} placeholder="Nome do técnico"></label><label class="ff">Previsão da visita<input id="rp-prev" type="date" value="${esc(r.previsao)}"${ro}></label></div>`
+    : r.via==='fabrica' ? `<label class="ff">Previsão de volta para a unidade<input id="rp-prev" type="date" value="${esc(r.previsao)}"${ro}></label>` : '';
+  const listaP = r.pecas.map((p,i)=>`<div class="peca${p.baixada?' ok':''}"><b>${esc(p.codigo||'')}</b><span>${esc(p.nome||p.id)}</span><span class="q">${fmtQ(p.qtd)} un</span>${p.baixada?`<span class="tag ok">Saiu do estoque${p.baixadaEm?' em '+fmtData(p.baixadaEm):''}</span>`:`<span class="tag pend">Sai do estoque ao salvar</span>${ro?'':`<button class="qbtn ghost" type="button" data-rmp="${i}" aria-label="Tirar ${esc(p.nome||'peça')}">×</button>`}`}</div>`).join('');
+  box.innerHTML = `<div class="rep">
+    <h3>Reparo${r.aberto?` · aberto em ${fmtData(r.aberto)}, há ${diasDesde(r.aberto)} dia(s)`:''}</h3>
+    <label class="ff">Qual é o problema?<textarea id="rp-problema" maxlength="400"${ro} placeholder="Ex.: máquina não liga; bomba 3 sem pressão">${esc(r.problema)}</textarea></label>
+    <label class="ff">Motivo do reparo<select id="rp-motivo"${ro}><option value="">Escolha o motivo</option>${Object.entries(MOTIVOS).map(([k,v])=>`<option value="${k}"${r.motivo===k?' selected':''}>${v}</option>`).join('')}</select></label>
+    <div class="rotulo">Como vai ser resolvido</div>
+    <div class="vias">${Object.entries(VIAS).map(([k,v])=>`<label class="via ${k}${r.via===k?' on':''}"><input type="radio" name="rp-via" value="${k}"${r.via===k?' checked':''}${ro}><b>${v.n}</b><span>${v.d}</span></label>`).join('')}</div>
+    ${viaExtra}
+    <label class="ff">Tem peça vinculada ao reparo?<select id="rp-compeca"${ro}><option value="nao"${r.comPeca?'':' selected'}>Não</option><option value="sim"${r.comPeca?' selected':''}>Sim, sai do estoque da fábrica</option></select></label>
+    ${r.comPeca ? `<div class="pecas">${listaP || '<div class="vazio">Nenhuma peça adicionada ainda.</div>'}
+      ${!S.host ? '<div class="vazio">A baixa de peças funciona dentro do site da Fábrica.</div>' : ro ? '' : `<div class="addp"><select id="rp-item" aria-label="Peça">${opt}</select><input id="rp-qtd" type="number" min="0" step="any" value="1" aria-label="Quantidade"><button class="qbtn" type="button" data-addp="1">Adicionar</button></div>`}</div>` : ''}
+  </div>`;
+}
+function addPeca(){
+  lerRep(); const g = UI.gaveta; const sel = $('#rp-item'); if (!sel || !S.host) return;
+  const q = parseFloat(String($('#rp-qtd').value).replace(',', '.'));
+  if (!(q > 0)){ toast('Informe a quantidade da peça.', true); return; }
+  const it = S.host.itens().find(i=>i.id===sel.value); if (!it) return;
+  const ja = g.rep.pecas.find(p=>p.id===it.id && !p.baixada);
+  if (ja) ja.qtd = Number(ja.qtd) + q; else g.rep.pecas.push({id:it.id, codigo:it.codigo||'', nome:it.nome||'', qtd:q, baixada:false});
+  const total = g.rep.pecas.filter(p=>p.id===it.id && !p.baixada).reduce((s,p)=>s+Number(p.qtd),0);
+  if (total > Number(it.estoque||0)) toast(`${it.nome}: o estoque tem ${fmtQ(it.estoque)}. O saldo ficará negativo ao salvar.`, true);
+  renderRep();
+}
 function renderGaveta(){
+  lerRep();
   const G = $('#gaveta'); const g = UI.gaveta;
   if (!g){ G.hidden = true; G.innerHTML=''; return; }
   const ro = !S.canWrite || !S.db ? ' disabled' : '';
@@ -419,16 +557,19 @@ function renderGaveta(){
   if (g.tipo==='mq' || g.tipo==='novamq'){
     const m = g.tipo==='mq' ? S.maquinas[g.id] : {modelo:'MINI', status:'producao', unidade:FAB, serie:'', nota:''};
     if (!m){ fechar(); return; }
+    if (!g.rep) g.rep = repInicial(m);
     G.innerHTML = `<div class="cab"><h2>${g.tipo==='mq'?esc(idMaq(g.id,m)):'Nova máquina'}</h2><button class="qbtn ghost" data-x="1" type="button">Fechar</button></div>
     <form class="corpo" id="fmq" autocomplete="off">
       <div class="linha"><label class="ff">Modelo<select id="mq-modelo"${ro}>${Object.entries(MODELO).map(([k,v])=>`<option value="${k}"${m.modelo===k?' selected':''}>${v}</option>`).join('')}</select></label>
       <label class="ff">Nº de série<input id="mq-serie" value="${esc(m.serie||'')}" maxlength="30"${ro}></label></div>
       <label class="ff">Status<select id="mq-status"${ro}>${ORDEM.slice().reverse().map(k=>`<option value="${k}"${m.status===k?' selected':''}>${STATUS[k].n}</option>`).join('')}</select></label>
+      <div id="mq-rep"></div>
       <label class="ff">Unidade<select id="mq-un"${ro}>${optsUn(m.unidade)}</select></label>
       <label class="ff">Observação<textarea id="mq-nota" maxlength="500"${ro} placeholder="Ex.: trocar bomba 2, aguardando peça">${esc(m.nota||'')}</textarea></label>
       ${ro?'<div class="vazio">Somente leitura.</div>':`<div class="acoes">${g.tipo==='mq'?'<button class="qbtn perigo" type="button" data-del="1">Excluir máquina</button>':''}<button class="qbtn pri" type="submit">${g.tipo==='mq'?'Salvar':'Cadastrar'}</button></div>`}
       ${g.conf?`<div class="conf">Excluir ${esc(idMaq(g.id,m))} de vez? O histórico de movimentos continua.<div class="acoes"><button class="qbtn" type="button" data-nconf="1">Manter</button><button class="qbtn perigo" type="button" data-sconf="1">Excluir</button></div></div>`:''}
     </form>`;
+    G.hidden = false; renderRep(); return;
   } else {
     const nova = g.tipo==='novaun'; const u = nova ? {nome:'', uf:'', nota:'Franquia em compra', ordem: unidadesOrd().length+1} : S.unidades[g.id];
     if (!u){ fechar(); return; }
@@ -449,18 +590,41 @@ function renderGaveta(){
   G.hidden = false;
 }
 async function salvarMq(){
-  const g = UI.gaveta; const d = {modelo:$('#mq-modelo').value, serie:$('#mq-serie').value.trim(), status:$('#mq-status').value, unidade:$('#mq-un').value, nota:$('#mq-nota').value.trim()};
-  if (g.tipo==='novamq'){
-    const id = 'mq-' + Date.now().toString(36);
-    d.base = d.unidade; d.num = String(maqsDe(d.unidade).filter(x=>x.modelo===d.modelo).length+1);
-    if (await guard(()=>S.db.doc('frota_maquinas/'+id).set(d), 'Máquina cadastrada')) fechar();
-    return;
+  const g = UI.gaveta; lerRep();
+  const d = {modelo:$('#mq-modelo').value, serie:$('#mq-serie').value.trim(), status:$('#mq-status').value, unidade:$('#mq-un').value, nota:$('#mq-nota').value.trim()};
+  const m = g.tipo==='mq' ? S.maquinas[g.id] : null;
+  const id = g.tipo==='novamq' ? 'mq-' + Date.now().toString(36) : g.id;
+  if (g.tipo==='novamq'){ d.base = d.unidade; d.num = String(maqsDe(d.unidade).filter(x=>x.modelo===d.modelo).length+1); }
+  // Reparo: obrigatório informar problema, motivo e como resolve; peças novas saem do estoque da Fábrica
+  let saidas = [];
+  if (d.status === 'manutencao'){
+    const r = g.rep;
+    if (!String(r.problema||'').trim()){ toast('Descreva qual é o problema da máquina.', true); $('#rp-problema')?.focus(); return; }
+    if (!r.motivo){ toast('Escolha o motivo do reparo.', true); return; }
+    if (!r.via){ toast('Informe se vai um técnico homologado ou se a máquina vai para a fábrica.', true); return; }
+    const pecas = r.comPeca ? r.pecas : r.pecas.filter(p=>p.baixada);
+    if (r.comPeca && !pecas.length){ toast('Adicione a peça usada no reparo ou marque que não tem peça vinculada.', true); return; }
+    saidas = pecas.filter(p=>!p.baixada);
+    if (saidas.length && !(S.host && S.host.saida)){ toast('A baixa de peças só funciona dentro do site da Fábrica.', true); return; }
+    d.reparo = {id: r.id || 'rp-' + Date.now().toString(36), aberto: r.aberto || hojeIso(), problema: String(r.problema).trim(), motivo: r.motivo, via: r.via,
+      tecnico: r.via==='tecnico' ? String(r.tecnico||'').trim() : '', previsao: r.previsao || '', pecas: pecas.map(p=>({...p}))};
+    saidas = d.reparo.pecas.filter(p=>!p.baixada);
+  } else if (m && m.status==='manutencao' && m.reparo){
+    d.reparos = [...(m.reparos||[]), {...m.reparo, fechado: hojeIso(), solucao: String(g.solucao||'').trim(), statusFinal: d.status}].slice(-20);
+    d.reparo = null;
   }
-  const m = S.maquinas[g.id]; const mudouUn = (S.unidades[m.unidade]?m.unidade:FAB) !== d.unidade;
+  const nome = idMaq(id, {...(m||{}), ...d});
   const ok = await guard(async ()=>{
-    await S.db.doc('frota_maquinas/'+g.id).update(d);
-    if (mudouUn) await S.db.collection('frota_movimentos').add({maquina:g.id, rotulo: rotMq(d), de: S.unidades[m.unidade]?m.unidade:FAB, para:d.unidade, deNome:nomeUn(m.unidade), paraNome:nomeUn(d.unidade), status:d.status, ts:new Date().toISOString(), por:S.uid||null});
-  }, 'Máquina atualizada');
+    if (g.tipo==='novamq') await S.db.doc('frota_maquinas/'+id).set(d); else await S.db.doc('frota_maquinas/'+id).update(d);
+    if (m && (S.unidades[m.unidade]?m.unidade:FAB) !== d.unidade) await S.db.collection('frota_movimentos').add({maquina:id, rotulo: rotMq(d), de: S.unidades[m.unidade]?m.unidade:FAB, para:d.unidade, deNome:nomeUn(m.unidade), paraNome:nomeUn(d.unidade), status:d.status, ts:new Date().toISOString(), por:S.uid||null});
+    if (saidas.length){
+      for (const p of saidas){
+        await S.host.saida(p.id, Number(p.qtd), 'Reparo ' + nome + ': ' + d.reparo.problema, {origem:'reparo', maquina:id, maquinaNome:nome, unidade:d.unidade, reparo:d.reparo.id, via:d.reparo.via});
+        p.baixada = true; p.baixadaEm = hojeIso();
+      }
+      await S.db.doc('frota_maquinas/'+id).update({reparo: d.reparo});
+    }
+  }, g.tipo==='novamq' ? 'Máquina cadastrada' : saidas.length ? `Reparo salvo · ${saidas.length} peça(s) saíram do estoque` : d.reparos ? 'Reparo concluído e guardado no histórico' : 'Máquina atualizada');
   if (ok) fechar();
 }
 async function salvarUn(){
@@ -488,7 +652,7 @@ async function excluir(){
 
 /* ---------------- eventos do painel ---------------- */
 $('#chips').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; UI.filtro = UI.filtro===b.dataset.f ? null : b.dataset.f; renderAll(); });
-['un','mv','lg'].forEach(k => $('#ab-'+k).addEventListener('click', ()=>{ UI.aba=k; renderLista(); }));
+['un','rp','mv','lg'].forEach(k => $('#ab-'+k).addEventListener('click', ()=>{ UI.aba=k; renderLista(); }));
 $('#bt-nova').addEventListener('click', ()=>{ UI.gaveta={tipo:'novaun', conf:false}; renderGaveta(); });
 $('#bt-rel').addEventListener('click', ()=>{ UI.gaveta={tipo:'rel', conf:false}; renderGaveta(); });
 $('#lista').addEventListener('input', e => { if (e.target.id==='busca'){ UI.q = e.target.value; renderLista(); } });
@@ -502,8 +666,14 @@ $('#lista').addEventListener('dragstart', e => { const mq = e.target.closest('[d
 $('#lista').addEventListener('dragover', e => { const z = e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); raiz.querySelectorAll('.un.over').forEach(x=>x!==z&&x.classList.remove('over')); z.classList.add('over'); });
 $('#lista').addEventListener('dragleave', e => { const z = e.target.closest('[data-drop]'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('over'); });
 $('#lista').addEventListener('drop', e => { const z = e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); z.classList.remove('over'); const id = e.dataTransfer.getData('text/plain'); if (id && S.maquinas[id]) mover(id, z.dataset.drop); });
+$('#gaveta').addEventListener('change', e => {
+  const t = e.target;
+  if (t.id==='mq-status' || t.id==='rp-compeca' || t.name==='rp-via'){ lerRep(); renderRep(); }
+});
 $('#gaveta').addEventListener('click', e => {
   if (e.target.closest('[data-x]')) return fechar();
+  if (e.target.closest('[data-addp]')) return addPeca();
+  const rm = e.target.closest('[data-rmp]'); if (rm){ lerRep(); UI.gaveta.rep.pecas.splice(Number(rm.dataset.rmp), 1); renderRep(); return; }
   if (e.target.closest('[data-copyrel]')){ const t = $('#rel-txt'); navigator.clipboard.writeText(t.value).then(()=>toast('Texto copiado')).catch(()=>{ t.select(); toast('Selecione o texto e copie', true); }); return; }
   if (e.target.closest('[data-del]')){ UI.gaveta.conf = true; renderGaveta(); return; }
   if (e.target.closest('[data-nconf]')){ UI.gaveta.conf = false; renderGaveta(); return; }

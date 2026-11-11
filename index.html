@@ -47,6 +47,57 @@ h3{font-size:23px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+/* Painel integrado: rosca da frota, quadro da fábrica, fluxo da montagem, barras e cronograma das praças */
+.ink{color:var(--ink)}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:16px;margin-bottom:22px}
+.dash .panel{display:flex;flex-direction:column}
+.ph2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.ph2 h3{font-size:25px}
+.dn{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.dnut{width:128px;height:128px;flex:none}
+.dnut .dn-v{font-family:var(--display);font-size:30px;fill:var(--ink)}
+.dnut .dn-l{font-family:var(--sub);font-size:8px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;fill:var(--muted)}
+.lg2{display:grid;gap:4px;font-size:13px;flex:1;min-width:150px}
+.lg2 span{display:flex;align-items:center;gap:7px}
+.lg2 i{width:10px;height:10px;border-radius:50%;flex:none}
+.lg2 b{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:10px}
+.lane{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.lane h4{margin:0;font-family:var(--sub);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lane h4 b{font-family:var(--display);font-size:30px;color:var(--ink);letter-spacing:0;font-weight:400;line-height:1}
+.chipm{display:flex;align-items:center;gap:6px;font-size:12.5px;border:1px solid var(--line);border-radius:99px;padding:3px 10px;background:var(--surface-2);min-width:0;color:var(--ink);text-decoration:none}
+.chipm:hover{border-color:var(--c)}
+.chipm i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--c)}
+.chipm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.chipm small{margin-left:auto;color:var(--muted);white-space:nowrap;font-size:11.5px}
+.row .chipm{flex:none}
+.lbl2{font-family:var(--sub);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+.lbl2:first-child{margin-top:0}
+.flow{display:flex;align-items:stretch}
+.flow .st{flex:1;min-width:0;text-align:center;padding:10px 4px;border:1px solid var(--line);background:var(--surface-2);position:relative}
+.flow .st+.st{border-left:0}
+.flow .st:first-child{border-radius:var(--r) 0 0 var(--r)}
+.flow .st:last-child{border-radius:0 var(--r) var(--r) 0}
+.flow .st b{display:block;font-family:var(--display);font-size:30px;line-height:1;font-weight:400}
+.flow .st span{display:block;font-family:var(--sub);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:4px}
+.flow .st:not(:last-child)::after{content:"";position:absolute;right:-6px;top:50%;width:10px;height:10px;transform:translateY(-50%) rotate(45deg);border-top:1px solid var(--line);border-right:1px solid var(--line);background:var(--surface-2);z-index:1}
+.hbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(60px,110px) 34px;gap:8px;align-items:center;font-size:13px;margin-top:6px}
+.hbar>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .tr{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.hbar .tr span{display:block;height:100%;background:var(--mineral)}
+.hbar b{text-align:right;font-variant-numeric:tabular-nums}
+.prog{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;display:flex}
+.prog span{display:block;height:100%}
+.pp{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.pp:last-child{border-bottom:0}
+.gantt{position:relative}
+.gantt i{position:absolute;top:-3px;width:2px;height:16px;background:var(--ink);border-radius:1px;transform:translateX(-1px)}
+.tline{display:grid;grid-template-columns:auto auto 1fr;gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:baseline}
+.tline:last-child{border-bottom:0}
+.tline>span:nth-child(3){grid-column:1/-1}
+.tline>span:nth-child(4){grid-column:1/-1;color:var(--mineral)}
+.alertline{padding:9px 12px;border-radius:var(--r);background:var(--bad-bg);color:var(--bad);font-size:13.5px;font-weight:500}
+@media (max-width:700px){.flow .st b{font-size:24px}.lane h4 b{font-size:26px}.dnut{width:112px;height:112px}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
 .stat .lbl{font-family:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:600}
 .stat .val{font-family:var(--display);font-size:36px;margin-top:6px;font-variant-numeric:tabular-nums;line-height:1}
@@ -403,7 +454,7 @@ const ZERO_M = () => ({ ...Object.fromEntries(Object.keys(CONJ).map((k) => [k, 0
 const PRECO_KEYS = ["custo", "precoAvulso", "link", "fornecedor"];
 const ROLE_NAME = { admin: "Administrador", tecnico: "Montagem Técnica", leitura: "Somente leitura" };
 
-const S = { db: null, assets: null, user: null, role: "leitura", canWrite: false, loaded: { itens: false }, itens: {}, precos: {}, cfg: null, mont: null, compras: {}, movs: [], pracas: {}, links: {}, producao: [], arquivos: null };
+const S = { db: null, assets: null, user: null, role: "leitura", canWrite: false, loaded: { itens: false }, itens: {}, precos: {}, cfg: null, mont: null, compras: {}, movs: [], pracas: {}, links: {}, producao: [], arquivos: null, fu: {}, fm: {} };
 const UI = { view: "inicio", pecasSub: "peca", grupo: "", conj: "", q: "", modo: "cards", estoqueQ: "", intMini: "", intTech: "", intReserva: true, estoqueF: "todos", linksModel: "MINI", custoModel: "MINI", praca: null };
 const ADM = () => S.role === "admin";
 const W = () => S.canWrite;
@@ -600,12 +651,17 @@ function render() {
 // ---------- frota (só administradores): pátio 3D e mapa das microfranquias ----------
 const FROTA_JS = ["https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js", "https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/geometries/RoundedBoxGeometry.js", "frota/modelos.js", "frota/brasil.js", "frota/frota.js"];
 let frotaCarga = null;
+// A Frota usa as peças da fábrica: escolhe a peça do reparo e dá a saída no estoque
+const FROTA_HOST = {
+  itens: () => itemsArr().map((i) => ({ id: i.id, codigo: i.codigo, nome: i.nome, grupo: i.grupo, tipo: i.tipo, estoque: num(i.estoque) })),
+  saida: (id, q, motivo, extra) => moveStock(id, "saida", num(q), motivo, extra),
+};
 function carregarJs(src) { return new Promise((ok, erro) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => erro(new Error(src)); document.head.appendChild(s); }); }
 function vFrota() {
   const v = $("#view");
   if (!ADM()) { location.hash = "#inicio"; return; }
   if (!S.db) { v.innerHTML = noDb(); return; }
-  if (window.QGFrota) { window.QGFrota.montar(v, { db: S.db, canWrite: S.canWrite && ADM(), user: S.user }); return; }
+  if (window.QGFrota) { window.QGFrota.montar(v, { db: S.db, canWrite: S.canWrite && ADM(), user: S.user, host: FROTA_HOST }); return; }
   if (!v.querySelector(".frota-carregando")) v.innerHTML = `<div class="empty frota-carregando"><h2>Frota</h2><p class="lead" style="margin:8px auto">Carregando o pátio 3D das microfranquias…</p></div>`;
   if (!frotaCarga) frotaCarga = (async () => { for (const s of FROTA_JS) await carregarJs(s); })()
     .then(() => { if (UI.view === "frota") render(); })
@@ -646,6 +702,7 @@ function vInicio() {
   };
   return `
   <section class="hero"><div class="in"><div class="eyebrow">Fábrica Quick GO · Campo Grande</div><h1>Do componente ao bar compacto no evento</h1><p>${adm ? "Peças, montagem, custos, estoque e compras das máquinas Mini Go e Tech Go, e o prazo de entrega de cada nova praça." : "Peças, montagem, estoque e manuais das máquinas Mini Go e Tech Go, e as praças em produção."}</p>${adm ? `<a class="btn amb" href="#pracas">Solicitar nova praça</a>` : `<a class="btn amb" href="#manuais">Abrir manuais</a>`}</div></section>
+  ${painelGeral(adm)}
   <div class="grid g2">${card("MINI", cm)}${card("TECH", ct)}</div>
   <div class="grid g4 sec">
     <div class="panel stat"><div class="lbl">Itens cadastrados</div><div class="val">${its.length}</div><div class="sub">${its.filter((i) => i.tipo === "peca").length} peças · ${its.filter((i) => i.tipo === "peca_pronta").length} peças prontas · ${its.filter((i) => i.tipo === "acessorio").length} acessórios</div></div>
@@ -811,6 +868,125 @@ function vCustos() {
   </tbody></table></div></div>`;
 }
 
+// ---------- frota integrada: reparos, o que a fábrica está fazendo e painel geral ----------
+const FROTA_ST = { operando: ["Operando", "#4fae7f"], manutencao: ["Em reparo", "#e0604f"], acabamento: ["Ajuste de acabamento", "#e0a24a"], faltando: ["Falta entregar", "#e89a82"], a_produzir: ["A produzir", "#8494d4"], producao: ["Em produção", "#5aa6ba"], envio: ["Em envio", "#b98bb6"], devolucao: ["Devolução", "#8e9799"], aguardando: ["Aguardando compra", "#a9cad5"] };
+const MOTIVOS = { peca: "Peça com defeito", eletrica: "Falha elétrica ou eletrônica", hidraulica: "Vazamento ou hidráulica", software: "Tela ou software", acabamento: "Acabamento ou estrutura", desgaste: "Desgaste de uso", mau_uso: "Mau uso ou acidente", outro: "Outro" };
+const VIAS = { tecnico: ["Técnico homologado", "#6e7fb8"], fabrica: ["Reparo na fábrica", "#d79a45"] };
+const semAcentoId = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]/g, "");
+function idMaq(id, m) {
+  const b = m.base || id.replace(/-(m\d|t\d)$/, ""); const n = String(m.num || (id.match(/(\d)$/) || [, "1"])[1]).padStart(2, "0");
+  return (m.modelo === "TECH" ? "Tech" : "Mini") + n + semAcentoId(S.fu[b] ? S.fu[b].nome : b);
+}
+const frotaArr = () => Object.entries(S.fm).map(([id, v]) => ({ id, ...v, nomeId: idMaq(id, v), unNome: (S.fu[v.unidade] && S.fu[v.unidade].nome) || "Fábrica" }));
+// Todas as peças que saíram do estoque em reparos (abertos e concluídos)
+function pecasReparo() {
+  const out = [];
+  for (const m of frotaArr()) {
+    const rs = [...(m.reparos || []), ...(m.status === "manutencao" && m.reparo ? [m.reparo] : [])];
+    for (const r of rs) for (const p of r.pecas || []) if (p.baixada) out.push({ ...p, data: p.baixadaEm || r.aberto || "", maquina: m.nomeId, unidade: m.unNome, via: r.via, problema: r.problema, aberto: !r.fechado });
+  }
+  return out.sort((a, b) => String(b.data).localeCompare(String(a.data)));
+}
+const diasAtras = (n) => iso(new Date(Date.now() - n * 864e5));
+function usoReparos(dias) {
+  const lim = diasAtras(dias); const o = {};
+  for (const p of pecasReparo()) if (!p.data || p.data >= lim) o[p.id] = (o[p.id] || 0) + num(p.qtd);
+  return o;
+}
+function donut(parts, label) {
+  const tot = parts.reduce((s, p) => s + p.v, 0); const r = 50, c = 2 * Math.PI * r; let off = 0;
+  const segs = parts.filter((p) => p.v > 0).map((p) => { const len = (p.v / (tot || 1)) * c; const s = `<circle r="${r}" cx="66" cy="66" fill="none" stroke="${p.cor}" stroke-width="20" stroke-dasharray="${len.toFixed(2)} ${(c - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${esc(p.n)}: ${p.v}</title></circle>`; off += len; return s; }).join("");
+  return `<svg class="dnut" viewBox="0 0 132 132" role="img" aria-label="${esc(label)}: ${tot}"><g transform="rotate(-90 66 66)"><circle r="${r}" cx="66" cy="66" fill="none" stroke="var(--surface-2)" stroke-width="20"/>${segs}</g><text x="66" y="66" text-anchor="middle" class="dn-v">${tot}</text><text x="66" y="84" text-anchor="middle" class="dn-l">${esc(label)}</text></svg>`;
+}
+const curto = (s, n = 34) => { s = String(s || ""); return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; };
+const chipMaq = (m, cor, extra) => `<a class="chipm" href="#frota" style="--c:${cor}" title="${esc(m.nomeId + " · " + m.unNome + (m.reparo ? " · " + m.reparo.problema : ""))}"><i></i><span>${esc(m.nomeId)}</span>${extra ? `<small>${extra}</small>` : ""}</a>`;
+// O que a fábrica está fazendo: máquinas por etapa, técnicos em campo, praças e linha de montagem
+function fabricaAgora() {
+  const fm = frotaArr();
+  const lanes = [
+    ["Fila de produção", "#8494d4", fm.filter((m) => m.status === "a_produzir"), "Ainda não entrou na linha"],
+    ["Em produção", "#5aa6ba", fm.filter((m) => m.status === "producao"), "Sendo montadas agora"],
+    ["Reparo na fábrica", "#e0604f", fm.filter((m) => m.status === "manutencao" && m.reparo && m.reparo.via === "fabrica"), "Voltaram para conserto"],
+    ["Saindo para a unidade", "#b98bb6", fm.filter((m) => m.status === "envio"), "Embaladas ou na estrada"],
+    ["Voltando da unidade", "#8e9799", fm.filter((m) => m.status === "devolucao"), "Devolução de franquia"],
+  ];
+  const pr = Object.entries(S.pracas).map(([id, v]) => ({ id, ...v })).filter(PRACA_ATIVA);
+  return { fm, lanes, pr, tecnico: fm.filter((m) => m.status === "manutencao" && m.reparo && m.reparo.via === "tecnico"), semRep: fm.filter((m) => m.status === "manutencao" && !m.reparo) };
+}
+function laneHtml([nome, cor, ms, dica]) {
+  const vis = ms.slice(0, 8);
+  return `<div class="lane" style="--c:${cor}"><h4><span>${nome}</span><b>${ms.length}</b></h4><div class="small muted" style="margin-top:-6px">${dica}</div>
+    ${ms.length ? vis.map((m) => chipMaq(m, cor, m.reparo && m.reparo.via === "fabrica" && m.reparo.aberto ? diffDays(m.reparo.aberto, today()) + " d" : "")).join("") + (ms.length > vis.length ? `<span class="small muted">e mais ${ms.length - vis.length}</span>` : "") : `<span class="small muted">Nenhuma agora</span>`}</div>`;
+}
+function montagemFlow() {
+  const ms = mont();
+  return MODELS.map((m) => { const conj = Object.keys(CONJ).reduce((s, k) => s + (ms[m][k] || 0), 0);
+    return `<div><div class="lbl2">${MODEL_NAME[m]}</div><div class="flow"><div class="st"><b>${conj}</b><span>Conjuntos montados</span></div><div class="st"><b>${ms[m].acabado}</b><span>Máquinas acabadas</span></div><div class="st"><b>${ms[m].maquina}</b><span>Prontas para enviar</span></div></div></div>`; }).join("");
+}
+function pracaProgresso(p, pl) {
+  const ini = parseD(pl.inicio), fim = parseD(pl.entrega); const tot = Math.max(1, fim - ini); const hoje = parseD(today());
+  const pos = Math.min(100, Math.max(0, ((hoje - ini) / tot) * 100));
+  const atual = pl.fases.find((f) => today() >= f.ini && today() <= f.fim) || (today() > pl.entrega ? { nome: "Entrega prevista passou" } : pl.fases[0]);
+  const segs = pl.fases.map((f) => { const w = Math.max(0, (parseD(f.fim) - parseD(f.ini)) / tot * 100); return w ? `<span style="width:${w}%;background:${f.cor}" title="${esc(f.nome)}: ${fmtDs(f.ini)} a ${fmtDs(f.fim)}"></span>` : ""; }).join("");
+  return `<a class="pp" href="#pracas-p-${p.id}"><div class="row" style="justify-content:space-between"><b>${esc(p.cidade)}</b><span class="small muted">entrega ${fmtD(pl.entrega)}</span></div>
+    <div class="gantt"><div class="prog">${segs}</div><i style="left:${pos}%" title="Hoje"></i></div><div class="small muted">Agora: ${esc(atual.nome)}</div></a>`;
+}
+function secFabrica(adm) {
+  const f = fabricaAgora(); const plans = f.pr.length ? allPlans() : {};
+  const temFrota = adm && f.fm.length;
+  return `<div class="sec"><div class="sech"><div><div class="eyebrow">Agora na fábrica</div><h2>O que a fábrica está fazendo</h2></div>${temFrota ? `<a class="lk" href="#frota">Abrir a Frota</a>` : ""}</div>
+    ${temFrota ? `<div class="board">${f.lanes.map(laneHtml).join("")}</div>` : ""}
+    <div class="grid g2" style="margin-top:14px">
+      <div class="panel"><h3 style="margin-bottom:12px">Linha de montagem</h3>${montagemFlow()}</div>
+      <div class="panel"><h3 style="margin-bottom:12px">Praças em produção</h3>${f.pr.length ? f.pr.map((p) => pracaProgresso(p, plans[p.id])).join("") : `<div class="small muted">Nenhuma praça em andamento.${adm ? ` <a class="lk" href="#pracas">Planejar uma praça</a>` : ""}</div>`}</div>
+    </div>
+    ${temFrota && (f.tecnico.length || f.semRep.length) ? `<div class="grid g2" style="margin-top:14px">
+      ${f.tecnico.length ? `<div class="panel"><h3 style="margin-bottom:10px">Técnicos homologados em campo</h3>${f.tecnico.map((m) => `<div class="tline"><b>${esc(m.nomeId)}</b><span>${esc(m.unNome)}</span><span class="muted">${esc(m.reparo.problema)}</span><span class="small">${m.reparo.tecnico ? esc(m.reparo.tecnico) : "técnico a definir"}${m.reparo.previsao ? " · visita " + fmtDs(m.reparo.previsao) : ""}</span></div>`).join("")}</div>` : ""}
+      ${f.semRep.length ? `<div class="panel"><h3 style="margin-bottom:10px">Reparos sem detalhes</h3><p class="small muted" style="margin:0 0 8px">Abra cada máquina na Frota e informe o problema, o motivo e se vai técnico ou volta para a fábrica.</p><div class="row" style="gap:6px">${f.semRep.map((m) => chipMaq(m, "#e0604f", "")).join("")}</div></div>` : ""}
+    </div>` : ""}</div>`;
+}
+function secReparos(adm) {
+  if (!adm || !Object.keys(S.fm).length) return "";
+  const ps = pecasReparo(); const lim = diasAtras(90); const rec = ps.filter((p) => !p.data || p.data >= lim);
+  const porItem = {}; rec.forEach((p) => { porItem[p.id] = (porItem[p.id] || 0) + num(p.qtd); });
+  const top = Object.entries(porItem).sort((a, b) => b[1] - a[1]).slice(0, 6); const mx = top.length ? top[0][1] : 1;
+  const custo = rec.reduce((s, p) => s + num(p.qtd) * num((itemOf(p.id) || {}).custo), 0);
+  return `<div class="sec"><div class="sech"><div><div class="eyebrow">Frota</div><h2>Peças que saíram para reparos</h2></div><span class="small muted">Últimos 90 dias</span></div>
+    ${ps.length ? `<div class="grid g2"><div class="panel"><div class="grid g3" style="gap:10px"><div class="stat"><div class="lbl">Peças usadas</div><div class="val">${fmtN(rec.reduce((s, p) => s + num(p.qtd), 0))}</div></div><div class="stat"><div class="lbl">Custo das peças</div><div class="val">${brl(custo)}</div></div><div class="stat"><div class="lbl">Máquinas atendidas</div><div class="val">${new Set(rec.map((p) => p.maquina)).size}</div></div></div>
+      <h3 style="margin:16px 0 8px;font-size:19px">Mais usadas</h3>${top.map(([id, q]) => { const it = itemOf(id) || { nome: id }; return `<div class="hbar"><span>${esc(it.nome)}</span><div class="tr"><span style="width:${(q / mx) * 100}%"></span></div><b>${fmtN(q)}</b></div>`; }).join("")}</div>
+      <div class="tw"><table><thead><tr><th>Data</th><th>Peça</th><th class="n">Qtd</th><th>Máquina</th><th>Como</th></tr></thead><tbody>${ps.slice(0, 15).map((p) => `<tr><td class="small">${p.data ? fmtDs(p.data) : "—"}</td><td><span class="code muted">${esc(p.codigo || "")}</span><br>${esc(p.nome || p.id)}</td><td class="n">${fmtN(p.qtd)}</td><td><b>${esc(p.maquina)}</b><br><span class="small muted">${esc(p.unidade)}</span></td><td><span class="pill ${p.via === "fabrica" ? "p-warn" : "p-info"}">${p.via === "fabrica" ? "Fábrica" : "Técnico"}</span></td></tr>`).join("")}</tbody></table></div></div>`
+      : `<div class="empty">Quando uma máquina entra em reparo com peça vinculada, a peça sai do estoque e aparece aqui.</div>`}</div>`;
+}
+function painelGeral(adm) {
+  const f = fabricaAgora(); const blocos = [];
+  if (adm && f.fm.length) {
+    const cont = Object.keys(FROTA_ST).map((k) => ({ n: FROTA_ST[k][0], cor: FROTA_ST[k][1], v: f.fm.filter((m) => m.status === k).length })).filter((x) => x.v);
+    const uns = Object.entries(S.fu).filter(([, u]) => u.categoria !== "intencao");
+    const ok = uns.filter(([id]) => { const ms = f.fm.filter((m) => m.unidade === id); return ms.length === 3 && ms.every((m) => m.status === "operando"); }).length;
+    blocos.push(`<div class="panel"><div class="ph2"><h3>Frota</h3><a class="lk small" href="#frota">Pátio 3D</a></div><div class="dn">${donut(cont, "máquinas")}<div class="lg2">${cont.map((x) => `<span><i style="background:${x.cor}"></i>${x.n}<b>${x.v}</b></span>`).join("")}</div></div><div class="small muted" style="margin-top:12px"><b class="ink">${ok} de ${uns.length}</b> unidades com as 3 máquinas operando</div><div class="bar" style="margin-top:6px"><span style="width:${uns.length ? (ok / uns.length) * 100 : 0}%;background:#4fae7f"></span></div></div>`);
+    const rep = f.fm.filter((m) => m.status === "manutencao"); const tec = f.tecnico.length, fab = rep.filter((m) => m.reparo && m.reparo.via === "fabrica").length, sem = f.semRep.length;
+    const velho = rep.filter((m) => m.reparo && m.reparo.aberto).sort((a, b) => a.reparo.aberto.localeCompare(b.reparo.aberto))[0];
+    const pct = (v) => rep.length ? (v / rep.length) * 100 : 0;
+    blocos.push(`<div class="panel"><div class="ph2"><h3>Reparos</h3><a class="lk small" href="#frota">Ver na Frota</a></div><div class="stat"><div class="val">${rep.length}</div><div class="sub">máquinas em reparo agora</div></div>
+      <div class="bar" style="height:12px;margin-top:14px"><span style="width:${pct(tec)}%;background:${VIAS.tecnico[1]}"></span><span style="width:${pct(fab)}%;background:${VIAS.fabrica[1]}"></span><span style="width:${pct(sem)}%;background:var(--bad)"></span></div>
+      <div class="legend"><span><i style="background:${VIAS.tecnico[1]}"></i>Técnico ${tec}</span><span><i style="background:${VIAS.fabrica[1]}"></i>Na fábrica ${fab}</span>${sem ? `<span><i style="background:var(--bad)"></i>Sem detalhes ${sem}</span>` : ""}</div>
+      ${velho ? `<div class="small muted" style="margin-top:10px">Mais antigo: <b class="ink">${esc(velho.nomeId)}</b>, aberto há ${diffDays(velho.reparo.aberto, today())} dias</div>` : ""}
+      ${sem ? `<div class="alertline" style="margin-top:10px">${sem} máquina${sem > 1 ? "s" : ""} em reparo sem o problema informado.</div>` : ""}</div>`);
+  }
+  const prod = f.fm.filter((m) => m.status === "producao").length, fila = f.fm.filter((m) => m.status === "a_produzir").length, envio = f.fm.filter((m) => m.status === "envio").length, ms = mont();
+  blocos.push(`<div class="panel"><div class="ph2"><h3>Fábrica agora</h3><a class="lk small" href="#estoque">Detalhes</a></div>
+    <div class="flow">${adm && f.fm.length ? `<div class="st"><b>${fila}</b><span>Na fila</span></div><div class="st"><b>${prod}</b><span>Em produção</span></div>` : ""}<div class="st"><b>${ms.MINI.maquina + ms.TECH.maquina}</b><span>Prontas</span></div>${adm && f.fm.length ? `<div class="st"><b>${envio}</b><span>Em envio</span></div>` : ""}</div>
+    <div class="small muted" style="margin-top:12px">${f.pr.length ? `${f.pr.length} praça${f.pr.length > 1 ? "s" : ""} em andamento` : "Nenhuma praça em andamento"}${adm && f.fm.length ? ` · ${f.lanes[2][2].length} em reparo na fábrica` : ""}</div></div>`);
+  const its = itemsArr(); const b = baseLivre(false); const c = cfg();
+  const capM = capacidade((n) => ({ MINI: n, TECH: 0 }), b, false).n, capT = capacidade((n) => ({ MINI: 0, TECH: n }), b, false).n, capP = capacidade((n) => ({ MINI: n * c.combo.MINI, TECH: n * c.combo.TECH }), b, false);
+  const alerta = its.filter((i) => statusEstoque(i)[0] !== "OK" && (qtyOf(i, "MINI") || qtyOf(i, "TECH"))).length;
+  blocos.push(`<div class="panel"><div class="ph2"><h3>Estoque</h3><a class="lk small" href="#estoque">Inteligência</a></div>
+    <div class="flow"><div class="st"><b>${capM}</b><span>Mini possíveis</span></div><div class="st"><b>${capT}</b><span>Tech possíveis</span></div><div class="st"><b>${capP.n}</b><span>Praças completas</span></div></div>
+    ${capP.falta.length ? `<div class="small muted" style="margin-top:10px">Para a próxima praça faltam ${capP.falta.length} ${capP.falta.length === 1 ? "item" : "itens"}: ${capP.falta.slice(0, 2).map((l) => esc(curto(l.it.nome))).join(", ")}${capP.falta.length > 2 ? "…" : ""}</div>` : ""}
+    <div class="small" style="margin-top:8px;color:${alerta ? "var(--bad)" : "var(--ok)"}">${alerta} ${alerta === 1 ? "item zerado ou abaixo do mínimo" : "itens zerados ou abaixo do mínimo"}</div></div>`);
+  return `<div class="dash">${blocos.join("")}</div>`;
+}
+
 // ---------- inteligência de produção ----------
 // Mesma conta das praças: máquinas prontas, máquinas acabadas e conjuntos já montados saem do estoque antes das peças soltas.
 const PRACA_ATIVA = (p) => !p.baixado && !["cancelada", "expedida", "entregue"].includes(p.status);
@@ -899,7 +1075,7 @@ function vEstoque() {
   const valorEst = its.reduce((s, i) => s + Math.max(0, num(i.estoque)) * num(i.custo), 0);
   const cr = (c) => { const it = itemOf(c.itemId) || {}; const st = STATUS_COMPRA[c.status] || STATUS_COMPRA.pendente; const p = c.pracaId && S.pracas[c.pracaId]; const late = c.status === "pedido" && c.previsao && c.previsao < today();
     return `<tr><td class="ph">${thumb(it)}</td><td><span class="code muted">${esc(it.codigo || "?")}</span><br>${esc(it.nome || "Item removido")}</td><td class="n">${fmtN(c.qtd)}</td><td class="n">${brl(num(c.qtd) * num(c.custoUnit))}</td><td><span class="pill ${st[1]}">${st[0]}</span></td><td class="small">${c.dataPedido ? fmtDs(c.dataPedido) : "—"}</td><td class="small">${c.status === "recebido" ? "Recebido " + fmtDs(c.recebidoEm) + (c.dataPedido ? ` · ${diffDays(c.dataPedido, c.recebidoEm)} d` : "") : `<span style="${late ? "color:var(--bad);font-weight:600" : ""}">${fmtD(c.previsao)}${late ? " · atrasado" : ""}</span>`}</td><td class="small">${p ? `<a class="lk" href="#pracas-p-${c.pracaId}">${esc(p.cidade)}</a>` : "Avulsa"}</td><td>${it.link || c.link ? `<a class="lk small" target="_blank" rel="noopener" href="${esc(c.link || it.link)}">Link</a>` : ""}</td><td style="white-space:nowrap">${c.status === "pendente" ? `<button class="btn sm" data-cp="${c.id}|pedido">Marcar pedido</button>` : c.status === "pedido" ? `<button class="btn sm pri" data-receber="${c.id}">Receber</button>` : ""}${c.status === "pendente" || c.status === "pedido" ? ` <button class="btn sm ghost danger" data-cp="${c.id}|cancelado">Cancelar</button>` : ""}</td></tr>`; };
-  const movs = S.movs.slice(0, 25);
+  const movs = S.movs.slice(0, 25); const repUso = adm ? usoReparos(90) : {};
   const thC = `<thead><tr><th></th><th>Item</th><th class="n">Qtd</th><th class="n">Valor</th><th>Status</th><th>Pedido</th><th>Chegada</th><th>Praça</th><th></th><th></th></tr></thead>`;
   return `<div class="head"><div><div class="eyebrow">Estoque</div><h1>${adm ? "Estoque &amp; compras" : "Estoque"}</h1><p class="lead">${adm ? "Saldo de cada item, pedidos de compra com previsão de chegada e histórico de movimentações. Receber um pedido soma a quantidade ao estoque e registra o preço pago." : "Saldo de cada item e histórico de movimentações. Lance entradas, saídas e ajustes de inventário."}</p></div>
   ${adm ? `<button class="btn pri" data-newcompra="1">Compra avulsa</button>` : ""}</div>
@@ -907,16 +1083,18 @@ function vEstoque() {
   <div class="panel stat"><div class="lbl">Compras em aberto</div><div class="val">${abertas.length}</div><div class="sub">${abertas.filter((c) => c.status === "pendente").length} a pedir · ${abertas.filter((c) => c.status === "pedido").length} a caminho</div></div>` : `<div class="panel stat"><div class="lbl">Itens em estoque</div><div class="val">${its.filter((i) => num(i.estoque) > 0).length}</div><div class="sub">de ${its.length} cadastrados</div></div>`}
   <div class="panel stat"><div class="lbl">Itens em alerta</div><div class="val" style="color:var(--bad)">${its.filter((i) => statusEstoque(i)[0] !== "OK").length}</div></div>
   <div class="panel stat"><div class="lbl">Máquinas prontas</div><div class="val">${mont().MINI.maquina + mont().TECH.maquina}</div><div class="sub">${mont().MINI.maquina} Mini · ${mont().TECH.maquina} Tech</div></div></div>
+  ${secFabrica(adm)}
   ${secInteligencia(adm)}
+  ${secReparos(adm)}
   ${adm ? `<div class="sec"><div class="sech"><h2>Compras em aberto</h2></div>
   ${abertas.length ? `<div class="tw"><table>${thC}<tbody>${abertas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra em aberto. Gere os pedidos a partir de uma praça ou registre uma compra avulsa.</div>`}</div>` : ""}
   <div class="sec"><div class="sech"><h2>Saldo por item</h2>
   <div class="row"><input id="eq" type="search" placeholder="Buscar item" value="${esc(UI.estoqueQ)}"><select id="ef" aria-label="Filtro">${[["todos", "Todos"], ["alerta", "Em alerta"], ["peca", "Peças"], ["peca_pronta", "Peças prontas"], ["acessorio", "Acessórios"]].map(([k, n]) => `<option value="${k}" ${UI.estoqueF === k ? "selected" : ""}>${n}</option>`).join("")}</select></div></div>
   <div class="tw"><table><thead><tr><th></th><th>Item</th><th>Tipo</th><th>Local</th><th class="n">Estoque</th><th class="n">Mínimo</th><th>Situação</th>${adm ? '<th class="n">Valor</th>' : ""}${W() ? "<th>Movimentar</th>" : ""}</tr></thead><tbody>
-  ${list.map((i) => { const st = statusEstoque(i); return `<tr><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}</td><td class="small">${TIPO[i.tipo]}</td><td class="code muted">${esc(i.local || "—")}</td><td class="n"><b>${fmtN(i.estoque)}</b></td><td class="n">${fmtN(i.minimo) || "—"}</td><td><span class="pill ${st[1]}">${st[0]}</span></td>${adm ? `<td class="n">${brl(Math.max(0, num(i.estoque)) * num(i.custo))}</td>` : ""}${W() ? `<td><div class="row" style="gap:4px;flex-wrap:nowrap"><input id="mv-${i.id}" type="number" step="1" min="0" placeholder="qtd" aria-label="Quantidade" style="width:66px"><button class="btn sm" data-mv="${i.id}|entrada">Entrada</button><button class="btn sm" data-mv="${i.id}|saida">Saída</button><button class="btn sm ghost" data-mv="${i.id}|ajuste" title="Define o saldo exato">Ajustar</button></div></td>` : ""}</tr>`; }).join("")}
+  ${list.map((i) => { const st = statusEstoque(i); return `<tr><td class="ph">${thumb(i)}</td><td><span class="code muted">${esc(i.codigo)}</span><br>${esc(i.nome)}${repUso[i.id] ? ` <span class="pill p-info" title="Saiu do estoque para reparos de máquinas nos últimos 90 dias">${fmtN(repUso[i.id])} em reparos</span>` : ""}</td><td class="small">${TIPO[i.tipo]}</td><td class="code muted">${esc(i.local || "—")}</td><td class="n"><b>${fmtN(i.estoque)}</b></td><td class="n">${fmtN(i.minimo) || "—"}</td><td><span class="pill ${st[1]}">${st[0]}</span></td>${adm ? `<td class="n">${brl(Math.max(0, num(i.estoque)) * num(i.custo))}</td>` : ""}${W() ? `<td><div class="row" style="gap:4px;flex-wrap:nowrap"><input id="mv-${i.id}" type="number" step="1" min="0" placeholder="qtd" aria-label="Quantidade" style="width:66px"><button class="btn sm" data-mv="${i.id}|entrada">Entrada</button><button class="btn sm" data-mv="${i.id}|saida">Saída</button><button class="btn sm ghost" data-mv="${i.id}|ajuste" title="Define o saldo exato">Ajustar</button></div></td>` : ""}</tr>`; }).join("")}
   </tbody></table></div></div>
   <div class="grid g2 sec">
-    <div><div class="sech"><h2>Movimentações recentes</h2></div>${movs.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Item</th><th>Tipo</th><th class="n">Qtd</th><th>Motivo</th></tr></thead><tbody>${movs.map((m) => { const it = S.itens[m.itemId] || {}; return `<tr><td class="small">${fmtDs(m.data)}</td><td><span class="code">${esc(it.codigo || "?")}</span></td><td><span class="pill ${m.tipo === "entrada" ? "p-ok" : m.tipo === "saida" ? "p-warn" : "p-neu"}">${esc(m.tipo)}</span></td><td class="n">${fmtN(m.qtd)}</td><td class="small muted">${esc(m.motivo || "")}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">As entradas, saídas e ajustes aparecem aqui.</div>`}</div>
+    <div><div class="sech"><h2>Movimentações recentes</h2></div>${movs.length ? `<div class="tw"><table><thead><tr><th>Data</th><th>Item</th><th>Tipo</th><th class="n">Qtd</th><th>Motivo</th></tr></thead><tbody>${movs.map((m) => { const it = S.itens[m.itemId] || {}; return `<tr><td class="small">${fmtDs(m.data)}</td><td><span class="code">${esc(it.codigo || "?")}</span></td><td><span class="pill ${m.tipo === "entrada" ? "p-ok" : m.tipo === "saida" ? "p-warn" : "p-neu"}">${esc(m.origem === "reparo" ? "reparo" : m.tipo)}</span></td><td class="n">${fmtN(m.qtd)}</td><td class="small muted">${esc(m.motivo || "")}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">As entradas, saídas e ajustes aparecem aqui.</div>`}</div>
     ${adm ? `<div><div class="sech"><h2>Compras concluídas</h2></div>${fechadas.length ? `<div class="tw"><table>${thC}<tbody>${fechadas.map(cr).join("")}</tbody></table></div>` : `<div class="empty">Nenhuma compra concluída ainda.</div>`}</div>` : ""}
   </div>`;
 }
@@ -1217,11 +1395,11 @@ function confirmDrawer(title, text, label, fn, extraHtml = "") {
 }
 
 // ---------- ações ----------
-async function moveStock(id, tipo, q, motivo) {
+async function moveStock(id, tipo, q, motivo, extra = {}) {
   const it = S.itens[id]; const atual = num(it.estoque);
   const novo = tipo === "entrada" ? atual + q : tipo === "saida" ? atual - q : q;
   await S.db.collection("itens").doc(id).update({ estoque: novo });
-  await S.db.collection("movs").add({ itemId: id, tipo, qtd: q, data: today(), ts: new Date().toISOString(), motivo: motivo || "" });
+  await S.db.collection("movs").add({ itemId: id, tipo, qtd: q, data: today(), ts: new Date().toISOString(), motivo: motivo || "", ...extra });
   S.itens[id] = { ...it, estoque: novo };
 }
 async function setMont(m, k, v) { const cur = mont(); cur[m][k] = Math.max(0, v); await S.db.collection("config").doc("montagem").set(cur); S.mont = cur; }
@@ -1449,6 +1627,8 @@ function unlock(pedido) {
     sub(db.doc("config/geral"), (d) => { S.cfg = d.exists ? d.data() : null; schedule(); });
     sub(db.collection("compras"), (sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.compras = o; schedule(); });
     sub(db.collection("links"), (sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.links = o; schedule(); });
+    sub(db.collection("frota_unidades"), (sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.fu = o; schedule(); });
+    sub(db.collection("frota_maquinas"), (sn) => { const o = {}; sn.docs.forEach((d) => (o[d.id] = d.data())); S.fm = o; schedule(); });
   }
   location.hash = "#inicio"; route();
 }
